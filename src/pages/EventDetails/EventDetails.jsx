@@ -1,54 +1,99 @@
 import "./EventDetails.css";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import eventData from "../Home/eventData";
-import { Link } from "react-router-dom";
 
 function EventDetails() {
   const { id } = useParams();
 
- const adminEvents =
-  JSON.parse(localStorage.getItem("events")) || [];
+  const adminEvents =
+    JSON.parse(localStorage.getItem("events")) || [];
 
-const allEvents = [...eventData, ...adminEvents];
+  const allEvents = [...eventData, ...adminEvents];
 
-const event = allEvents.find(
-  (item) => item.id === Number(id)
-);
+  const event = allEvents.find(
+    (item) => item.id === Number(id)
+  );
+
   if (!event) {
     return <h2>Event Not Found</h2>;
   }
 
   return (
     <div className="event-details">
-      <h1>{event.title}</h1>
 
-      <p><strong>Category:</strong> {event.category}</p>
+      {/* Event Image */}
 
-      <p><strong>Date:</strong> {event.date}</p>
+      <img
+        src={
+          event.image ||
+          "https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200"
+        }
+        alt={event.title}
+        className="event-banner"
+      />
 
-      <p><strong>Venue:</strong> {event.location}</p>
+      <div className="event-content">
 
-      <p>
-        <strong>Fee:</strong>{" "}
-        {event.fee === 0 ? "Free" : `₹${event.fee}`}
-      </p>
+        <h1>{event.title}</h1>
 
-      <p><strong>Total Seats:</strong> {event.seats}</p>
+        <div className="event-info">
 
-      <p><strong>Available Seats:</strong> {event.availableSeats}</p>
+          <p><strong>Category:</strong> {event.category}</p>
 
-      <p><strong>Registration Ends:</strong> {event.lastDate}</p>
+          <p><strong>Date:</strong> {event.date}</p>
 
-      <p><strong>Organizer:</strong> {event.organizer}</p>
+          <p><strong>Time:</strong> {event.time || "10:00 AM"}</p>
 
-      <h3>Description</h3>
+          <p>
+            <strong>Venue:</strong>{" "}
+            {event.venue || event.location}
+          </p>
 
-      <p>{event.description}</p>
+          <p>
+            <strong>Fee:</strong>{" "}
+            {event.fee === 0 || !event.fee
+              ? "Free"
+              : `₹${event.fee}`}
+          </p>
 
-      
-    <Link to={`/registration/${event.id}`}>
-  <button>Register Now</button>
-</Link>
+          <p>
+            <strong>Total Seats:</strong>{" "}
+            {event.seats}
+          </p>
+
+          <p>
+            <strong>Available Seats:</strong>{" "}
+            {event.availableSeats || event.seats}
+          </p>
+
+          <p>
+            <strong>Registration Ends:</strong>{" "}
+            {event.lastDate || event.date}
+          </p>
+
+          <p>
+            <strong>Organizer:</strong>{" "}
+            {event.organizer || "College Event Committee"}
+          </p>
+
+        </div>
+
+        <div className="description-box">
+
+          <h2>Description</h2>
+
+          <p>{event.description}</p>
+
+        </div>
+
+        <Link to={`/registration/${event.id}`}>
+          <button className="register-btn">
+            Register Now
+          </button>
+        </Link>
+
+      </div>
+
     </div>
   );
 }

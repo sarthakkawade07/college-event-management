@@ -75,6 +75,7 @@ useEffect(() => {
   location={event.location || event.venue}
   fee={event.fee}
   category={event.category}
+  image={event.image}
 />
           ))
         ) : (

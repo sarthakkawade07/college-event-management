@@ -1,21 +1,53 @@
 import "./EventCard.css";
 import { Link } from "react-router-dom";
 
-function EventCard({ id, title, date, location, fee, category }) {
+function EventCard({
+  id,
+  title,
+  date,
+  location,
+  fee,
+  category,
+  image,
+}) {
   return (
     <div className="event-card">
-      <span className="event-category">{category}</span>
 
-      <h3>{title}</h3>
+      <img
+        src={
+          image ||
+          "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800"
+        }
+        alt={title}
+        className="event-image"
+      />
 
-      <p>📅 {date}</p>
-      <p>📍 {location}</p>
+      <div className="event-content">
 
-      <h4>{fee === 0 ? "Free" : `₹${fee}`}</h4>
+        <span className="event-category">
+          {category}
+        </span>
 
-    <Link to={`/events/${id}`}>
-             <button>View Details</button>
-    </Link>
+        <h3>{title}</h3>
+
+        <p>📅 {date}</p>
+
+        <p>📍 {location}</p>
+
+        <h4>
+          {fee === 0 || !fee
+            ? "Free"
+            : `₹${fee}`}
+        </h4>
+
+        <Link to={`/events/${id}`}>
+          <button className="details-btn">
+            View Details
+          </button>
+        </Link>
+
+      </div>
+
     </div>
   );
 }

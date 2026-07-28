@@ -10,6 +10,7 @@ function AddEvent() {
     venue: "",
     category: "",
     seats: "",
+    image: "",
   });
 
   const handleChange = (e) => {
@@ -23,19 +24,19 @@ function AddEvent() {
     e.preventDefault();
 
     const oldEvents =
-  JSON.parse(localStorage.getItem("events")) || [];
+      JSON.parse(localStorage.getItem("events")) || [];
 
-const newEvent = {
-  id: Date.now(),
-  ...event,
-};
+    const newEvent = {
+      id: Date.now(),
+      ...event,
+    };
 
-localStorage.setItem(
-  "events",
-  JSON.stringify([...oldEvents, newEvent])
-);
+    localStorage.setItem(
+      "events",
+      JSON.stringify([...oldEvents, newEvent])
+    );
 
-    alert("Event Added Successfully!");
+    alert("✅ Event Added Successfully!");
 
     setEvent({
       title: "",
@@ -45,13 +46,17 @@ localStorage.setItem(
       venue: "",
       category: "",
       seats: "",
+      image: "",
     });
   };
 
   return (
     <div className="add-event-page">
 
-      <form className="add-event-card" onSubmit={handleSubmit}>
+      <form
+        className="add-event-card"
+        onSubmit={handleSubmit}
+      >
 
         <h2>Add New Event</h2>
 
@@ -111,6 +116,17 @@ localStorage.setItem(
           name="seats"
           placeholder="Total Seats"
           value={event.seats}
+          onChange={handleChange}
+          required
+        />
+
+        {/* Event Image */}
+
+        <input
+          type="text"
+          name="image"
+          placeholder="Paste Event Image URL"
+          value={event.image}
           onChange={handleChange}
           required
         />
