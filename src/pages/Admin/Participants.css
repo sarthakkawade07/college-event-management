@@ -1,0 +1,46 @@
+.participants-page{
+    padding:40px;
+    background:#f4f7fc;
+    min-height:100vh;
+}
+
+.participants-page h1{
+    color:#2563eb;
+    margin-bottom:25px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+    text-align:left;
+}
+
+td{
+    padding:15px;
+    border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+@media(max-width:768px){
+    table{
+        font-size:14px;
+    }
+
+    th,
+    td{
+        padding:10px;
+    }
+}

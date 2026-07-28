@@ -1,0 +1,170 @@
+.profile-page {
+    min-height: 100vh;
+    background: #f4f7fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.profile-card {
+    width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.1);
+    transition: .3s;
+}
+
+.profile-card:hover {
+    transform: translateY(-8px);
+}
+
+/* ---------- Profile Image ---------- */
+
+.profile-image-wrapper {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    margin: 0 auto 20px;
+}
+
+.profile-image {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 6px solid #2563eb;
+    background: #fff;
+    display: block;
+}
+
+/* ---------- Camera Button ---------- */
+
+.camera-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 42px;
+    height: 42px;
+    background: #2563eb;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 3px solid white;
+    font-size: 18px;
+    transition: .3s;
+}
+
+.camera-btn:hover {
+    background: #1d4ed8;
+    transform: scale(1.1);
+}
+
+/* ---------- Heading ---------- */
+
+.profile-card h2 {
+    color: #2563eb;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.role {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 17px;
+}
+
+/* ---------- Info ---------- */
+
+.profile-info {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0;
+    padding: 12px;
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.info-row svg {
+    color: #2563eb;
+    font-size: 20px;
+}
+
+/* ---------- Input ---------- */
+
+.edit-input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #2563eb;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.edit-input:focus {
+    border-color: #1d4ed8;
+}
+
+/* ---------- Buttons ---------- */
+
+.edit-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 17px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.edit-btn:hover {
+    background: #1d4ed8;
+}
+
+.save-btn {
+    background: #16a34a;
+}
+
+.save-btn:hover {
+    background: #15803d;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width:500px) {
+
+    .profile-card {
+        width: 100%;
+    }
+
+    .profile-image-wrapper {
+        width: 140px;
+        height: 140px;
+    }
+
+    .profile-image {
+        width: 140px;
+        height: 140px;
+    }
+
+    .camera-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+}

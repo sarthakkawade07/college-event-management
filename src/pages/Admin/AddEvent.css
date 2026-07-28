@@ -1,0 +1,60 @@
+.add-event-page{
+    min-height:100vh;
+    background:#f4f7fc;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.add-event-card{
+    width:500px;
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.add-event-card h2{
+    text-align:center;
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.add-event-card input,
+.add-event-card textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+}
+
+.add-event-card textarea{
+    resize:none;
+    height:100px;
+}
+
+.add-event-card input:focus,
+.add-event-card textarea:focus{
+    border-color:#2563eb;
+}
+
+.add-event-card button{
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.add-event-card button:hover{
+    background:#1d4ed8;
+}
