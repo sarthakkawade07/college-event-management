@@ -67,7 +67,7 @@ useEffect(() => {
 
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-            <EventCard
+      <EventCard
   key={event.id}
   id={event.id}
   title={event.title}
@@ -76,8 +76,7 @@ useEffect(() => {
   fee={event.fee}
   category={event.category}
   image={event.image}
-/>
-          ))
+/>     ))
         ) : (
           <h2>No Event Found</h2>
         )}

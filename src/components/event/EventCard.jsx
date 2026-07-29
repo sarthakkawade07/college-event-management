@@ -14,10 +14,7 @@ function EventCard({
     <div className="event-card">
 
       <img
-        src={
-          image ||
-          "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800"
-        }
+        src={image}
         alt={title}
         className="event-image"
       />

@@ -85,6 +85,47 @@ function EventDetails() {
           <p>{event.description}</p>
 
         </div>
+        <div className="benefits-box">
+
+  <h2>🎁 Event Benefits</h2>
+
+  <div className="benefits-grid">
+
+    <div className="benefit-card">
+      🏆
+      <h4>Certificate</h4>
+      <p>Participation Certificate</p>
+    </div>
+
+    <div className="benefit-card">
+      🎁
+      <h4>Exciting Prizes</h4>
+      <p>Win Amazing Rewards</p>
+    </div>
+
+    <div className="benefit-card">
+      🤝
+      <h4>Networking</h4>
+      <p>Meet Industry Experts</p>
+    </div>
+
+    <div className="benefit-card">
+      📚
+      <h4>Learning</h4>
+      <p>Hands-on Experience</p>
+    </div>
+
+  </div>
+
+</div>
+
+<div className="rating-box">
+
+  <h2>⭐⭐⭐⭐⭐</h2>
+
+  <p>Rated 4.9 / 5 by Students</p>
+
+</div>
 
         <Link to={`/registration/${event.id}`}>
           <button className="register-btn">

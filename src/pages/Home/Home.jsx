@@ -59,14 +59,15 @@ function Home() {
 
           {eventData.map((event) => (
             <EventCard
-  key={event.id}
-  id={event.id}
-  title={event.title}
-  date={event.date}
-  location={event.location}
-  fee={event.fee}
-  category={event.category}
-/>
+              key={event.id}
+              id={event.id}
+              title={event.title}
+              date={event.date}
+              location={event.location}
+              fee={event.fee}
+              category={event.category}
+              image={event.image}
+            />
           ))}
 
         </div>
