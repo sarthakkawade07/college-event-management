@@ -6,69 +6,77 @@ function ManageEvents() {
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-const [editedEvent, setEditedEvent] = useState({
-  title: "",
-  date: "",
-  venue: "",
-  category: "",
-  fee: "",
-  seats: "",
-  description: "",
-});
+  const [editedEvent, setEditedEvent] = useState({
+    title: "",
+    description: "",
+    date: "",
+    time: "",
+    venue: "",
+    category: "",
+    organizer: "",
+    fee: "",
+    image: "",
+  });
+
   useEffect(() => {
-    const savedEvents =
-      JSON.parse(localStorage.getItem("events")) || [];
-    setEvents(savedEvents);
+    fetch("http://localhost:5000/api/events")
+      .then((res) => res.json())
+      .then((data) => setEvents(data))
+      .catch((err) => console.log(err));
   }, []);
 
-  // Save Edited Event
- const saveEdit = (id) => {
-  const updatedEvents = events.map((event) =>
-    event.id === id
-      ? {
-          ...event,
-          ...editedEvent,
-        }
-      : event
-  );
-
-  setEvents(updatedEvents);
-
-  localStorage.setItem(
-    "events",
-    JSON.stringify(updatedEvents)
-  );
-
-  setEditingId(null);
-
-  alert("Event Updated Successfully!");
-};
-  // Delete Event
-  const deleteEvent = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this event?"
-    );
-
-    if (!confirmDelete) return;
-
-    const updatedEvents = events.filter(
-      (event) => event.id !== id
-    );
-
-    setEvents(updatedEvents);
-
-    localStorage.setItem(
-      "events",
-      JSON.stringify(updatedEvents)
-    );
-
-    alert("Event Deleted Successfully!");
-  };
-
-  // Search
   const filteredEvents = events.filter((event) =>
     event.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  const deleteEvent = async (id) => {
+    if (!window.confirm("Delete this event?")) return;
+
+    try {
+      await fetch(`http://localhost:5000/api/events/${id}`, {
+        method: "DELETE",
+      });
+
+      setEvents(events.filter((event) => event._id !== id));
+
+      alert("✅ Event Deleted Successfully");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const saveEdit = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/events/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedEvent),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setEvents(
+          events.map((event) =>
+            event._id === id ? result.updatedEvent : event
+          )
+        );
+
+        setEditingId(null);
+
+        alert("✅ Event Updated Successfully");
+      } else {
+        alert(result.message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="manage-events-page">
@@ -76,166 +84,202 @@ const [editedEvent, setEditedEvent] = useState({
       <h1>Manage Events</h1>
 
       <input
+        className="search-input"
         type="text"
         placeholder="Search Event..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="search-input"
       />
 
       <div className="events-list">
 
-        {filteredEvents.length > 0 ? (
+        {filteredEvents.map((event) => (
+          <div className="event-box" key={event._id}>
 
-          filteredEvents.map((event) => (
+  <h2>{event.title}</h2>
 
-            <div className="event-box" key={event.id}>
+  <p>📅 {event.date}</p>
+  <p>🕒 {event.time}</p>
+  <p>📍 {event.venue}</p>
+  <p>🏷 {event.category}</p>
+  <p>👤 {event.organizer}</p>
+  <p>💰 ₹{event.fee}</p>
 
-              {editingId === event.id ? (
-                <div className="edit-form">
+  {editingId === event._id ? (
 
-  <input
-    type="text"
-    placeholder="Event Title"
-    value={editedEvent.title}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        title: e.target.value,
-      })
-    }
-  />
+    <>
+      <div className="edit-form">
 
-  <input
-    type="date"
-    value={editedEvent.date}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        date: e.target.value,
-      })
-    }
-  />
+        <input
+          type="text"
+          placeholder="Title"
+          value={editedEvent.title}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              title: e.target.value,
+            })
+          }
+        />
 
-  <input
-    type="text"
-    placeholder="Venue"
-    value={editedEvent.venue}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        venue: e.target.value,
-      })
-    }
-  />
+        <textarea
+          placeholder="Description"
+          value={editedEvent.description}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              description: e.target.value,
+            })
+          }
+        />
 
-  <input
-    type="text"
-    placeholder="Category"
-    value={editedEvent.category}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        category: e.target.value,
-      })
-    }
-  />
+        <input
+          type="date"
+          value={editedEvent.date}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              date: e.target.value,
+            })
+          }
+        />
 
-  <input
-    type="number"
-    placeholder="Fee"
-    value={editedEvent.fee}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        fee: e.target.value,
-      })
-    }
-  />
+        <input
+          type="time"
+          value={editedEvent.time}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              time: e.target.value,
+            })
+          }
+        />
 
-  <input
-    type="number"
-    placeholder="Seats"
-    value={editedEvent.seats}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        seats: e.target.value,
-      })
-    }
-  />
+        <input
+          type="text"
+          placeholder="Venue"
+          value={editedEvent.venue}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              venue: e.target.value,
+            })
+          }
+        />
 
-  <textarea
-    placeholder="Description"
-    value={editedEvent.description}
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        description: e.target.value,
-      })
-    }
-  />
+        <input
+          type="text"
+          placeholder="Category"
+          value={editedEvent.category}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              category: e.target.value,
+            })
+          }
+        />
 
-</div>
-              ) : (
-                <h2>{event.title}</h2>
-              )}
+        <input
+          type="text"
+          placeholder="Organizer"
+          value={editedEvent.organizer}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              organizer: e.target.value,
+            })
+          }
+        />
 
-              <p>📅 {event.date}</p>
+        <input
+          type="number"
+          placeholder="Fee"
+          value={editedEvent.fee}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              fee: e.target.value,
+            })
+          }
+        />
 
-              <p>📍 {event.venue}</p>
+        <input
+          type="text"
+          placeholder="Image URL"
+          value={editedEvent.image}
+          onChange={(e) =>
+            setEditedEvent({
+              ...editedEvent,
+              image: e.target.value,
+            })
+          }
+        />
 
-              <p>🏷 {event.category}</p>
+      </div>
 
-              <p>👥 {event.seats} Seats</p>
+      <div className="btn-group">
 
-              <div className="btn-group">
+        <button
+          className="edit-btn"
+          onClick={() => saveEdit(event._id)}
+        >
+          💾 Save
+        </button>
 
-                {editingId === event.id ? (
-                  <button
-                    className="edit-btn"
-                    onClick={() => saveEdit(event.id)}
-                  >
-                    💾 Save
-                  </button>
-                ) : (
+        <button
+          className="delete-btn"
+          onClick={() => setEditingId(null)}
+        >
+          ❌ Cancel
+        </button>
+
+      </div>
+
+    </>
+  ) : (
+                  <>
+                <div className="btn-group">
+
                   <button
                     className="edit-btn"
                     onClick={() => {
-  setEditingId(event.id);
+                      setEditingId(event._id);
 
-  setEditedEvent({
-    title: event.title,
-    date: event.date,
-    venue: event.venue,
-    category: event.category,
-    fee: event.fee,
-    seats: event.seats,
-    description: event.description,
-  });
-}}
+                      setEditedEvent({
+                        title: event.title,
+                        description: event.description,
+                        date: event.date,
+                        time: event.time,
+                        venue: event.venue,
+                        category: event.category,
+                        organizer: event.organizer,
+                        fee: event.fee,
+                        image: event.image,
+                      });
+                    }}
                   >
-                    ✏️ Edit
+                    ✏ Edit
                   </button>
-                )}
 
-                <button
-                  className="delete-btn"
-                  onClick={() => deleteEvent(event.id)}
-                >
-                  🗑 Delete
-                </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteEvent(event._id)}
+                  >
+                    🗑 Delete
+                  </button>
 
-              </div>
+                </div>
+              </>
+            )}
 
-            </div>
+          </div>
 
-          ))
+        ))}
 
-        ) : (
-
-          <h2>No Events Found</h2>
-
+        {filteredEvents.length === 0 && (
+          <h2 style={{ textAlign: "center", width: "100%" }}>
+            No Events Found
+          </h2>
         )}
 
       </div>

@@ -1,137 +1,250 @@
 import "./EventDetails.css";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import eventData from "../Home/eventData";
+
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMapMarkerAlt,
+  FaUsers,
+  FaUserTie,
+  FaTag,
+  FaGift,
+  FaCertificate,
+  FaLaptopCode,
+  FaNetworkWired,
+  FaStar,
+} from "react-icons/fa";
 
 function EventDetails() {
   const { id } = useParams();
 
-  const adminEvents =
-    JSON.parse(localStorage.getItem("events")) || [];
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const allEvents = [...eventData, ...adminEvents];
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/events/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEvent(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, [id]);
 
-  const event = allEvents.find(
-    (item) => item.id === Number(id)
-  );
+  if (loading) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "120px",
+          fontSize: "30px",
+          fontWeight: "bold",
+        }}
+      >
+        Loading Event...
+      </div>
+    );
+  }
 
-  if (!event) {
-    return <h2>Event Not Found</h2>;
+  if (!event || event.message) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "120px",
+          fontSize: "35px",
+          color: "#2563eb",
+          fontWeight: "700",
+        }}
+      >
+        Event Not Found
+      </div>
+    );
   }
 
   return (
-    <div className="event-details">
+    <div className="event-page">
+      <section
+        className="hero-banner"
+        style={{
+          backgroundImage: `url(${
+            event.image ||
+            "https://images.unsplash.com/photo-1511578314322-379afb476865?w=1600"
+          })`,
+        }}
+      >
+        <div className="hero-overlay">
+          <span className="hero-category">
+            {event.category}
+          </span>
 
-      {/* Event Image */}
-
-      <img
-        src={
-          event.image ||
-          "https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200"
-        }
-        alt={event.title}
-        className="event-banner"
-      />
-
-      <div className="event-content">
-
-        <h1>{event.title}</h1>
-
-        <div className="event-info">
-
-          <p><strong>Category:</strong> {event.category}</p>
-
-          <p><strong>Date:</strong> {event.date}</p>
-
-          <p><strong>Time:</strong> {event.time || "10:00 AM"}</p>
-
-          <p>
-            <strong>Venue:</strong>{" "}
-            {event.venue || event.location}
-          </p>
-
-          <p>
-            <strong>Fee:</strong>{" "}
-            {event.fee === 0 || !event.fee
-              ? "Free"
-              : `₹${event.fee}`}
-          </p>
-
-          <p>
-            <strong>Total Seats:</strong>{" "}
-            {event.seats}
-          </p>
-
-          <p>
-            <strong>Available Seats:</strong>{" "}
-            {event.availableSeats || event.seats}
-          </p>
-
-          <p>
-            <strong>Registration Ends:</strong>{" "}
-            {event.lastDate || event.date}
-          </p>
-
-          <p>
-            <strong>Organizer:</strong>{" "}
-            {event.organizer || "College Event Committee"}
-          </p>
-
-        </div>
-
-        <div className="description-box">
-
-          <h2>Description</h2>
+          <h1>{event.title}</h1>
 
           <p>{event.description}</p>
+        </div>
+      </section>
+
+      <div className="event-wrapper">
+
+        <div className="event-left">
+
+          <div className="section-card">
+
+            <h2>Event Information</h2>
+
+            <div className="info-grid">
+
+              <div className="info-box">
+                <FaCalendarAlt />
+                <div>
+                  <span>Date</span>
+                  <h4>{event.date}</h4>
+                </div>
+              </div>
+
+              <div className="info-box">
+                <FaClock />
+                <div>
+                  <span>Time</span>
+                  <h4>{event.time}</h4>
+                </div>
+              </div>
+
+              <div className="info-box">
+                <FaMapMarkerAlt />
+                <div>
+                  <span>Venue</span>
+                  <h4>{event.venue}</h4>
+                </div>
+              </div>
+
+              <div className="info-box">
+                <FaUserTie />
+                <div>
+                  <span>Organizer</span>
+                  <h4>{event.organizer}</h4>
+                </div>
+              </div>
+                            <div className="info-box">
+                <FaUsers />
+                <div>
+                  <span>Seats</span>
+                  <h4>
+                    {event.availableSeats || 0} / {event.seats || 0}
+                  </h4>
+                </div>
+              </div>
+
+              <div className="info-box">
+                <FaTag />
+                <div>
+                  <span>Fee</span>
+                  <h4>
+                    {event.fee === 0 ? "Free" : `₹${event.fee}`}
+                  </h4>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="section-card">
+            <h2>Description</h2>
+
+            <p className="description">
+              {event.description}
+            </p>
+          </div>
+
+          <div className="section-card">
+            <h2>Event Benefits</h2>
+
+            <div className="benefits">
+
+              <div className="benefit-card">
+                <FaCertificate />
+                <h4>Certificate</h4>
+                <p>Participation Certificate</p>
+              </div>
+
+              <div className="benefit-card">
+                <FaGift />
+                <h4>Exciting Prizes</h4>
+                <p>Win Amazing Rewards</p>
+              </div>
+
+              <div className="benefit-card">
+                <FaNetworkWired />
+                <h4>Networking</h4>
+                <p>Meet Industry Experts</p>
+              </div>
+
+              <div className="benefit-card">
+                <FaLaptopCode />
+                <h4>Learning</h4>
+                <p>Hands-on Experience</p>
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
-        <div className="benefits-box">
 
-  <h2>🎁 Event Benefits</h2>
+        <div className="event-right">
 
-  <div className="benefits-grid">
+          <div className="register-card">
 
-    <div className="benefit-card">
-      🏆
-      <h4>Certificate</h4>
-      <p>Participation Certificate</p>
-    </div>
+            <h3>Registration</h3>
 
-    <div className="benefit-card">
-      🎁
-      <h4>Exciting Prizes</h4>
-      <p>Win Amazing Rewards</p>
-    </div>
+            <h1>
+              {event.fee === 0 ? "FREE" : `₹${event.fee}`}
+            </h1>
 
-    <div className="benefit-card">
-      🤝
-      <h4>Networking</h4>
-      <p>Meet Industry Experts</p>
-    </div>
+            <p>
+              {event.availableSeats || 0} Seats Left
+            </p>
 
-    <div className="benefit-card">
-      📚
-      <h4>Learning</h4>
-      <p>Hands-on Experience</p>
-    </div>
+            <div className="progress">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${
+                    event.seats
+                      ? ((event.availableSeats || 0) / event.seats) * 100
+                      : 0
+                  }%`,
+                }}
+              ></div>
+            </div>
 
-  </div>
+            <Link to={`/registration/${event._id}`}>
+              <button className="register-btn">
+                Register Now
+              </button>
+            </Link>
 
-</div>
+          </div>
 
-<div className="rating-box">
+          <div className="rating-card">
 
-  <h2>⭐⭐⭐⭐⭐</h2>
+            <div className="stars">
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+            </div>
 
-  <p>Rated 4.9 / 5 by Students</p>
+            <p>Rated 4.9 / 5 by Students</p>
 
-</div>
+          </div>
 
-        <Link to={`/registration/${event.id}`}>
-          <button className="register-btn">
-            Register Now
-          </button>
-        </Link>
+        </div>
 
       </div>
 

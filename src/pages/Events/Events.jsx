@@ -1,19 +1,24 @@
 import "./Events.css";
 import { useEffect, useState } from "react";
 import EventCard from "../../components/event/EventCard";
-import eventData from "../Home/eventData";
 
 function Events() {
+  const [events, setEvents] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
-const [events, setEvents] = useState([]);
 
-useEffect(() => {
-  const adminEvents =
-    JSON.parse(localStorage.getItem("events")) || [];
+  useEffect(() => {
+    fetch("http://localhost:5000/api/events")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("API DATA:", data);
+        setEvents(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-  setEvents([...eventData, ...adminEvents]);
-}, []);
   const filteredEvents = events.filter((event) => {
     const matchSearch = event.title
       .toLowerCase()
@@ -27,7 +32,6 @@ useEffect(() => {
 
   return (
     <div className="events-page">
-
       <h1>All Events</h1>
 
       <p className="subtitle">
@@ -44,45 +48,30 @@ useEffect(() => {
       </div>
 
       <div className="filter-buttons">
-
-        <button onClick={() => setCategory("All")}>
-          All
-        </button>
-
-        <button onClick={() => setCategory("Technical")}>
-          Technical
-        </button>
-
-        <button onClick={() => setCategory("Coding")}>
-          Coding
-        </button>
-
-        <button onClick={() => setCategory("Competition")}>
-          Competition
-        </button>
-
+        <button onClick={() => setCategory("All")}>All</button>
+        <button onClick={() => setCategory("Technical")}>Technical</button>
+        <button onClick={() => setCategory("Coding")}>Coding</button>
+        <button onClick={() => setCategory("Competition")}>Competition</button>
       </div>
 
       <div className="events-grid">
-
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-      <EventCard
-  key={event.id}
-  id={event.id}
-  title={event.title}
-  date={event.date}
-  location={event.location || event.venue}
-  fee={event.fee}
-  category={event.category}
-  image={event.image}
-/>     ))
+            <EventCard
+              key={event._id}
+              id={event._id}
+              title={event.title}
+              date={event.date}
+              location={event.venue}
+              fee={event.fee}
+              category={event.category}
+              image={event.image}
+            />
+          ))
         ) : (
           <h2>No Event Found</h2>
         )}
-
       </div>
-
     </div>
   );
 }

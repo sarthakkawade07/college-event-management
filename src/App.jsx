@@ -22,6 +22,8 @@ import AddEvent from "./pages/Admin/AddEvent";
 import Participants from "./pages/Admin/Participants";
 import ManageEvents from "./pages/Admin/ManageEvents";
 import Payment from "./pages/Payment/Payment";
+import PaymentVerification from "./pages/Admin/PaymentVerification";
+import Certificate from "./pages/Certificate/Certificate";
 function App() {
   return (
     <>
@@ -46,8 +48,12 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/add-event" element={<AddEvent />} />
         <Route path="/participants" element={<Participants />} />
-<Route path="/manage-events" element={<ManageEvents />} />
-<Route path="/payment/:id" element={<Payment />} />
+        <Route path="/manage-events" element={<ManageEvents />} />
+        <Route path="/payment/:id" element={<Payment />} />
+        <Route path="/payment-verification"element={<PaymentVerification />}/>
+        <Route path="/certificate" element={<Certificate />} />
+
+
 </Routes>
       <Footer />
     </>

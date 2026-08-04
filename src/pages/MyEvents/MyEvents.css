@@ -474,3 +474,43 @@ flex-direction:column;
 }
 
 }
+.approved{
+    color:#16a34a;
+    font-weight:bold;
+    background:#dcfce7;
+    padding:5px 12px;
+    border-radius:20px;
+}
+
+.rejected{
+    color:#dc2626;
+    font-weight:bold;
+    background:#fee2e2;
+    padding:5px 12px;
+    border-radius:20px;
+}
+
+.pending{
+    color:#92400e;
+    font-weight:bold;
+    background:#fef3c7;
+    padding:5px 12px;
+    border-radius:20px;
+}
+.payment-msg{
+    margin-top:10px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.approved-msg{
+    color:#16a34a;
+}
+
+.pending-msg{
+    color:#f59e0b;
+}
+
+.rejected-msg{
+    color:#dc2626;
+}

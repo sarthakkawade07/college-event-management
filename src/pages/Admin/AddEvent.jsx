@@ -5,11 +5,12 @@ function AddEvent() {
   const [event, setEvent] = useState({
     title: "",
     description: "",
+    category: "",
     date: "",
     time: "",
     venue: "",
-    category: "",
-    seats: "",
+    organizer: "",
+    fee: "",
     image: "",
   });
 
@@ -20,44 +21,46 @@ function AddEvent() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const oldEvents =
-      JSON.parse(localStorage.getItem("events")) || [];
+    try {
+      const response = await fetch("http://localhost:5000/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(event),
+      });
 
-    const newEvent = {
-      id: Date.now(),
-      ...event,
-    };
+      const data = await response.json();
 
-    localStorage.setItem(
-      "events",
-      JSON.stringify([...oldEvents, newEvent])
-    );
+      if (response.ok) {
+        alert("✅ Event Added Successfully!");
 
-    alert("✅ Event Added Successfully!");
-
-    setEvent({
-      title: "",
-      description: "",
-      date: "",
-      time: "",
-      venue: "",
-      category: "",
-      seats: "",
-      image: "",
-    });
+        setEvent({
+          title: "",
+          description: "",
+          category: "",
+          date: "",
+          time: "",
+          venue: "",
+          organizer: "",
+          fee: "",
+          image: "",
+        });
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Server Error");
+    }
   };
 
   return (
     <div className="add-event-page">
-
-      <form
-        className="add-event-card"
-        onSubmit={handleSubmit}
-      >
-
+      <form className="add-event-card" onSubmit={handleSubmit}>
         <h2>Add New Event</h2>
 
         <input
@@ -73,6 +76,15 @@ function AddEvent() {
           name="description"
           placeholder="Description"
           value={event.description}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="text"
+          name="category"
+          placeholder="Category"
+          value={event.category}
           onChange={handleChange}
           required
         />
@@ -104,28 +116,26 @@ function AddEvent() {
 
         <input
           type="text"
-          name="category"
-          placeholder="Category"
-          value={event.category}
+          name="organizer"
+          placeholder="Organizer"
+          value={event.organizer}
           onChange={handleChange}
           required
         />
 
         <input
           type="number"
-          name="seats"
-          placeholder="Total Seats"
-          value={event.seats}
+          name="fee"
+          placeholder="Registration Fee"
+          value={event.fee}
           onChange={handleChange}
           required
         />
 
-        {/* Event Image */}
-
         <input
           type="text"
           name="image"
-          placeholder="Paste Event Image URL"
+          placeholder="Image URL"
           value={event.image}
           onChange={handleChange}
           required
@@ -134,9 +144,7 @@ function AddEvent() {
         <button type="submit">
           Publish Event
         </button>
-
       </form>
-
     </div>
   );
 }

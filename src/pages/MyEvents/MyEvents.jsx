@@ -16,13 +16,11 @@ function MyEvents() {
     setMyEvents(events);
   }, []);
 
-  // Open Modal
   const handleWithdraw = (id) => {
     setSelectedEventId(id);
     setShowModal(true);
   };
 
-  // Confirm Withdraw
   const confirmWithdraw = () => {
     const updatedEvents = myEvents.filter(
       (event) => event.id !== selectedEventId
@@ -39,7 +37,6 @@ function MyEvents() {
     alert("Registration Withdrawn Successfully!");
   };
 
-  // Cancel Withdraw
   const cancelWithdraw = () => {
     setShowModal(false);
   };
@@ -48,27 +45,43 @@ function MyEvents() {
     <>
       <div className="my-events-page">
 
-        <h1>My Events</h1>
+        <h1>🎟 My Registered Events</h1>
 
         {myEvents.length === 0 ? (
+
           <h2 className="no-events">
             No Registered Events
           </h2>
+
         ) : (
+
           <div className="events-container">
 
             {myEvents.map((event) => (
+
               <div className="event-card" key={event.id}>
 
                 <h2>{event.title}</h2>
 
                 <p>
-                  <strong>Date:</strong> {event.date}
+                  <strong>📅 Date :</strong> {event.date}
                 </p>
 
                 <p>
-                  <strong>Status:</strong>
+                  <strong>💰 Amount :</strong>{" "}
+                  {event.amount === 0
+                    ? "Free"
+                    : `₹${event.amount}`}
+                </p>
 
+                <p>
+                  <strong>🆔 Transaction ID :</strong>
+                  <br />
+                  {event.transactionId || "-"}
+                </p>
+
+                <p>
+                  <strong>🎫 Registration :</strong>{" "}
                   <span
                     className={
                       event.status === "Completed"
@@ -76,10 +89,41 @@ function MyEvents() {
                         : "registered"
                     }
                   >
-                    {" "}
                     {event.status}
                   </span>
                 </p>
+
+                <p>
+                  <strong>💳 Payment :</strong>{" "}
+                  <span
+                    className={
+                      event.paymentStatus === "Approved"
+                        ? "approved"
+                        : event.paymentStatus === "Rejected"
+                        ? "rejected"
+                        : "pending"
+                    }
+                  >
+                    {event.paymentStatus || "Pending"}
+                  </span>
+                </p>
+                {event.paymentStatus === "Approved" && (
+  <p className="payment-msg approved-msg">
+    ✅ Payment Verified Successfully
+  </p>
+)}
+
+{event.paymentStatus === "Pending" && (
+  <p className="payment-msg pending-msg">
+    ⏳ Waiting For Admin Verification
+  </p>
+)}
+
+{event.paymentStatus === "Rejected" && (
+  <p className="payment-msg rejected-msg">
+    ❌ Payment Rejected. Contact Admin.
+  </p>
+)}
 
                 <button
                   onClick={() =>
@@ -99,14 +143,17 @@ function MyEvents() {
                 </button>
 
               </div>
+
             ))}
 
           </div>
+
         )}
 
       </div>
 
       {showModal && (
+
         <div className="modal-overlay">
 
           <div className="modal-box">
@@ -114,8 +161,7 @@ function MyEvents() {
             <h2>Withdraw Registration</h2>
 
             <p>
-              Are you sure you want to withdraw from
-              this event?
+              Are you sure you want to withdraw from this event?
             </p>
 
             <div className="modal-buttons">
@@ -139,7 +185,9 @@ function MyEvents() {
           </div>
 
         </div>
+
       )}
+
     </>
   );
 }

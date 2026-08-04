@@ -441,25 +441,29 @@ const topEvents = Object.entries(eventStats)
 
       <div className="quick-actions">
 
-        <h2>⚡ Quick Actions</h2>
+  <h2>⚡ Quick Actions</h2>
 
-        <div className="dashboard-buttons">
+  <div className="dashboard-buttons">
 
-          <Link to="/add-event">
-            <button>➕ Add Event</button>
-          </Link>
+    <Link to="/add-event">
+      <button>➕ Add Event</button>
+    </Link>
 
-          <Link to="/manage-events">
-            <button>📝 Manage Events</button>
-          </Link>
+    <Link to="/manage-events">
+      <button>📝 Manage Events</button>
+    </Link>
 
-          <Link to="/participants">
-            <button>👥 Participants</button>
-          </Link>
+    <Link to="/participants">
+      <button>👥 Participants</button>
+    </Link>
 
-        </div>
+    <Link to="/payment-verification">
+      <button>💳 Payment Verification</button>
+    </Link>
 
-      </div>
+  </div>
+
+</div>
             {/* ================= BOTTOM SECTION ================= */}
 
       <div className="dashboard-bottom">

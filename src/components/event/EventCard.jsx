@@ -14,7 +14,7 @@ function EventCard({
     <div className="event-card">
 
       <img
-        src={image}
+        src={image || "https://via.placeholder.com/300x180?text=No+Image"}
         alt={title}
         className="event-image"
       />
@@ -32,9 +32,7 @@ function EventCard({
         <p>📍 {location}</p>
 
         <h4>
-          {fee === 0 || !fee
-            ? "Free"
-            : `₹${fee}`}
+          {fee && fee > 0 ? `₹${fee}` : "Free"}
         </h4>
 
         <Link to={`/events/${id}`}>

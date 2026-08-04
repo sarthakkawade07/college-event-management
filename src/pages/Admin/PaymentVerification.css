@@ -1,0 +1,167 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+}
+
+/* ================= PAGE ================= */
+
+.payment-verification{
+    min-height:100vh;
+    padding:40px;
+    background:linear-gradient(135deg,#eef5ff,#ffffff);
+}
+
+.payment-verification h1{
+    text-align:center;
+    color:#2563eb;
+    font-size:42px;
+    margin-bottom:30px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:100%;
+    max-width:500px;
+    display:block;
+    margin:0 auto 40px;
+    padding:15px 20px;
+    border:2px solid #2563eb;
+    border-radius:12px;
+    outline:none;
+    font-size:16px;
+    transition:.3s;
+}
+
+.search-box:focus{
+    box-shadow:0 0 15px rgba(37,99,235,.2);
+}
+
+/* ================= GRID ================= */
+
+.payment-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+    gap:25px;
+}
+
+/* ================= CARD ================= */
+
+.payment-card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+    transition:.3s;
+    border-top:5px solid #2563eb;
+}
+
+.payment-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(37,99,235,.15);
+}
+
+.payment-card h2{
+    color:#2563eb;
+    margin-bottom:18px;
+}
+
+.payment-card p{
+    margin:12px 0;
+    color:#555;
+    line-height:1.7;
+}
+
+.payment-card strong{
+    color:#111827;
+}
+
+/* ================= STATUS ================= */
+
+.status{
+    display:inline-block;
+    margin-top:15px;
+    padding:8px 18px;
+    border-radius:30px;
+    color:white;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.pending{
+    background:#f59e0b;
+}
+
+.approved{
+    background:#16a34a;
+}
+
+.rejected{
+    background:#dc2626;
+}
+
+/* ================= BUTTONS ================= */
+
+.buttons{
+    display:flex;
+    gap:15px;
+    margin-top:25px;
+}
+
+.buttons button{
+    flex:1;
+    border:none;
+    padding:13px;
+    border-radius:10px;
+    cursor:pointer;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.approve{
+    background:#16a34a;
+}
+
+.approve:hover{
+    background:#15803d;
+    transform:translateY(-3px);
+}
+
+.reject{
+    background:#dc2626;
+}
+
+.reject:hover{
+    background:#b91c1c;
+    transform:translateY(-3px);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+.payment-verification{
+padding:20px;
+}
+
+.payment-verification h1{
+font-size:30px;
+}
+
+.payment-grid{
+grid-template-columns:1fr;
+}
+
+.buttons{
+flex-direction:column;
+}
+
+}
