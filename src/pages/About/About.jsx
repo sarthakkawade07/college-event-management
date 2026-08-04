@@ -1,5 +1,5 @@
 import "./About.css";
-import sarthak from "../../assets/Sarthak.jpg";
+import sarthak from "../../assets/sarthak.jpg";
 function About() {
   return (
     <div className="about-page">
