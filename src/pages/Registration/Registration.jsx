@@ -1,7 +1,7 @@
 import "./Registration.css";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import eventData from "../Home/eventData";
+
 import { useEvent } from "../../context/EventContext";
 
 function Registration() {
@@ -9,14 +9,24 @@ function Registration() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const adminEvents =
-    JSON.parse(localStorage.getItem("events")) || [];
 
-  const allEvents = [...eventData, ...adminEvents];
 
-  const selectedEvent = allEvents.find(
-    (item) => item.id === Number(id)
-  );
+  import { useEffect, useState } from "react";
+
+const [selectedEvent, setSelectedEvent] = useState(null);
+
+useEffect(() => {
+  fetch(
+    `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
+  )
+    .then((res) => res.json())
+    .then((data) => setSelectedEvent(data))
+    .catch((err) => console.log(err));
+}, [id]);
+
+if (!selectedEvent) {
+  return <h2>Loading...</h2>;
+}
 
   const loggedInUser =
     JSON.parse(localStorage.getItem("loggedInUser")) || {};
