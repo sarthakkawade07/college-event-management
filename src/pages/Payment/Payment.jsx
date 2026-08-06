@@ -1,56 +1,68 @@
 import "./Payment.css";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Payment() {
+  const { id } = useParams();
   const navigate = useNavigate();
 
+  const [event, setEvent] = useState(null);
   const [transactionId, setTransactionId] = useState("");
 
-  const registrationData = JSON.parse(
-    localStorage.getItem("registrationData")
-  );
+  useEffect(() => {
+    fetch(
+      `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
+    )
+      .then((res) => res.json())
+      .then((data) => setEvent(data))
+      .catch((err) => console.log(err));
+  }, [id]);
 
-  if (!registrationData) {
-    return <h2>Registration Data Not Found</h2>;
+  if (!event) {
+    return <h2>Loading...</h2>;
   }
 
   const handlePayment = async () => {
-    if (transactionId.trim() === "") {
+    if (!transactionId.trim()) {
       alert("Please Enter Transaction ID");
       return;
     }
 
+    const user =
+      JSON.parse(localStorage.getItem("loggedInUser")) || {};
+
+    const paymentData = {
+      eventId: event._id,
+      eventTitle: event.title,
+      name: user.fullName,
+      email: user.email,
+      amount: event.fee,
+      transactionId,
+      status: "Pending",
+    };
+
     try {
-      const response = await fetch(
-        "https://college-event-management-backend-2mzu.onrender.com/api/registrations",
+      const res = await fetch(
+        "https://college-event-management-backend-2mzu.onrender.com/api/payments",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            ...registrationData,
-            transactionId,
-            paymentStatus: "Pending",
-            registrationStatus: "Registered",
-          }),
+          body: JSON.stringify(paymentData),
         }
       );
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
-        localStorage.removeItem("registrationData");
-
-        alert("✅ Registration Successful!\nWaiting for Admin Verification.");
-
+      if (res.ok) {
+        alert("Payment Submitted Successfully");
         navigate("/my-events");
       } else {
-        alert(data.message || "Registration Failed");
+        alert(data.message);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       alert("Server Error");
     }
   };
@@ -58,6 +70,7 @@ function Payment() {
   return (
     <div className="payment-page">
       <div className="payment-card">
+
         <h1>Payment Verification</h1>
 
         <img
@@ -66,18 +79,14 @@ function Payment() {
           className="qr-image"
         />
 
-        <h2>{registrationData.eventTitle}</h2>
+        <h2>{event.title}</h2>
 
         <p>
           Amount :
           <strong>
-            {registrationData.amount === 0
-              ? " Free"
-              : ` ₹${registrationData.amount}`}
+            {event.fee === 0 ? " Free" : ` ₹${event.fee}`}
           </strong>
         </p>
-
-        <p>Scan QR Code & Complete Payment</p>
 
         <input
           type="text"
@@ -90,6 +99,7 @@ function Payment() {
         <button onClick={handlePayment}>
           Submit Payment
         </button>
+
       </div>
     </div>
   );
