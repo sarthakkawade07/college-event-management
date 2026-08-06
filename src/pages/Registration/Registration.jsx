@@ -75,8 +75,8 @@ function Registration() {
       return;
     }
 
-addParticipant({
-  eventId: selectedEvent.id,
+    const registrationData = {
+  eventId: selectedEvent._id,
   eventTitle: selectedEvent.title,
   fullName: formData.fullName,
   email: formData.email,
@@ -84,8 +84,15 @@ addParticipant({
   college: formData.college,
   department: formData.department,
   year: formData.year,
-});
-    navigate(`/payment/${selectedEvent.id}`);
+  amount: selectedEvent.fee,
+};
+
+localStorage.setItem(
+  "registrationData",
+  JSON.stringify(registrationData)
+);
+
+navigate(`/payment/${selectedEvent._id}`);
   };
 
   return (
