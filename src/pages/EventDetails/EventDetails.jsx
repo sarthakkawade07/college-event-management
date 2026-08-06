@@ -23,7 +23,7 @@ function EventDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/events/${id}`)
+    fetch(`https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setEvent(data);
