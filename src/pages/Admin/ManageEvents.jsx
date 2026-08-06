@@ -19,7 +19,7 @@ function ManageEvents() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/events")
+    fetch("https://college-event-management-backend-2mzu.onrender.com/api/events")
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch((err) => console.log(err));
@@ -33,7 +33,7 @@ function ManageEvents() {
     if (!window.confirm("Delete this event?")) return;
 
     try {
-      await fetch(`http://localhost:5000/api/events/${id}`, {
+      await fetch(`https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`, {
         method: "DELETE",
       });
 
@@ -47,9 +47,7 @@ function ManageEvents() {
 
   const saveEdit = async (id) => {
   try {
-    const response = await fetch(
-      `http://localhost:5000/api/events/${id}`,
-      {
+    const response = await fetch(`https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

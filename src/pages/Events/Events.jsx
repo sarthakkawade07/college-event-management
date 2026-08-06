@@ -8,7 +8,7 @@ function Events() {
   const [category, setCategory] = useState("All");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/events")
+    fetch("https://college-event-management-backend-2mzu.onrender.com/api/events")
       .then((res) => res.json())
       .then((data) => {
         console.log("API DATA:", data);
