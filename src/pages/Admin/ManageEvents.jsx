@@ -46,37 +46,43 @@ function ManageEvents() {
   };
 
   const saveEdit = async (id) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/events/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedEvent),
-        }
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/events/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedEvent),
+      }
+    );
+
+    const result = await response.json();
+
+    if (response.ok) {
+
+      // Update UI immediately
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event._id === id
+            ? { ...event, ...editedEvent }
+            : event
+        )
       );
 
-      const result = await response.json();
+      setEditingId(null);
 
-      if (response.ok) {
-        setEvents(
-          events.map((event) =>
-            event._id === id ? result.updatedEvent : event
-          )
-        );
+      alert("✅ Event Updated Successfully");
 
-        setEditingId(null);
-
-        alert("✅ Event Updated Successfully");
-      } else {
-        alert(result.message);
-      }
-    } catch (err) {
-      console.log(err);
+    } else {
+      alert(result.message);
     }
-  };
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   return (
     <div className="manage-events-page">

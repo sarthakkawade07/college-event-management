@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AddEvent.css";
 
 function AddEvent() {
+
+  const navigate = useNavigate();
+
   const [event, setEvent] = useState({
     title: "",
     description: "",
@@ -14,6 +18,7 @@ function AddEvent() {
     image: "",
   });
 
+
   const handleChange = (e) => {
     setEvent({
       ...event,
@@ -21,21 +26,29 @@ function AddEvent() {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/events", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(event),
-      });
+
+      const response = await fetch(
+        "http://localhost:5000/api/events",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(event),
+        }
+      );
+
 
       const data = await response.json();
 
+
       if (response.ok) {
+
         alert("✅ Event Added Successfully!");
 
         setEvent({
@@ -49,19 +62,38 @@ function AddEvent() {
           fee: "",
           image: "",
         });
+
+
+        navigate("/manage-events");
+
       } else {
+
         alert(data.message);
+
       }
+
+
     } catch (error) {
+
       console.log(error);
       alert("Server Error");
+
     }
+
   };
 
+
   return (
+
     <div className="add-event-page">
-      <form className="add-event-card" onSubmit={handleSubmit}>
+
+      <form 
+        className="add-event-card" 
+        onSubmit={handleSubmit}
+      >
+
         <h2>Add New Event</h2>
+
 
         <input
           type="text"
@@ -72,6 +104,7 @@ function AddEvent() {
           required
         />
 
+
         <textarea
           name="description"
           placeholder="Description"
@@ -79,6 +112,7 @@ function AddEvent() {
           onChange={handleChange}
           required
         />
+
 
         <input
           type="text"
@@ -89,6 +123,7 @@ function AddEvent() {
           required
         />
 
+
         <input
           type="date"
           name="date"
@@ -97,6 +132,7 @@ function AddEvent() {
           required
         />
 
+
         <input
           type="time"
           name="time"
@@ -104,6 +140,7 @@ function AddEvent() {
           onChange={handleChange}
           required
         />
+
 
         <input
           type="text"
@@ -114,6 +151,7 @@ function AddEvent() {
           required
         />
 
+
         <input
           type="text"
           name="organizer"
@@ -122,6 +160,7 @@ function AddEvent() {
           onChange={handleChange}
           required
         />
+
 
         <input
           type="number"
@@ -132,6 +171,7 @@ function AddEvent() {
           required
         />
 
+
         <input
           type="text"
           name="image"
@@ -141,12 +181,18 @@ function AddEvent() {
           required
         />
 
+
         <button type="submit">
           Publish Event
         </button>
+
+
       </form>
+
     </div>
+
   );
+
 }
 
 export default AddEvent;
