@@ -1,32 +1,12 @@
 import "./Registration.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useEvent } from "../../context/EventContext";
-
 function Registration() {
-  const { addParticipant } = useEvent();
   const { id } = useParams();
   const navigate = useNavigate();
 
-
-
-  import { useEffect, useState } from "react";
-
-const [selectedEvent, setSelectedEvent] = useState(null);
-
-useEffect(() => {
-  fetch(
-    `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
-  )
-    .then((res) => res.json())
-    .then((data) => setSelectedEvent(data))
-    .catch((err) => console.log(err));
-}, [id]);
-
-if (!selectedEvent) {
-  return <h2>Loading...</h2>;
-}
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const loggedInUser =
     JSON.parse(localStorage.getItem("loggedInUser")) || {};
@@ -40,6 +20,15 @@ if (!selectedEvent) {
     year: loggedInUser.year || "",
   });
 
+  useEffect(() => {
+    fetch(
+      `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
+    )
+      .then((res) => res.json())
+      .then((data) => setSelectedEvent(data))
+      .catch((err) => console.log(err));
+  }, [id]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -47,102 +36,79 @@ if (!selectedEvent) {
     });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  if (formData.fullName.trim() === "") {
-    alert("Please enter your full name.");
-    return;
-  }
+    if (!selectedEvent) {
+      alert("Event not found");
+      return;
+    }
 
-  if (formData.email.trim() === "") {
-    alert("Please enter your email.");
-    return;
-  }
+    const registrationData = {
+      eventId: selectedEvent._id,
+      eventTitle: selectedEvent.title,
+      fullName: formData.fullName,
+      email: formData.email,
+      mobile: formData.mobile,
+      college: formData.college,
+      department: formData.department,
+      year: formData.year,
+      amount: selectedEvent.fee,
+    };
 
-  if (!formData.email.includes("@")) {
-    alert("Please enter a valid email.");
-    return;
-  }
+    localStorage.setItem(
+      "registrationData",
+      JSON.stringify(registrationData)
+    );
 
-  if (formData.mobile.length !== 10) {
-    alert("Please enter a valid mobile number.");
-    return;
-  }
-
-  if (formData.college.trim() === "") {
-    alert("Please enter college name.");
-    return;
-  }
-
-  if (formData.department.trim() === "") {
-    alert("Please enter department.");
-    return;
-  }
-
-  if (formData.year === "") {
-    alert("Please select your year.");
-    return;
-  }
-
-  navigate(`/payment/${selectedEvent._id}`);
-};
-
-localStorage.setItem(
-  "registrationData",
-  JSON.stringify(registrationData)
-);
-
-navigate(`/payment/${selectedEvent._id}`);
+    navigate(`/payment/${selectedEvent._id}`);
   };
+
+  if (!selectedEvent) {
+    return <h2>Loading...</h2>;
+  }
 
   return (
     <div className="registration-container">
       <div className="registration-card">
-
         <h1>Event Registration</h1>
 
         <form onSubmit={handleSubmit}>
-
           <div className="form-group">
             <label>Full Name</label>
             <input
               type="text"
               name="fullName"
-              placeholder="Enter your full name"
               value={formData.fullName}
               onChange={handleChange}
             />
           </div>
 
           <div className="form-group">
-            <label>Email Address</label>
+            <label>Email</label>
             <input
               type="email"
               name="email"
-              placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
             />
           </div>
 
           <div className="form-group">
-            <label>Mobile Number</label>
+            <label>Mobile</label>
             <input
-              type="tel"
+              type="text"
               name="mobile"
-              placeholder="Enter mobile number"
               value={formData.mobile}
               onChange={handleChange}
             />
           </div>
 
           <div className="form-group">
-            <label>College Name</label>
+            <label>College</label>
             <input
               type="text"
               name="college"
-              placeholder="Enter college name"
               value={formData.college}
               onChange={handleChange}
             />
@@ -153,7 +119,6 @@ navigate(`/payment/${selectedEvent._id}`);
             <input
               type="text"
               name="department"
-              placeholder="Enter department"
               value={formData.department}
               onChange={handleChange}
             />
@@ -178,11 +143,10 @@ navigate(`/payment/${selectedEvent._id}`);
           <button type="submit">
             Continue to Payment
           </button>
-
         </form>
-
       </div>
     </div>
   );
+}
 
 export default Registration;
