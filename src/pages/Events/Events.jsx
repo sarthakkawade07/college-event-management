@@ -8,16 +8,14 @@ function Events() {
   const [category, setCategory] = useState("All");
 
   useEffect(() => {
-    fetch("https://college-event-management-backend-2mzu.onrender.com/api/events")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("API DATA:", data);
-        setEvents(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  fetch("https://college-event-management-backend-2mzu.onrender.com/api/events")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setEvents(data);
+    })
+    .catch((err) => console.log(err));
+}, []);
 
   const filteredEvents = events.filter((event) => {
     const matchSearch = event.title
