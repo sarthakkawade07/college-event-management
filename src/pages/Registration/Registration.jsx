@@ -37,54 +37,45 @@ function Registration() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (formData.fullName.trim() === "") {
-      alert("Please enter your full name.");
-      return;
-    }
+  if (formData.fullName.trim() === "") {
+    alert("Please enter your full name.");
+    return;
+  }
 
-    if (formData.email.trim() === "") {
-      alert("Please enter your email.");
-      return;
-    }
+  if (formData.email.trim() === "") {
+    alert("Please enter your email.");
+    return;
+  }
 
-    if (!formData.email.includes("@")) {
-      alert("Please enter a valid email.");
-      return;
-    }
+  if (!formData.email.includes("@")) {
+    alert("Please enter a valid email.");
+    return;
+  }
 
-    if (formData.mobile.length !== 10) {
-      alert("Please enter a valid mobile number.");
-      return;
-    }
+  if (formData.mobile.length !== 10) {
+    alert("Please enter a valid mobile number.");
+    return;
+  }
 
-    if (formData.college.trim() === "") {
-      alert("Please enter college name.");
-      return;
-    }
+  if (formData.college.trim() === "") {
+    alert("Please enter college name.");
+    return;
+  }
 
-    if (formData.department.trim() === "") {
-      alert("Please enter department.");
-      return;
-    }
+  if (formData.department.trim() === "") {
+    alert("Please enter department.");
+    return;
+  }
 
-    if (formData.year === "") {
-      alert("Please select your year.");
-      return;
-    }
+  if (formData.year === "") {
+    alert("Please select your year.");
+    return;
+  }
 
-    const registrationData = {
-  eventId: selectedEvent._id,
-  eventTitle: selectedEvent.title,
-  fullName: formData.fullName,
-  email: formData.email,
-  mobile: formData.mobile,
-  college: formData.college,
-  department: formData.department,
-  year: formData.year,
-  amount: selectedEvent.fee,
+  navigate(`/payment/${selectedEvent._id}`);
 };
 
 localStorage.setItem(
@@ -183,6 +174,5 @@ navigate(`/payment/${selectedEvent._id}`);
       </div>
     </div>
   );
-}
 
 export default Registration;
