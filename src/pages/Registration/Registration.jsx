@@ -1,6 +1,7 @@
 import "./Registration.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import {
   FaUser,
   FaEnvelope,
@@ -8,10 +9,10 @@ import {
   FaUniversity,
   FaLaptopCode,
   FaGraduationCap,
+  FaArrowRight,
   FaCalendarAlt,
   FaMapMarkerAlt,
   FaMoneyBillWave,
-  FaArrowRight,
 } from "react-icons/fa";
 
 function Registration() {
@@ -56,18 +57,6 @@ function Registration() {
       return;
     }
 
-    if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.mobile ||
-      !formData.college ||
-      !formData.department ||
-      !formData.year
-    ) {
-      alert("Please fill all fields.");
-      return;
-    }
-
     localStorage.setItem(
       "registrationData",
       JSON.stringify({
@@ -87,11 +76,7 @@ function Registration() {
   };
 
   if (!selectedEvent) {
-    return (
-      <div className="loading-page">
-        <div className="loader"></div>
-      </div>
-    );
+    return <h2 className="loading">Loading...</h2>;
   }
 
   return (
@@ -99,7 +84,7 @@ function Registration() {
 
       <div className="registration-container">
 
-        {/* LEFT PANEL */}
+        {/* LEFT SIDE */}
 
         <div className="left-panel">
 
@@ -107,61 +92,68 @@ function Registration() {
             EVENT REGISTRATION
           </span>
 
-          <h1>
-            Register
-            <br />
-            For Event
-          </h1>
+          <h1>Register Your Event</h1>
 
           <p>
-            Complete your registration to participate in the event.
+            Fill out the registration form and secure
+            your seat for this amazing event.
           </p>
+<div className="event-card">
 
-          <div className="event-card">
+  <h2>{selectedEvent.title}</h2>
 
-            <h2>{selectedEvent.title}</h2>
+  <div className="event-item">
+    <FaCalendarAlt />
+    <span>
+      <strong>Date :</strong> {selectedEvent.date}
+    </span>
+  </div>
 
-            <div className="event-item">
-              <FaCalendarAlt />
-              <span>{selectedEvent.date}</span>
-            </div>
+  <div className="event-item">
+    <FaMapMarkerAlt />
+    <span>
+      <strong>Venue :</strong> {selectedEvent.venue}
+    </span>
+  </div>
 
-            <div className="event-item">
-              <FaMapMarkerAlt />
-              <span>{selectedEvent.venue}</span>
-            </div>
+  <div className="event-item">
+    <FaMoneyBillWave />
+    <span>
+      <strong>Fee :</strong>{" "}
+      {selectedEvent.fee === 0
+        ? "Free Entry"
+        : `₹${selectedEvent.fee}`}
+    </span>
+  </div>
 
-            <div className="event-item">
-              <FaMoneyBillWave />
-              <span>
-                {selectedEvent.fee === 0
-                  ? "Free"
-                  : `₹${selectedEvent.fee}`}
-              </span>
-            </div>
+  <h3 className="about-title">
+    About Event
+  </h3>
 
-            <p className="event-desc">
-              {selectedEvent.description}
-            </p>
+  <p className="about-text">
+    {selectedEvent.description}
+  </p>
 
-          </div>
+</div>
 
         </div>
 
-        {/* RIGHT PANEL */}
+        {/* RIGHT SIDE */}
 
         <div className="right-panel">
 
           <div className="form-header">
-            <h2>Event Registration</h2>
+
+            <h2>Create Registration</h2>
+
             <p>
-              Fill in your details below
+              Please fill all required information.
             </p>
+
           </div>
 
           <form onSubmit={handleSubmit}>
-
-            <div className="input-box">
+                        <div className="input-box">
               <FaUser />
               <input
                 type="text"
@@ -169,6 +161,7 @@ function Registration() {
                 placeholder="Full Name"
                 value={formData.fullName}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -180,6 +173,7 @@ function Registration() {
                 placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -191,6 +185,7 @@ function Registration() {
                 placeholder="Mobile Number"
                 value={formData.mobile}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -202,9 +197,11 @@ function Registration() {
                 placeholder="College Name"
                 value={formData.college}
                 onChange={handleChange}
+                required
               />
             </div>
-                        <div className="input-box">
+
+            <div className="input-box">
               <FaLaptopCode />
               <input
                 type="text"
@@ -212,21 +209,24 @@ function Registration() {
                 placeholder="Department"
                 value={formData.department}
                 onChange={handleChange}
+                required
               />
             </div>
 
             <div className="input-box">
               <FaGraduationCap />
+
               <select
                 name="year"
                 value={formData.year}
                 onChange={handleChange}
+                required
               >
                 <option value="">Select Year</option>
-                <option>First Year</option>
-                <option>Second Year</option>
-                <option>Third Year</option>
-                <option>Final Year</option>
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+                <option value="Final Year">Final Year</option>
               </select>
             </div>
 
@@ -234,7 +234,7 @@ function Registration() {
               type="submit"
               className="register-btn"
             >
-              Continue To Payment
+              Continue to Payment
               <FaArrowRight />
             </button>
 
@@ -249,3 +249,4 @@ function Registration() {
 }
 
 export default Registration;
+          
