@@ -1,15 +1,29 @@
+/* ==========================
+   GLOBAL
+========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:"Poppins",sans-serif;
 }
 
 body{
-    background:#f4f7fc;
+    background:linear-gradient(135deg,#2563eb,#7c3aed,#9333ea);
+    background-size:300% 300%;
+    animation:bgMove 10s ease infinite;
 }
 
-/* ================= PAGE ================= */
+@keyframes bgMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* ==========================
+   PAGE
+========================== */
 
 .payment-page{
     min-height:100vh;
@@ -17,164 +31,457 @@ body{
     justify-content:center;
     align-items:center;
     padding:40px 20px;
-    background:linear-gradient(135deg,#eff6ff,#dbeafe);
 }
 
-/* ================= CARD ================= */
-
-.payment-card{
+.payment-container{
     width:100%;
-    max-width:520px;
+    max-width:1300px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    border-radius:28px;
+    overflow:hidden;
     background:#fff;
-    border-radius:22px;
-    padding:35px;
-    text-align:center;
-    box-shadow:0 20px 45px rgba(37,99,235,.15);
-    animation:fadeUp .5s ease;
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
 }
 
-.payment-card h1{
-    color:#2563eb;
-    font-size:34px;
+/* ==========================
+   LEFT PANEL
+========================== */
+
+.payment-left{
+
+    background:linear-gradient(
+        160deg,
+        #2563eb,
+        #6d28d9,
+        #8b5cf6
+    );
+
+    color:#fff;
+    padding:60px 50px;
+    position:relative;
+}
+
+.payment-left::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:220px;
+    height:220px;
+
+    background:rgba(255,255,255,.12);
+
+    border-radius:50%;
+
+    top:-80px;
+    right:-80px;
+}
+
+.payment-left::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:160px;
+    height:160px;
+
+    background:rgba(255,255,255,.08);
+
+    border-radius:50%;
+
+    bottom:-60px;
+    left:-60px;
+}
+
+.payment-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    background:rgba(255,255,255,.18);
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    margin-bottom:22px;
+}
+
+.payment-left h1{
+
+    font-size:42px;
+    margin-bottom:18px;
+    line-height:1.2;
+}
+
+.payment-left>p{
+
+    color:#eef2ff;
+
+    line-height:1.8;
+
+    margin-bottom:35px;
+}
+
+/* ==========================
+   EVENT CARD
+========================== */
+
+.payment-event-card{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:28px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.payment-event-card h2{
+
+    color:#1e3a8a;
+
+    font-size:30px;
+
+    margin-bottom:20px;
+
+    font-weight:700;
+}
+
+.payment-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:16px;
+
+    color:#374151;
+
+    font-size:16px;
+}
+
+.payment-info svg{
+
+    color:#7c3aed;
+
+    font-size:19px;
+}
+
+.payment-steps{
+
+    margin-top:25px;
+
+    border-top:1px solid #e5e7eb;
+
+    padding-top:20px;
+}
+
+.payment-steps h3{
+
+    color:#7c3aed;
+
+    margin-bottom:12px;
+
+    font-size:19px;
+}
+
+.payment-steps p{
+
+    color:#4b5563;
+
+    margin-bottom:10px;
+
+    font-size:15px;
+}
+/* ==========================
+   RIGHT PANEL
+========================== */
+
+.payment-right{
+    padding:60px 50px;
+    background:#ffffff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.payment-header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.payment-header svg{
+    font-size:48px;
+    color:#6d28d9;
+    margin-bottom:12px;
+}
+
+.payment-header h2{
+    font-size:36px;
+    color:#111827;
     margin-bottom:8px;
 }
 
-.payment-card h2{
-    margin-top:20px;
-    color:#1e293b;
-    font-size:24px;
+.payment-header p{
+    color:#6b7280;
+    font-size:15px;
 }
 
-.payment-card p{
-    color:#555;
-    margin-top:10px;
-    line-height:1.7;
-    font-size:16px;
-}
+/* ==========================
+   QR CARD
+========================== */
 
-/* ================= QR ================= */
-
-.qr-image{
-    width:260px;
-    height:260px;
-    margin:25px auto;
-    display:block;
-    padding:12px;
-    background:white;
-    border-radius:18px;
-    border:4px solid #2563eb;
-    box-shadow:0 10px 30px rgba(37,99,235,.15);
-}
-
-/* ================= INPUT ================= */
-
-.transaction-input{
-    width:100%;
-    margin-top:30px;
-    padding:15px 18px;
-    border:2px solid #dbeafe;
-    border-radius:12px;
-    outline:none;
-    font-size:16px;
-    transition:.3s;
-    background:#f8fbff;
-}
-
-.transaction-input:focus{
-    border-color:#2563eb;
-    background:white;
-    box-shadow:0 0 15px rgba(37,99,235,.2);
-}
-
-.transaction-input::placeholder{
-    color:#888;
-}
-
-/* ================= BUTTON ================= */
-
-.payment-card button{
-    width:100%;
-    margin-top:25px;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(135deg,#16a34a,#15803d);
-    color:white;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.payment-card button:hover{
-    transform:translateY(-3px);
-    box-shadow:0 15px 30px rgba(22,163,74,.3);
-}
-
-/* ================= INFO BOX ================= */
-
-.payment-info{
-    margin-top:25px;
+.qr-card{
     background:#f8fafc;
-    padding:18px;
-    border-radius:12px;
-    border-left:5px solid #2563eb;
-    text-align:left;
+    border:2px dashed #c4b5fd;
+    border-radius:24px;
+    padding:30px;
+    text-align:center;
+    margin-bottom:30px;
+    transition:.35s;
 }
 
-.payment-info h3{
-    color:#2563eb;
-    margin-bottom:10px;
+.qr-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(124,58,237,.15);
 }
 
-.payment-info ul{
-    padding-left:18px;
-}
-
-.payment-info li{
-    margin:8px 0;
-    color:#555;
-}
-
-/* ================= ANIMATION ================= */
-
-@keyframes fadeUp{
-
-from{
-opacity:0;
-transform:translateY(25px);
-}
-
-to{
-opacity:1;
-transform:translateY(0);
-}
-
-}
-
-/* ================= MOBILE ================= */
-
-@media(max-width:768px){
-
-.payment-card{
-padding:25px;
-}
-
-.payment-card h1{
-font-size:28px;
-}
-
-.payment-card h2{
-font-size:21px;
+.qr-icon{
+    font-size:42px;
+    color:#7c3aed;
+    margin-bottom:15px;
 }
 
 .qr-image{
-width:220px;
-height:220px;
+    width:230px;
+    max-width:100%;
+    display:block;
+    margin:0 auto 20px;
 }
 
-.transaction-input{
-font-size:15px;
+.qr-card h3{
+    color:#111827;
+    font-size:22px;
 }
 
+.qr-card h3 span{
+    color:#2563eb;
+    font-weight:700;
+}
+
+/* ==========================
+   INPUT
+========================== */
+
+.input-box{
+    margin-bottom:25px;
+}
+
+.input-box input{
+    width:100%;
+    height:58px;
+    border:2px solid #e5e7eb;
+    border-radius:16px;
+    padding:0 18px;
+    font-size:16px;
+    outline:none;
+    transition:.3s;
+    background:#f9fafb;
+}
+
+.input-box input:focus{
+    border-color:#7c3aed;
+    background:#fff;
+    box-shadow:0 10px 25px rgba(124,58,237,.12);
+}
+
+.input-box input::placeholder{
+    color:#9ca3af;
+}
+
+/* ==========================
+   BUTTON
+========================== */
+
+.payment-btn{
+    width:100%;
+    height:60px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:#fff;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+
+    transition:.35s;
+}
+
+.payment-btn:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 35px rgba(124,58,237,.35);
+}
+
+.payment-btn svg{
+    transition:.3s;
+}
+
+.payment-btn:hover svg{
+    transform:translateX(6px);
+}
+
+/* ==========================
+   LOADING
+========================== */
+
+.loading{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    font-weight:700;
+    color:#7c3aed;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:992px){
+
+.payment-container{
+    grid-template-columns:1fr;
+}
+
+.payment-left,
+.payment-right{
+    padding:40px 30px;
+}
+
+.payment-left h1{
+    font-size:34px;
+}
+
+.payment-event-card h2{
+    font-size:26px;
+}
+
+.payment-header h2{
+    font-size:30px;
+}
+
+}
+
+@media(max-width:576px){
+
+.payment-page{
+    padding:15px;
+}
+
+.payment-left,
+.payment-right{
+    padding:25px 20px;
+}
+
+.payment-left h1{
+    font-size:28px;
+}
+
+.payment-header h2{
+    font-size:26px;
+}
+
+.qr-image{
+    width:180px;
+}
+
+.payment-btn{
+    height:56px;
+    font-size:16px;
+}
+
+}
+.student-card{
+background:#f8fafc;
+padding:18px;
+border-radius:16px;
+margin-bottom:25px;
+}
+
+.student-item{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:12px;
+font-size:16px;
+font-weight:600;
+color:#374151;
+}
+
+.student-item svg{
+color:#7c3aed;
+font-size:18px;
+}
+
+.amount-card{
+display:flex;
+align-items:center;
+gap:18px;
+padding:20px;
+background:#eef2ff;
+border-radius:18px;
+margin-bottom:25px;
+}
+
+.amount-card svg{
+font-size:38px;
+color:#2563eb;
+}
+
+.amount-card h4{
+color:#6b7280;
+margin-bottom:6px;
+}
+
+.amount-card h2{
+font-size:30px;
+color:#111827;
+}
+
+.upload-box{
+margin-bottom:25px;
+}
+
+.upload-box label{
+display:block;
+margin-bottom:8px;
+font-weight:600;
+color:#374151;
+}
+
+.upload-box input{
+width:100%;
+padding:14px;
+border:2px dashed #7c3aed;
+border-radius:14px;
+background:#faf5ff;
+cursor:pointer;
 }
