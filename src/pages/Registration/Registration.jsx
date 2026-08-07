@@ -95,6 +95,16 @@ function Registration() {
         <h1>Event Registration</h1>
 
         <form onSubmit={handleSubmit}>
+          <p
+  style={{
+    textAlign: "center",
+    color: "#64748b",
+    marginBottom: "30px",
+    fontSize: "17px",
+  }}
+>
+  Fill your details to complete event registration.
+</p>
           <input
             type="text"
             name="fullName"
