@@ -14,27 +14,23 @@ import {
 } from "react-icons/fa";
 
 function Payment() {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [event, setEvent] = useState(null);
   const [transactionId, setTransactionId] = useState("");
-
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
 
-const user =JSON.parse(localStorage.getItem("loggedInUser")) || {};
-console.log(user);
+  const user =
+    JSON.parse(localStorage.getItem("loggedInUser")) || {};
 
   useEffect(() => {
-
     fetch(
       `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
     )
       .then((res) => res.json())
       .then((data) => setEvent(data))
       .catch((err) => console.log(err));
-
   }, [id]);
 
   if (!event) {
@@ -42,29 +38,25 @@ console.log(user);
   }
 
   const handlePayment = async () => {
-
-    if (transactionId.trim() === "") {
+    if (!transactionId.trim()) {
       alert("Please Enter Transaction ID");
       return;
     }
 
-    const user =
-      JSON.parse(localStorage.getItem("loggedInUser")) || {};
-
     const paymentData = {
-  eventId: event._id,
-  eventTitle: event.title,
-  name: user.fullName,
-  email: user.email,
-  amount: event.fee,
-  transactionId,
-  screenshot:
-    paymentScreenshot?.name || "",
-  status: "Pending",
-};
+      eventId: event._id,
+      eventTitle: event.title,
+      name: user.fullName || "",
+      email: user.email || "",
+      amount: event.fee,
+      transactionId,
+      screenshot: paymentScreenshot
+        ? paymentScreenshot.name
+        : "",
+      status: "Pending",
+    };
 
     try {
-
       const res = await fetch(
         "https://college-event-management-backend-2mzu.onrender.com/api/payments",
         {
@@ -84,7 +76,6 @@ console.log(user);
       } else {
         alert(data.message);
       }
-
     } catch (err) {
       console.log(err);
       alert("Server Error");
@@ -92,14 +83,11 @@ console.log(user);
   };
 
   return (
-
     <div className="payment-page">
-
       <div className="payment-container">
 
         {/* LEFT PANEL */}
-
-        <div className="payment-left">
+                <div className="payment-left">
 
           <span className="payment-badge">
             PAYMENT VERIFICATION
@@ -137,13 +125,13 @@ console.log(user);
 
             <div className="payment-steps">
 
-              <h3>How To Pay?</h3>
+              <h3>Payment Steps</h3>
 
               <p>① Scan QR Code</p>
-              <p>② Complete Payment</p>
-              <p>③ Enter Transaction ID</p>
-              <p>④ Submit Payment</p>
-              <p>⑤ Wait For Admin Verification</p>
+              <p>② Pay Registration Fee</p>
+              <p>③ Copy Transaction ID</p>
+              <p>④ Upload Payment Screenshot</p>
+              <p>⑤ Submit For Verification</p>
 
             </div>
 
@@ -156,30 +144,34 @@ console.log(user);
         <div className="payment-right">
 
           <div className="payment-header">
-            <div className="student-card">
 
-  <div className="student-item">
-    <FaUser />
-    <span>{user.fullName}</span>
-  </div>
+            <FaCreditCard className="payment-icon"/>
 
-  <div className="student-item">
-    <FaEnvelope />
-    <span>{user.email}</span>
-  </div>
+            <h2>Payment Details</h2>
 
-</div>
-
-            <FaCreditCard />
-
-            <h2>Payment</h2>
-
-            <p>Verify your payment below.</p>
+            <p>
+              Complete your payment and upload proof.
+            </p>
 
           </div>
-                    <div className="qr-card">
 
-            <FaQrcode className="qr-icon" />
+          <div className="student-card">
+
+            <div className="student-item">
+              <FaUser />
+              <span>{user.fullName || "Student Name"}</span>
+            </div>
+
+            <div className="student-item">
+              <FaEnvelope />
+              <span>{user.email || "student@email.com"}</span>
+            </div>
+
+          </div>
+
+          <div className="qr-card">
+
+            <FaQrcode className="qr-icon"/>
 
             <img
               src="https://i.ibb.co/wrNNpyxc/scanner.png"
@@ -187,33 +179,26 @@ console.log(user);
               className="qr-image"
             />
 
-            <h3>
-              Amount :
-              <span>
-                {event.fee === 0
-                  ? " Free"
-                  : ` ₹${event.fee}`}
-              </span>
-            </h3>
-
           </div>
+
           <div className="amount-card">
 
-  <FaMoneyBillWave />
+            <FaMoneyBillWave className="amount-icon"/>
 
-  <div>
-    <h4>Registration Fee</h4>
+            <div>
 
-    <h2>
-      {event.fee === 0
-        ? "FREE"
-        : `₹${event.fee}`}
-    </h2>
-  </div>
+              <h4>Registration Fee</h4>
 
-</div>
+              <h2>
+                {event.fee === 0
+                  ? "FREE"
+                  : `₹${event.fee}`}
+              </h2>
 
-          <div className="input-box">
+            </div>
+
+          </div>
+                    <div className="input-box">
 
             <input
               type="text"
@@ -225,36 +210,38 @@ console.log(user);
             />
 
           </div>
+
           <div className="upload-box">
 
-  <label>
-    Upload Payment Screenshot
-  </label>
+            <label>
+              Upload Payment Screenshot
+            </label>
 
-  <input
-    type="file"
-    accept="image/*"
-    onChange={(e) =>
-      setPaymentScreenshot(e.target.files[0])
-    }
-  />
-  {paymentScreenshot && (
-  <div className="preview-box">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setPaymentScreenshot(e.target.files[0])
+              }
+            />
 
-    <img
-      src={URL.createObjectURL(paymentScreenshot)}
-      alt="Payment Preview"
-      className="preview-image"
-    />
+            {paymentScreenshot && (
 
-    <p>
-      {paymentScreenshot.name}
-    </p>
+              <div className="preview-box">
 
-  </div>
-)}
+                <img
+                  src={URL.createObjectURL(paymentScreenshot)}
+                  alt="Payment Preview"
+                  className="preview-image"
+                />
 
-</div>
+                <p>{paymentScreenshot.name}</p>
+
+              </div>
+
+            )}
+
+          </div>
 
           <button
             className="payment-btn"
@@ -269,7 +256,6 @@ console.log(user);
       </div>
 
     </div>
-
   );
 }
 
