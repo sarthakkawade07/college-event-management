@@ -1,7 +1,6 @@
 import "./Registration.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import {
   FaUser,
   FaEnvelope,
@@ -9,10 +8,10 @@ import {
   FaUniversity,
   FaLaptopCode,
   FaGraduationCap,
-  FaArrowRight,
   FaCalendarAlt,
   FaMapMarkerAlt,
   FaMoneyBillWave,
+  FaArrowRight,
 } from "react-icons/fa";
 
 function Registration() {
@@ -65,7 +64,7 @@ function Registration() {
       !formData.department ||
       !formData.year
     ) {
-      alert("Please Fill All Fields");
+      alert("Please fill all fields.");
       return;
     }
 
@@ -88,139 +87,160 @@ function Registration() {
   };
 
   if (!selectedEvent) {
-    return <h2 className="loading">Loading...</h2>;
+    return (
+      <div className="loading-page">
+        <div className="loader"></div>
+      </div>
+    );
   }
 
   return (
     <div className="registration-page">
 
-      <div className="glass-card">
+      <div className="registration-container">
 
-        <h1>🎓 Event Registration</h1>
+        {/* LEFT PANEL */}
 
-        <p className="subtitle">
-          Register yourself to participate in this event
-        </p>
+        <div className="left-panel">
 
-        <div className="event-box">
+          <span className="badge">
+            EVENT REGISTRATION
+          </span>
 
-          <h2>{selectedEvent.title}</h2>
+          <h1>
+            Register
+            <br />
+            For Event
+          </h1>
 
-          <div className="event-info">
+          <p>
+            Complete your registration to participate in the event.
+          </p>
 
-            <p>
+          <div className="event-card">
+
+            <h2>{selectedEvent.title}</h2>
+
+            <div className="event-item">
               <FaCalendarAlt />
-              {selectedEvent.date}
-            </p>
+              <span>{selectedEvent.date}</span>
+            </div>
 
-            <p>
+            <div className="event-item">
               <FaMapMarkerAlt />
-              {selectedEvent.venue}
-            </p>
+              <span>{selectedEvent.venue}</span>
+            </div>
 
-            <p>
+            <div className="event-item">
               <FaMoneyBillWave />
-              {selectedEvent.fee === 0
-                ? "Free"
-                : `₹${selectedEvent.fee}`}
+              <span>
+                {selectedEvent.fee === 0
+                  ? "Free"
+                  : `₹${selectedEvent.fee}`}
+              </span>
+            </div>
+
+            <p className="event-desc">
+              {selectedEvent.description}
             </p>
 
           </div>
 
         </div>
 
-        <form onSubmit={handleSubmit}>
+        {/* RIGHT PANEL */}
 
-          <div className="input-group">
-            <label>
-              <FaUser /> Full Name
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Enter Full Name"
-              value={formData.fullName}
-              onChange={handleChange}
-            />
+        <div className="right-panel">
+
+          <div className="form-header">
+            <h2>Event Registration</h2>
+            <p>
+              Fill in your details below
+            </p>
           </div>
 
-          <div className="input-group">
-            <label>
-              <FaEnvelope /> Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Email Address"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
 
-          <div className="input-group">
-            <label>
-              <FaPhoneAlt /> Mobile Number
-            </label>
-            <input
-              type="text"
-              name="mobile"
-              placeholder="Enter Mobile Number"
-              value={formData.mobile}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="input-box">
+              <FaUser />
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Full Name"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="input-group">
-            <label>
-              <FaUniversity /> College Name
-            </label>
-            <input
-              type="text"
-              name="college"
-              placeholder="Enter College Name"
-              value={formData.college}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="input-box">
+              <FaEnvelope />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="input-group">
-            <label>
-              <FaLaptopCode /> Department
-            </label>
-            <input
-              type="text"
-              name="department"
-              placeholder="Enter Department"
-              value={formData.department}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="input-box">
+              <FaPhoneAlt />
+              <input
+                type="text"
+                name="mobile"
+                placeholder="Mobile Number"
+                value={formData.mobile}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="input-group">
-            <label>
-              <FaGraduationCap /> Year
-            </label>
+            <div className="input-box">
+              <FaUniversity />
+              <input
+                type="text"
+                name="college"
+                placeholder="College Name"
+                value={formData.college}
+                onChange={handleChange}
+              />
+            </div>
+                        <div className="input-box">
+              <FaLaptopCode />
+              <input
+                type="text"
+                name="department"
+                placeholder="Department"
+                value={formData.department}
+                onChange={handleChange}
+              />
+            </div>
 
-            <select
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
+            <div className="input-box">
+              <FaGraduationCap />
+              <select
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+              >
+                <option value="">Select Year</option>
+                <option>First Year</option>
+                <option>Second Year</option>
+                <option>Third Year</option>
+                <option>Final Year</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="register-btn"
             >
-              <option value="">Select Year</option>
-              <option>First Year</option>
-              <option>Second Year</option>
-              <option>Third Year</option>
-              <option>Final Year</option>
-            </select>
+              Continue To Payment
+              <FaArrowRight />
+            </button>
 
-          </div>
+          </form>
 
-          <button className="register-btn" type="submit">
-            Continue To Payment
-            <FaArrowRight />
-          </button>
-
-        </form>
+        </div>
 
       </div>
 
