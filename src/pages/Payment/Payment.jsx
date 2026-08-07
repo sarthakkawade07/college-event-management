@@ -237,6 +237,21 @@ const user =JSON.parse(localStorage.getItem("loggedInUser")) || {};
       setPaymentScreenshot(e.target.files[0])
     }
   />
+  {paymentScreenshot && (
+  <div className="preview-box">
+
+    <img
+      src={URL.createObjectURL(paymentScreenshot)}
+      alt="Payment Preview"
+      className="preview-image"
+    />
+
+    <p>
+      {paymentScreenshot.name}
+    </p>
+
+  </div>
+)}
 
 </div>
 

@@ -485,3 +485,22 @@ border-radius:14px;
 background:#faf5ff;
 cursor:pointer;
 }
+.preview-box{
+    margin-top:18px;
+    text-align:center;
+}
+
+.preview-image{
+    width:220px;
+    max-width:100%;
+    border-radius:14px;
+    border:3px solid #7c3aed;
+    box-shadow:0 10px 25px rgba(124,58,237,.25);
+}
+
+.preview-box p{
+    margin-top:10px;
+    color:#374151;
+    font-size:14px;
+    font-weight:600;
+}
