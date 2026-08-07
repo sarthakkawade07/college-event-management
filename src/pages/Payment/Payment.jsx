@@ -24,6 +24,7 @@ function Payment() {
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
 
 const user =JSON.parse(localStorage.getItem("loggedInUser")) || {};
+console.log(user);
 
   useEffect(() => {
 
