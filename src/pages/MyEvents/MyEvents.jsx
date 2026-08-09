@@ -4,42 +4,144 @@ import { useNavigate } from "react-router-dom";
 
 function MyEvents() {
   const [myEvents, setMyEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [showModal, setShowModal] = useState(false);
-  const [selectedEventId, setSelectedEventId] = useState(null);
+  const [selectedPaymentId, setSelectedPaymentId] = useState(null);
 
   const navigate = useNavigate();
 
+  // ==============================
+  // Logged In User
+  // ==============================
+
+  const registrationData =
+    JSON.parse(localStorage.getItem("registrationData")) || {};
+
+  const loggedInUser =
+    JSON.parse(localStorage.getItem("loggedInUser")) || {};
+
+  const userEmail =
+    registrationData.email || loggedInUser.email || "";
+
+  // ==============================
+  // Fetch My Registered Events
+  // ==============================
+
   useEffect(() => {
-    const events =
-      JSON.parse(localStorage.getItem("myEvents")) || [];
+    const fetchMyEvents = async () => {
+      try {
+        const res = await fetch(
+          "https://college-event-management-backend-2mzu.onrender.com/api/payments"
+        );
 
-    setMyEvents(events);
-  }, []);
+        const data = await res.json();
 
-  const handleWithdraw = (id) => {
-    setSelectedEventId(id);
+        if (!res.ok) {
+          throw new Error(
+            data.message || "Failed to fetch payments"
+          );
+        }
+
+        const payments = data.payments || [];
+
+        // फक्त current student चे payments
+        const filteredPayments = payments.filter(
+          (payment) =>
+            payment.email &&
+            userEmail &&
+            payment.email.toLowerCase() ===
+              userEmail.toLowerCase()
+        );
+
+        setMyEvents(filteredPayments);
+      } catch (error) {
+        console.log("My Events Error:", error);
+        setMyEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMyEvents();
+  }, [userEmail]);
+
+  // ==============================
+  // Withdraw Button
+  // ==============================
+
+  const handleWithdraw = (paymentId) => {
+    setSelectedPaymentId(paymentId);
     setShowModal(true);
   };
 
-  const confirmWithdraw = () => {
-    const updatedEvents = myEvents.filter(
-      (event) => event.id !== selectedEventId
-    );
+  // ==============================
+  // Confirm Withdraw
+  // ==============================
 
-    localStorage.setItem(
-      "myEvents",
-      JSON.stringify(updatedEvents)
-    );
+  const confirmWithdraw = async () => {
+    if (!selectedPaymentId) {
+      return;
+    }
 
-    setMyEvents(updatedEvents);
-    setShowModal(false);
+    try {
+      const res = await fetch(
+        `https://college-event-management-backend-2mzu.onrender.com/api/payments/${selectedPaymentId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-    alert("Registration Withdrawn Successfully!");
+      const data = await res.json();
+
+      if (res.ok) {
+        const updatedEvents = myEvents.filter(
+          (event) => event._id !== selectedPaymentId
+        );
+
+        setMyEvents(updatedEvents);
+
+        setShowModal(false);
+        setSelectedPaymentId(null);
+
+        alert("Registration Withdrawn Successfully!");
+      } else {
+        alert(
+          data.message || "Unable to withdraw registration"
+        );
+      }
+    } catch (error) {
+      console.log("Withdraw Error:", error);
+      alert("Server Error");
+    }
   };
+
+  // ==============================
+  // Cancel Withdraw
+  // ==============================
 
   const cancelWithdraw = () => {
     setShowModal(false);
+    setSelectedPaymentId(null);
   };
+
+  // ==============================
+  // Loading
+  // ==============================
+
+  if (loading) {
+    return (
+      <div className="my-events-page">
+        <h2 className="no-events">
+          Loading Registered Events...
+        </h2>
+      </div>
+    );
+  }
+
+  // ==============================
+  // Main UI
+  // ==============================
 
   return (
     <>
@@ -47,11 +149,31 @@ function MyEvents() {
 
         <h1>🎟 My Registered Events</h1>
 
+        <p className="my-events-subtitle">
+          Events you have registered and made payment for
+        </p>
+
         {myEvents.length === 0 ? (
 
-          <h2 className="no-events">
-            No Registered Events
-          </h2>
+          <div className="no-events-box">
+
+            <div className="no-events-icon">
+              🎫
+            </div>
+
+            <h2>No Registered Events Yet</h2>
+
+            <p>
+              You haven't registered for any event yet.
+            </p>
+
+            <button
+              onClick={() => navigate("/events")}
+            >
+              Explore Events
+            </button>
+
+          </div>
 
         ) : (
 
@@ -59,13 +181,64 @@ function MyEvents() {
 
             {myEvents.map((event) => (
 
-              <div className="event-card" key={event.id}>
+              <div
+                className="event-card"
+                key={event._id}
+              >
 
-                <h2>{event.title}</h2>
+                {/* =========================
+                    Event Header
+                ========================== */}
+
+                <div className="event-card-header">
+
+                  <span className="event-badge">
+                    REGISTERED
+                  </span>
+
+                  <span
+                    className={
+                      event.status === "Approved"
+                        ? "payment-status approved"
+                        : event.status === "Rejected"
+                        ? "payment-status rejected"
+                        : "payment-status pending"
+                    }
+                  >
+                    {event.status || "Pending"}
+                  </span>
+
+                </div>
+
+                {/* =========================
+                    Event Title
+                ========================== */}
+
+                <h2>
+                  {event.eventTitle}
+                </h2>
+
+                {/* =========================
+                    Student
+                ========================== */}
 
                 <p>
-                  <strong>📅 Date :</strong> {event.date}
+                  <strong>👤 Student :</strong>{" "}
+                  {event.name || "-"}
                 </p>
+
+                {/* =========================
+                    Email
+                ========================== */}
+
+                <p>
+                  <strong>📧 Email :</strong>{" "}
+                  {event.email || "-"}
+                </p>
+
+                {/* =========================
+                    Amount
+                ========================== */}
 
                 <p>
                   <strong>💰 Amount :</strong>{" "}
@@ -74,73 +247,85 @@ function MyEvents() {
                     : `₹${event.amount}`}
                 </p>
 
-                <p>
-                  <strong>🆔 Transaction ID :</strong>
-                  <br />
-                  {event.transactionId || "-"}
-                </p>
+                {/* =========================
+                    Transaction ID
+                ========================== */}
 
                 <p>
-                  <strong>🎫 Registration :</strong>{" "}
-                  <span
-                    className={
-                      event.status === "Completed"
-                        ? "completed"
-                        : "registered"
-                    }
-                  >
-                    {event.status}
+                  <strong>
+                    🆔 Transaction ID :
+                  </strong>
+
+                  <br />
+
+                  <span className="transaction-id">
+                    {event.transactionId || "-"}
                   </span>
                 </p>
 
+                {/* =========================
+                    Payment Status
+                ========================== */}
+
                 <p>
                   <strong>💳 Payment :</strong>{" "}
+
                   <span
                     className={
-                      event.paymentStatus === "Approved"
+                      event.status === "Approved"
                         ? "approved"
-                        : event.paymentStatus === "Rejected"
+                        : event.status === "Rejected"
                         ? "rejected"
                         : "pending"
                     }
                   >
-                    {event.paymentStatus || "Pending"}
+                    {event.status || "Pending"}
                   </span>
                 </p>
-                {event.paymentStatus === "Approved" && (
-  <p className="payment-msg approved-msg">
-    ✅ Payment Verified Successfully
-  </p>
-)}
 
-{event.paymentStatus === "Pending" && (
-  <p className="payment-msg pending-msg">
-    ⏳ Waiting For Admin Verification
-  </p>
-)}
+                {/* =========================
+                    Registered Date
+                ========================== */}
 
-{event.paymentStatus === "Rejected" && (
-  <p className="payment-msg rejected-msg">
-    ❌ Payment Rejected. Contact Admin.
-  </p>
-)}
+                {event.createdAt && (
+                  <p>
+                    <strong>
+                      📅 Registered On :
+                    </strong>{" "}
+                    {new Date(
+                      event.createdAt
+                    ).toLocaleDateString()}
+                  </p>
+                )}
 
-                <button
-                  onClick={() =>
-                    navigate(`/events/${event.id}`)
-                  }
-                >
-                  View Details
-                </button>
+                {/* =========================
+                    Buttons
+                ========================== */}
 
-                <button
-                  className="withdraw-btn"
-                  onClick={() =>
-                    handleWithdraw(event.id)
-                  }
-                >
-                  Withdraw
-                </button>
+                <div className="event-buttons">
+
+                  <button
+                    onClick={() =>
+                      navigate(
+                        `/events/${event.eventId}`
+                      )
+                    }
+                  >
+                    View Details
+                  </button>
+
+                  {event.status !== "Approved" && (
+                    <button
+                      className="withdraw-btn"
+                      onClick={() =>
+                        handleWithdraw(event._id)
+                      }
+                    >
+                      Withdraw
+                    </button>
+                  )}
+
+                </div>
 
               </div>
 
@@ -152,16 +337,23 @@ function MyEvents() {
 
       </div>
 
+      {/* ==============================
+          Withdraw Modal
+      ============================== */}
+
       {showModal && (
 
         <div className="modal-overlay">
 
           <div className="modal-box">
 
-            <h2>Withdraw Registration</h2>
+            <h2>
+              Withdraw Registration
+            </h2>
 
             <p>
-              Are you sure you want to withdraw from this event?
+              Are you sure you want to withdraw
+              from this event?
             </p>
 
             <div className="modal-buttons">
@@ -170,14 +362,14 @@ function MyEvents() {
                 className="yes-btn"
                 onClick={confirmWithdraw}
               >
-                Yes
+                Yes, Withdraw
               </button>
 
               <button
                 className="no-btn"
                 onClick={cancelWithdraw}
               >
-                No
+                Cancel
               </button>
 
             </div>
