@@ -6,10 +6,19 @@ function MyEvents() {
   const [myEvents, setMyEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Withdraw Modal
   const [showModal, setShowModal] = useState(false);
   const [selectedPaymentId, setSelectedPaymentId] = useState(null);
 
+  // View Details Modal
+  const [showDetails, setShowDetails] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
   const navigate = useNavigate();
+
+  // ==========================================
+  // GET PAYMENTS
+  // ==========================================
 
   useEffect(() => {
     fetch(
@@ -28,10 +37,32 @@ function MyEvents() {
       });
   }, []);
 
+  // ==========================================
+  // VIEW DETAILS
+  // ==========================================
+
+  const handleViewDetails = (event) => {
+    setSelectedEvent(event);
+    setShowDetails(true);
+  };
+
+  const closeDetails = () => {
+    setShowDetails(false);
+    setSelectedEvent(null);
+  };
+
+  // ==========================================
+  // WITHDRAW
+  // ==========================================
+
   const handleWithdraw = (paymentId) => {
     setSelectedPaymentId(paymentId);
     setShowModal(true);
   };
+
+  // ==========================================
+  // CONFIRM WITHDRAW
+  // ==========================================
 
   const confirmWithdraw = async () => {
     if (!selectedPaymentId) return;
@@ -47,8 +78,8 @@ function MyEvents() {
       const data = await res.json();
 
       if (res.ok) {
-        setMyEvents(
-          myEvents.filter(
+        setMyEvents((prevEvents) =>
+          prevEvents.filter(
             (event) => event._id !== selectedPaymentId
           )
         );
@@ -56,183 +87,633 @@ function MyEvents() {
         setShowModal(false);
         setSelectedPaymentId(null);
 
+        // जर details modal open असेल तर बंद कर
+        setShowDetails(false);
+        setSelectedEvent(null);
+
         alert("Registration Withdrawn Successfully!");
       } else {
         alert(data.message || "Unable to withdraw");
       }
     } catch (error) {
-      console.log(error);
+      console.log("WITHDRAW ERROR:", error);
       alert("Server Error");
     }
   };
+
+  // ==========================================
+  // CANCEL WITHDRAW
+  // ==========================================
 
   const cancelWithdraw = () => {
     setShowModal(false);
     setSelectedPaymentId(null);
   };
 
+  // ==========================================
+  // LOADING
+  // ==========================================
+
   if (loading) {
     return (
-      <div className="my-events-page">
-        <h2 className="no-events">
-          Loading Registered Events...
-        </h2>
+      <div className="my-events-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading Registered Events...</p>
       </div>
     );
   }
 
+  // ==========================================
+  // MAIN UI
+  // ==========================================
+
   return (
-    <>
-      <div className="my-events-page">
+    <div className="my-events-page">
 
-        <h1>🎟 My Registered Events</h1>
+      {/* ========================================
+          PAGE HEADER
+      ======================================== */}
 
-        <p className="my-events-subtitle">
-          Your registered events and payment details
-        </p>
+      <div className="my-events-header">
 
-        {myEvents.length === 0 ? (
+        <div className="header-icon">
+          🎟️
+        </div>
 
-          <div className="no-events-box">
+        <div>
+          <h1>My Registered Events</h1>
 
-            <div className="no-events-icon">
-              🎫
-            </div>
+          <p className="my-events-subtitle">
+            Your registered events and payment details
+          </p>
+        </div>
 
-            <h2>No Registered Events Yet</h2>
+      </div>
 
-            <p>
-              You haven't registered for any event yet.
-            </p>
 
-            <button
-              onClick={() => navigate("/events")}
-            >
-              Explore Events
-            </button>
+      {/* ========================================
+          NO EVENTS
+      ======================================== */}
 
+      {myEvents.length === 0 ? (
+
+        <div className="no-events-box">
+
+          <div className="no-events-icon">
+            🎫
           </div>
 
-        ) : (
+          <h2>
+            No Registered Events Yet
+          </h2>
 
-          <div className="events-container">
+          <p>
+            You haven't registered for any event yet.
+          </p>
 
-            {myEvents.map((event) => (
+          <button
+            onClick={() => navigate("/events")}
+          >
+            Explore Events
+          </button>
+
+        </div>
+
+      ) : (
+
+        /* ======================================
+           EVENTS CONTAINER
+        ====================================== */
+
+        <div className="events-container">
+
+          {myEvents.map((event) => (
+
+            <div
+              className="event-card"
+              key={event._id}
+            >
+
+              {/* Card Header */}
+
+              <div className="event-card-header">
+
+                <span className="event-badge">
+                  REGISTERED
+                </span>
+
+                <span
+                  className={
+                    event.status === "Approved"
+                      ? "payment-status approved"
+                      : event.status === "Rejected"
+                      ? "payment-status rejected"
+                      : "payment-status pending"
+                  }
+                >
+                  {event.status || "Pending"}
+                </span>
+
+              </div>
+
+
+              {/* Event Title */}
+
+              <h2>
+                {event.eventTitle}
+              </h2>
+
+
+              {/* Student */}
+
+              <p>
+                <strong>
+                  👤 Student :
+                </strong>{" "}
+                {event.name || "-"}
+              </p>
+
+
+              {/* Email */}
+
+              <p>
+                <strong>
+                  📧 Email :
+                </strong>{" "}
+                {event.email || "-"}
+              </p>
+
+
+              {/* Amount */}
+
+              <p>
+                <strong>
+                  💰 Amount :
+                </strong>{" "}
+                {event.amount === 0
+                  ? "Free"
+                  : `₹${event.amount}`}
+              </p>
+
+
+              {/* Transaction */}
+
+              <p>
+                <strong>
+                  🆔 Transaction ID :
+                </strong>
+
+                <br />
+
+                <span className="transaction-id">
+                  {event.transactionId || "-"}
+                </span>
+              </p>
+
+
+              {/* Payment Status */}
+
+              <p>
+                <strong>
+                  💳 Payment :
+                </strong>{" "}
+
+                <span
+                  className={
+                    event.status === "Approved"
+                      ? "payment-status approved"
+                      : event.status === "Rejected"
+                      ? "payment-status rejected"
+                      : "payment-status pending"
+                  }
+                >
+                  {event.status || "Pending"}
+                </span>
+
+              </p>
+
+
+              {/* Registered Date */}
+
+              <p>
+                <strong>
+                  📅 Registered On :
+                </strong>{" "}
+
+                {event.createdAt
+                  ? new Date(
+                      event.createdAt
+                    ).toLocaleDateString("en-GB")
+                  : "-"}
+              </p>
+
+
+              {/* Buttons */}
+
+              <div className="event-buttons">
+
+                {/* VIEW DETAILS */}
+
+                <button
+                  className="view-details-btn"
+                  onClick={() =>
+                    handleViewDetails(event)
+                  }
+                >
+                  👁️ View Details
+                </button>
+
+
+                {/* WITHDRAW */}
+
+                <button
+                  className="withdraw-btn"
+                  onClick={() =>
+                    handleWithdraw(event._id)
+                  }
+                >
+                  🗑️ Withdraw
+                </button>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      )}
+
+
+      {/* =====================================================
+          VIEW DETAILS MODAL
+      ===================================================== */}
+
+      {showDetails && selectedEvent && (
+
+        <div
+          className="details-overlay"
+          onClick={closeDetails}
+        >
+
+          <div
+            className="details-modal"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+
+            {/* =====================================
+                TOP PURPLE LINE
+            ===================================== */}
+
+            <div className="details-top-line"></div>
+
+
+            {/* =====================================
+                HEADER
+            ===================================== */}
+
+            <div className="details-header">
+
+              <div className="details-icon">
+                📄
+              </div>
+
+
+              <div className="details-title">
+
+                <span>
+                  REGISTRATION
+                </span>
+
+                <h1>
+                  {selectedEvent.eventTitle}
+                </h1>
+
+                <p>
+                  📅 Event Registration Details
+                </p>
+
+              </div>
+
+
+              {/* STATUS */}
 
               <div
-                className="event-card"
-                key={event._id}
+                className={
+                  selectedEvent.status === "Approved"
+                    ? "details-status approved"
+                    : selectedEvent.status === "Rejected"
+                    ? "details-status rejected"
+                    : "details-status pending"
+                }
               >
+                {selectedEvent.status || "Pending"}
+              </div>
 
-                <div className="event-card-header">
+            </div>
 
-                  <span className="event-badge">
-                    REGISTERED
-                  </span>
 
-                  <span
-                    className={
-                      event.status === "Approved"
-                        ? "payment-status approved"
-                        : event.status === "Rejected"
-                        ? "payment-status rejected"
-                        : "payment-status pending"
-                    }
-                  >
-                    {event.status || "Pending"}
-                  </span>
+            {/* =====================================
+                STUDENT / EMAIL / AMOUNT
+            ===================================== */}
 
+            <div className="details-info-card">
+
+
+              {/* Student */}
+
+              <div className="details-info-item">
+
+                <div className="details-info-icon">
+                  👤
                 </div>
 
-                <h2>
-                  {event.eventTitle}
-                </h2>
+                <div>
 
-                <p>
-                  <strong>👤 Student :</strong>{" "}
-                  {event.name || "-"}
-                </p>
+                  <small>
+                    Student
+                  </small>
 
-                <p>
-                  <strong>📧 Email :</strong>{" "}
-                  {event.email || "-"}
-                </p>
-
-                <p>
-                  <strong>💰 Amount :</strong>{" "}
-                  {event.amount === 0
-                    ? "Free"
-                    : `₹${event.amount}`}
-                </p>
-
-                <p>
-                  <strong>🆔 Transaction ID :</strong>
-                  <br />
-                  <span className="transaction-id">
-                    {event.transactionId || "-"}
-                  </span>
-                </p>
-<p>
-  <strong>💳 Payment :</strong>{" "}
-  <span
-    className={
-      event.paymentStatus === "Approved"
-        ? "approved"
-        : event.paymentStatus === "Rejected"
-        ? "rejected"
-        : "pending"
-    }
-  >
-    {event.paymentStatus || "Pending"}
-  </span>
-</p>
-                {event.createdAt && (
-                  <p>
-                    <strong>📅 Registered On :</strong>{" "}
-                    {new Date(
-                      event.createdAt
-                    ).toLocaleDateString()}
-                  </p>
-                )}
-
-                <div className="event-buttons">
-
-                  <button
-                    onClick={() =>
-                      navigate(
-                        `/events/${event.eventId}`
-                      )
-                    }
-                  >
-                    View Details
-                  </button>
-
-                  <button
-                    className="withdraw-btn"
-                    onClick={() =>
-                      handleWithdraw(event._id)
-                    }
-                  >
-                    Withdraw
-                  </button>
+                  <strong>
+                    {selectedEvent.name || "-"}
+                  </strong>
 
                 </div>
 
               </div>
 
-            ))}
+
+              {/* Email */}
+
+              <div className="details-info-item">
+
+                <div className="details-info-icon">
+                  ✉️
+                </div>
+
+                <div>
+
+                  <small>
+                    Email
+                  </small>
+
+                  <strong>
+                    {selectedEvent.email || "-"}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              {/* Amount */}
+
+              <div className="details-info-item">
+
+                <div className="details-info-icon">
+                  ₹
+                </div>
+
+                <div>
+
+                  <small>
+                    Amount
+                  </small>
+
+                  <strong>
+                    {selectedEvent.amount === 0
+                      ? "FREE"
+                      : `₹${selectedEvent.amount}`}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            {/* =====================================
+                TRANSACTION DETAILS
+            ===================================== */}
+
+            <div className="transaction-details">
+
+              <h3>
+                🆔 Transaction Details
+              </h3>
+
+
+              <div className="transaction-box">
+
+                <small>
+                  Transaction ID
+                </small>
+
+                <strong>
+                  {selectedEvent.transactionId || "-"}
+                </strong>
+
+                <button
+                  className="copy-btn"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      selectedEvent.transactionId || ""
+                    );
+
+                    alert(
+                      "Transaction ID Copied!"
+                    );
+                  }}
+                >
+                  📋
+                </button>
+
+              </div>
+
+            </div>
+
+
+            {/* =====================================
+                PAYMENT + REGISTERED DATE
+            ===================================== */}
+
+            <div className="details-info-card bottom-info">
+
+
+              {/* Payment */}
+
+              <div className="details-info-item">
+
+                <div className="details-info-icon">
+                  💳
+                </div>
+
+                <div>
+
+                  <small>
+                    Payment Status
+                  </small>
+
+                  <strong
+                    className={
+                      selectedEvent.status === "Approved"
+                        ? "text-approved"
+                        : selectedEvent.status === "Rejected"
+                        ? "text-rejected"
+                        : "text-pending"
+                    }
+                  >
+                    {selectedEvent.status || "Pending"}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              {/* Date */}
+
+              <div className="details-info-item">
+
+                <div className="details-info-icon">
+                  📅
+                </div>
+
+                <div>
+
+                  <small>
+                    Registered On
+                  </small>
+
+                  <strong>
+                    {selectedEvent.createdAt
+                      ? new Date(
+                          selectedEvent.createdAt
+                        ).toLocaleDateString(
+                          "en-GB"
+                        )
+                      : "-"}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            {/* =====================================
+                WHAT HAPPENS NEXT
+            ===================================== */}
+
+            <div
+              className={
+                selectedEvent.status === "Rejected"
+                  ? "next-info rejected-info"
+                  : selectedEvent.status === "Approved"
+                  ? "next-info approved-info"
+                  : "next-info"
+              }
+            >
+
+              <h3>
+                ℹ️ What happens next?
+              </h3>
+
+
+              {selectedEvent.status ===
+              "Approved" ? (
+
+                <p>
+                  Your payment has been approved.
+                  Your registration is confirmed
+                  and you are now a participant
+                  of this event.
+                </p>
+
+              ) : selectedEvent.status ===
+                "Rejected" ? (
+
+                <p>
+                  Your payment was rejected by
+                  the administrator. Please check
+                  your payment details and try again.
+                </p>
+
+              ) : (
+
+                <p>
+                  Your registration is currently
+                  pending. Once the payment is
+                  confirmed, your registration will
+                  be approved.
+                </p>
+
+              )}
+
+            </div>
+
+
+            {/* =====================================
+                CLOSE BUTTON
+            ===================================== */}
+
+            <button
+              className="details-close-btn"
+              onClick={closeDetails}
+            >
+              ✕ Close Details
+            </button>
+
+
+            {/* =====================================
+                HELP
+            ===================================== */}
+
+            <div className="details-help">
+
+              <div>
+                🎧
+                <strong>
+                  Need help?
+                </strong>
+              </div>
+
+              <p>
+                Contact our support team for
+                any assistance.
+              </p>
+
+            </div>
 
           </div>
 
-        )}
+        </div>
 
-      </div>
+      )}
+
+
+      {/* =====================================================
+          WITHDRAW MODAL
+      ===================================================== */}
 
       {showModal && (
 
-        <div className="modal-overlay">
+        <div
+          className="modal-overlay"
+          onClick={cancelWithdraw}
+        >
 
-          <div className="modal-box">
+          <div
+            className="modal-box"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
 
             <h2>
               Withdraw Registration
@@ -243,6 +724,7 @@ function MyEvents() {
               from this event?
             </p>
 
+
             <div className="modal-buttons">
 
               <button
@@ -251,6 +733,7 @@ function MyEvents() {
               >
                 Yes, Withdraw
               </button>
+
 
               <button
                 className="no-btn"
@@ -267,7 +750,7 @@ function MyEvents() {
 
       )}
 
-    </>
+    </div>
   );
 }
 

@@ -1,419 +1,902 @@
-/* ================================
-   MY EVENTS PAGE
-================================ */
+/* =========================================
+   MAIN PAGE
+========================================= */
 
 .my-events-page {
   min-height: 100vh;
-  padding: 45px 60px 70px;
+  padding: 45px 5%;
   background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.16), transparent 32%),
-    radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.12), transparent 30%),
-    linear-gradient(135deg, #f8faff 0%, #eef2ff 50%, #f5f3ff 100%);
+    radial-gradient(
+      circle at top left,
+      rgba(124, 58, 237, 0.12),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #f8f9ff,
+      #eef2ff
+    );
+  box-sizing: border-box;
 }
 
 
-/* ================================
-   PAGE TITLE
-================================ */
+/* =========================================
+   HEADER
+========================================= */
 
-.my-events-page h1 {
-  text-align: center;
-  margin: 10px 0 8px;
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -1px;
-
-  color: #2446a8;
-}
-.my-events-page h1::after {
-  content: "";
-  display: block;
-  width: 85px;
-  height: 5px;
-  margin: 18px auto 35px;
-  border-radius: 20px;
-  background: linear-gradient(
-    90deg,
-    #2563eb,
-    #7c3aed
-  );
+.my-events-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 35px;
 }
 
+.header-icon {
+  width: 65px;
+  height: 65px;
+  border-radius: 18px;
 
-/* ================================
-   SUB TITLE
-================================ */
-
-.my-events-page > p {
-  max-width: 1250px;
-  margin: 0 auto 25px;
-  color: #64748b;
-  font-size: 16px;
-}
-
-
-/* ================================
-   EVENTS GRID
-================================ */
-
-.events-container {
-  max-width: 1250px;
-  margin: auto;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-
-
-/* ================================
-   EVENT CARD
-================================ */
-
-.event-card {
-  position: relative;
-
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-
-  border-radius: 22px;
-
-  padding: 26px;
-
-  box-shadow:
-    0 10px 30px rgba(30, 41, 59, 0.08),
-    0 2px 8px rgba(30, 41, 59, 0.04);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-
-  overflow: hidden;
-}
-
-
-/* Top gradient line */
-
-.event-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-
-  background: linear-gradient(
-    90deg,
-    #2563eb,
-    #4f46e5,
-    #7c3aed
-  );
-}
-
-
-.event-card:hover {
-  transform: translateY(-8px);
-
-  box-shadow:
-    0 20px 45px rgba(79, 70, 229, 0.16);
-
-  border-color: #c7d2fe;
-}
-
-
-/* ================================
-   EVENT TITLE
-================================ */
-
-.event-card h2 {
-  margin: 12px 0 22px;
-
-  color: #1e3a8a;
-
-  font-size: 25px;
-  font-weight: 800;
-
-  text-transform: capitalize;
-
-  line-height: 1.25;
-}
-
-
-/* ================================
-   CARD TEXT
-================================ */
-
-.event-card p {
-  margin: 13px 0;
-
-  color: #475569;
-
-  font-size: 14px;
-
-  line-height: 1.6;
-}
-
-
-.event-card strong {
-  color: #2563eb;
-  font-weight: 700;
-}
-
-
-/* ================================
-   TRANSACTION ID
-================================ */
-
-.event-card p:nth-of-type(4) {
-  background: #f8fafc;
-
-  border: 1px solid #e2e8f0;
-
-  border-radius: 12px;
-
-  padding: 12px;
-
-  word-break: break-all;
-}
-
-
-/* ================================
-   STATUS BADGES
-================================ */
-
-.registered,
-.completed,
-.approved,
-.pending,
-.rejected {
-  display: inline-flex;
-
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  min-width: 82px;
-
-  padding: 6px 13px;
-
-  border-radius: 50px;
-
-  font-size: 12px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.3px;
-}
-
-
-/* Registration */
-
-.registered {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.completed {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-/* Pending */
-
-.payment-status.pending {
-  background: #fff3cd;
-  color: #b45309;
-  border-color: #f59e0b;
-}
-
-/* Approved */
-
-.payment-status.approved {
-  background: #dcfce7;
-  color: #15803d;
-  border-color: #22c55e;
-}
-
-/* Rejected */
-
-.payment-status.rejected {
-  background: #fee2e2;
-  color: #dc2626;
-  border: 2px solid #ef4444;
-
-  font-weight: 800;
-}
-
-
-/* ================================
-   BUTTON AREA
-================================ */
-
-.event-card button {
-  width: 100%;
-
-  border: none;
-
-  padding: 13px 18px;
-
-  margin-top: 12px;
-
-  border-radius: 12px;
+  font-size: 32px;
 
   background: linear-gradient(
     135deg,
-    #2563eb,
+    #6d28d9,
     #4f46e5
   );
 
   color: white;
 
-  font-size: 14px;
+  box-shadow:
+    0 12px 25px
+    rgba(79, 70, 229, 0.25);
+}
+
+.my-events-header h1 {
+  margin: 0;
+
+  font-size: 38px;
+  font-weight: 800;
+
+  background: linear-gradient(
+    90deg,
+    #4f46e5,
+    #7c3aed
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+}
+
+.my-events-subtitle {
+  margin-top: 7px;
+
+  color: #64748b;
+
+  font-size: 16px;
+}
+
+
+/* =========================================
+   EVENTS CONTAINER
+========================================= */
+
+.events-container {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(290px, 1fr)
+    );
+
+  gap: 28px;
+}
+
+
+/* =========================================
+   EVENT CARD
+========================================= */
+
+.event-card {
+  position: relative;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.96
+  );
+
+  border-radius: 22px;
+
+  padding: 28px;
+
+  border: 1px solid
+    rgba(226, 232, 240, 0.8);
+
+  box-shadow:
+    0 12px 35px
+    rgba(30, 41, 59, 0.09);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  overflow: hidden;
+}
+
+.event-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 5px;
+
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #7c3aed
+  );
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 20px 45px
+    rgba(79, 70, 229, 0.16);
+}
+
+
+/* =========================================
+   CARD HEADER
+========================================= */
+
+.event-card-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 15px;
+}
+
+.event-badge {
+  font-size: 12px;
+
+  font-weight: 700;
+
+  color: #475569;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.payment-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 7px 14px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  text-transform: capitalize;
+}
+
+.payment-status.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.payment-status.approved {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.payment-status.rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+
+/* =========================================
+   CARD TITLE
+========================================= */
+
+.event-card h2 {
+  margin: 8px 0 22px;
+
+  color: #1e3a8a;
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.event-card p {
+  color: #475569;
+
+  line-height: 1.6;
+
+  margin: 12px 0;
+}
+
+.event-card strong {
+  color: #2563eb;
+}
+
+
+/* =========================================
+   TRANSACTION
+========================================= */
+
+.transaction-id {
+  display: block;
+
+  margin-top: 7px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  color: #334155;
+
+  font-size: 13px;
+
+  word-break: break-all;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.event-buttons {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  margin-top: 22px;
+}
+
+.event-buttons button {
+  width: 100%;
+
+  border: none;
+
+  padding: 13px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
 
   font-weight: 700;
 
   cursor: pointer;
 
-  transition: all 0.25s ease;
-
-  box-shadow:
-    0 7px 18px rgba(37, 99, 235, 0.22);
+  transition: 0.25s ease;
 }
 
-
-.event-card button:hover {
-  transform: translateY(-2px);
+.view-details-btn {
+  color: white;
 
   background: linear-gradient(
-    135deg,
-    #1d4ed8,
-    #6d28d9
+    90deg,
+    #2563eb,
+    #4f46e5
   );
 
   box-shadow:
-    0 10px 24px rgba(79, 70, 229, 0.3);
+    0 8px 18px
+    rgba(37, 99, 235, 0.2);
 }
 
+.view-details-btn:hover {
+  transform: translateY(-2px);
+}
 
-/* ================================
-   WITHDRAW BUTTON
-================================ */
-
-.event-card .withdraw-btn {
-  background: #ffffff;
-
+.withdraw-btn {
   color: #dc2626;
 
-  border: 1px solid #fecaca;
+  background: white;
 
-  box-shadow: none;
+  border: 1px solid #fecaca !important;
+}
+
+.withdraw-btn:hover {
+  background: #fff1f2;
 }
 
 
-.event-card .withdraw-btn:hover {
-  background: #fee2e2;
+/* =========================================
+   DETAILS OVERLAY
+========================================= */
 
-  color: #b91c1c;
-
-  border-color: #fca5a5;
-
-  box-shadow: none;
-}
-
-
-/* ================================
-   NO EVENTS
-================================ */
-
-.no-events {
-  max-width: 600px;
-
-  margin: 100px auto;
-
-  padding: 45px;
-
-  text-align: center;
-
-  background: rgba(255, 255, 255, 0.9);
-
-  border-radius: 22px;
-
-  color: #64748b;
-
-  font-size: 22px;
-
-  box-shadow:
-    0 15px 40px rgba(15, 23, 42, 0.08);
-}
-
-
-/* ================================
-   MODAL
-================================ */
-
-.modal-overlay {
+.details-overlay {
   position: fixed;
 
   inset: 0;
 
   z-index: 9999;
 
+  background:
+    rgba(15, 23, 42, 0.55);
+
+  backdrop-filter: blur(8px);
+
   display: flex;
 
   justify-content: center;
+
   align-items: center;
 
-  background: rgba(15, 23, 42, 0.6);
+  padding: 25px;
 
-  backdrop-filter: blur(7px);
+  overflow-y: auto;
 }
 
 
-.modal-box {
-  width: min(450px, 90%);
+/* =========================================
+   DETAILS MODAL
+========================================= */
 
-  padding: 32px;
+.details-modal {
+  position: relative;
+
+  width: min(
+    900px,
+    100%
+  );
+
+  max-height: 94vh;
+
+  overflow-y: auto;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #fafaff
+    );
+
+  border-radius: 26px;
+
+  box-shadow:
+    0 30px 80px
+    rgba(15, 23, 42, 0.25);
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   PURPLE TOP LINE
+========================================= */
+
+.details-top-line {
+  height: 8px;
+
+  background: linear-gradient(
+    90deg,
+    #6d28d9,
+    #9333ea,
+    #4f46e5
+  );
+}
+
+
+/* =========================================
+   DETAILS HEADER
+========================================= */
+
+.details-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 25px;
+
+  padding: 38px 42px 28px;
+}
+
+.details-icon {
+  width: 110px;
+  height: 110px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 50px;
+
+  color: white;
+
+  background: linear-gradient(
+    135deg,
+    #8b5cf6,
+    #6d28d9
+  );
+
+  box-shadow:
+    0 15px 30px
+    rgba(109, 40, 217, 0.25);
+}
+
+.details-title {
+  flex: 1;
+}
+
+.details-title > span {
+  color: #64748b;
+
+  letter-spacing: 3px;
+
+  font-weight: 700;
+
+  font-size: 14px;
+}
+
+.details-title h1 {
+  margin: 5px 0;
+
+  color: #172554;
+
+  font-size: 38px;
+
+  font-weight: 800;
+
+  text-transform: capitalize;
+}
+
+.details-title p {
+  margin: 8px 0 0;
+
+  color: #64748b;
+
+  font-size: 17px;
+}
+
+
+/* =========================================
+   DETAILS STATUS
+========================================= */
+
+.details-status {
+  padding: 12px 22px;
+
+  border-radius: 999px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.details-status.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.details-status.approved {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.details-status.rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+
+/* =========================================
+   INFO CARD
+========================================= */
+
+.details-info-card {
+  margin: 15px 40px;
+
+  padding: 28px;
+
+  border-radius: 17px;
+
+  border: 1px solid #e2e8f0;
 
   background: white;
 
-  border-radius: 22px;
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 25px;
+}
+
+.details-info-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 0;
+}
+
+.details-info-item:not(:last-child) {
+  border-right: 1px solid #e2e8f0;
+
+  padding-right: 20px;
+}
+
+.details-info-icon {
+  width: 55px;
+  height: 55px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 25px;
+
+  background: #f5f3ff;
+
+  color: #6d28d9;
+}
+
+.details-info-item small {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  margin-bottom: 5px;
+}
+
+.details-info-item strong {
+  display: block;
+
+  color: #172554;
+
+  font-size: 17px;
+
+  word-break: break-word;
+}
+
+
+/* =========================================
+   TRANSACTION DETAILS
+========================================= */
+
+.transaction-details {
+  margin: 28px 40px;
+
+  padding: 28px;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #faf5ff,
+      #f5f3ff
+    );
+
+  border: 1px solid #ede9fe;
+}
+
+.transaction-details h3 {
+  margin: 0 0 20px;
+
+  color: #6d28d9;
+
+  font-size: 20px;
+}
+
+.transaction-box {
+  position: relative;
+
+  padding: 20px;
+
+  border: 1px solid #c4b5fd;
+
+  border-radius: 14px;
+
+  background: white;
+}
+
+.transaction-box small {
+  display: block;
+
+  color: #64748b;
+
+  margin-bottom: 8px;
+}
+
+.transaction-box strong {
+  display: block;
+
+  padding-right: 45px;
+
+  color: #172554;
+
+  font-size: 16px;
+
+  word-break: break-all;
+}
+
+.copy-btn {
+  position: absolute;
+
+  right: 18px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  color: #6d28d9;
+}
+
+
+/* =========================================
+   BOTTOM INFO
+========================================= */
+
+.bottom-info {
+  grid-template-columns:
+    repeat(2, 1fr);
+}
+
+.bottom-info
+.details-info-item:not(:last-child) {
+  border-right: 1px solid #e2e8f0;
+}
+
+.text-pending {
+  color: #b45309 !important;
+}
+
+.text-approved {
+  color: #15803d !important;
+}
+
+.text-rejected {
+  color: #dc2626 !important;
+}
+
+
+/* =========================================
+   NEXT INFO
+========================================= */
+
+.next-info {
+  margin: 28px 40px;
+
+  padding: 25px;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #faf5ff,
+      #f5f3ff
+    );
+
+  border: 1px solid #ede9fe;
+}
+
+.next-info h3 {
+  margin: 0 0 12px;
+
+  color: #5b21b6;
+
+  font-size: 20px;
+}
+
+.next-info p {
+  margin: 0;
+
+  color: #475569;
+
+  line-height: 1.7;
+}
+
+.approved-info {
+  background: #f0fdf4;
+
+  border-color: #bbf7d0;
+}
+
+.approved-info h3 {
+  color: #15803d;
+}
+
+.rejected-info {
+  background: #fff1f2;
+
+  border-color: #fecaca;
+}
+
+.rejected-info h3 {
+  color: #dc2626;
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.details-close-btn {
+  display: block;
+
+  width: calc(100% - 80px);
+
+  margin: 28px 40px;
+
+  padding: 16px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  color: white;
+
+  background: linear-gradient(
+    90deg,
+    #8b5cf6,
+    #4f46e5
+  );
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px
+    rgba(79, 70, 229, 0.2);
+}
+
+.details-close-btn:hover {
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   HELP
+========================================= */
+
+.details-help {
+  text-align: center;
+
+  padding: 25px;
+
+  border-top: 1px solid #e2e8f0;
+
+  color: #6d28d9;
+}
+
+.details-help strong {
+  margin-left: 8px;
+
+  font-size: 18px;
+}
+
+.details-help p {
+  margin: 8px 0 0;
+
+  color: #64748b;
+}
+
+
+/* =========================================
+   WITHDRAW MODAL
+========================================= */
+
+.modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 10000;
+
+  background:
+    rgba(15, 23, 42, 0.6);
+
+  backdrop-filter: blur(5px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.modal-box {
+  width: min(
+    420px,
+    90%
+  );
+
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
 
   text-align: center;
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.2);
-
-  animation: modalOpen 0.25s ease;
+    0 25px 70px
+    rgba(15, 23, 42, 0.25);
 }
-
 
 .modal-box h2 {
-  margin-bottom: 12px;
+  color: #172554;
 
-  color: #1e293b;
+  margin-top: 0;
 }
-
 
 .modal-box p {
   color: #64748b;
 
   line-height: 1.6;
-
-  margin-bottom: 25px;
 }
-
 
 .modal-buttons {
   display: flex;
 
   gap: 12px;
-}
 
+  margin-top: 25px;
+}
 
 .modal-buttons button {
   flex: 1;
-
-  border: none;
 
   padding: 12px;
 
@@ -424,96 +907,236 @@
   cursor: pointer;
 }
 
-
 .yes-btn {
+  border: none;
+
   background: #dc2626;
 
   color: white;
 }
 
-
-.yes-btn:hover {
-  background: #b91c1c;
-}
-
-
 .no-btn {
-  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+
+  background: white;
 
   color: #334155;
 }
 
 
-.no-btn:hover {
-  background: #cbd5e1;
+/* =========================================
+   NO EVENTS
+========================================= */
+
+.no-events-box {
+  max-width: 550px;
+
+  margin: 80px auto;
+
+  padding: 50px;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 25px;
+
+  box-shadow:
+    0 20px 50px
+    rgba(30, 41, 59, 0.1);
+}
+
+.no-events-icon {
+  font-size: 55px;
+}
+
+.no-events-box h2 {
+  color: #172554;
+}
+
+.no-events-box p {
+  color: #64748b;
+}
+
+.no-events-box button {
+  margin-top: 15px;
+
+  padding: 13px 25px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  color: white;
+
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #4f46e5
+  );
+
+  font-weight: 700;
+
+  cursor: pointer;
 }
 
 
-/* ================================
-   ANIMATION
-================================ */
+/* =========================================
+   LOADING
+========================================= */
 
-@keyframes modalOpen {
-  from {
-    opacity: 0;
-    transform: scale(0.92) translateY(10px);
-  }
+.my-events-loading {
+  min-height: 70vh;
 
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #475569;
+}
+
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+
+  border: 4px solid #e2e8f0;
+
+  border-top-color: #6d28d9;
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
   to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: rotate(360deg);
   }
 }
 
 
-/* ================================
-   TABLET
-================================ */
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-@media (max-width: 1000px) {
-
-  .my-events-page {
-    padding: 35px 25px 60px;
-  }
-
-  .my-events-page h1 {
-    font-size: 40px;
-  }
-
-  .events-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-
-/* ================================
-   MOBILE
-================================ */
-
-@media (max-width: 650px) {
+@media (max-width: 768px) {
 
   .my-events-page {
-    padding: 25px 15px 50px;
+    padding: 30px 18px;
   }
 
-  .my-events-page h1 {
-    font-size: 31px;
+  .my-events-header h1 {
+    font-size: 28px;
   }
 
-  .events-container {
+  .details-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 28px;
+  }
+
+  .details-icon {
+    width: 80px;
+    height: 80px;
+
+    font-size: 35px;
+  }
+
+  .details-title h1 {
+    font-size: 28px;
+  }
+
+  .details-status {
+    align-self: flex-start;
+  }
+
+  .details-info-card {
     grid-template-columns: 1fr;
-    gap: 20px;
+
+    margin: 15px 20px;
+  }
+
+  .details-info-item:not(:last-child) {
+    border-right: none;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    padding-right: 0;
+
+    padding-bottom: 18px;
+  }
+
+  .bottom-info {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-details,
+  .next-info {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .details-close-btn {
+    width: calc(100% - 40px);
+
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .my-events-header {
+    align-items: flex-start;
+  }
+
+  .header-icon {
+    width: 50px;
+    height: 50px;
+
+    font-size: 24px;
+  }
+
+  .my-events-header h1 {
+    font-size: 24px;
   }
 
   .event-card {
     padding: 22px;
   }
 
-  .event-card h2 {
-    font-size: 22px;
+  .details-overlay {
+    padding: 10px;
   }
 
-  .modal-box {
-    padding: 25px;
+  .details-modal {
+    border-radius: 18px;
   }
+
+  .details-header {
+    padding: 25px 20px;
+  }
+
+  .details-title h1 {
+    font-size: 24px;
+  }
+
+  .details-info-card {
+    padding: 20px;
+  }
+
+  .transaction-details,
+  .next-info {
+    padding: 20px;
+  }
+
 }
