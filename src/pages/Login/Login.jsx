@@ -8,7 +8,6 @@ import {
   FaEyeSlash,
   FaSignInAlt,
   FaGoogle,
-  FaArrowRight,
 } from "react-icons/fa";
 
 import "./Login.css";
@@ -16,7 +15,6 @@ import "./Login.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,8 +36,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Email validation
-    if (email.trim() === "") {
+    if (!email.trim()) {
       alert("Please enter your email.");
       return;
     }
@@ -49,8 +46,7 @@ function Login() {
       return;
     }
 
-    // Password validation
-    if (password.trim() === "") {
+    if (!password.trim()) {
       alert("Please enter your password.");
       return;
     }
@@ -60,13 +56,11 @@ function Login() {
     // ==============================
 
     if (
-      email === "admin@gmail.com" &&
+      email.trim().toLowerCase() === "admin@gmail.com" &&
       password === "admin123"
     ) {
       alert("Welcome Admin!");
-
       navigate("/admin-dashboard");
-
       return;
     }
 
@@ -75,32 +69,22 @@ function Login() {
     // ==============================
 
     const savedUser =
-      JSON.parse(localStorage.getItem("user"));
+      JSON.parse(localStorage.getItem("user")) || null;
 
     if (!savedUser) {
       alert("No account found! Please Register First.");
-
       navigate("/register");
-
       return;
     }
 
-    // ==============================
-    // CHECK LOGIN DETAILS
-    // ==============================
-
     if (
-      email !== savedUser.email ||
+      email.trim().toLowerCase() !==
+        savedUser.email.trim().toLowerCase() ||
       password !== savedUser.password
     ) {
       alert("Invalid Email or Password");
-
       return;
     }
-
-    // ==============================
-    // LOGIN SUCCESS
-    // ==============================
 
     setLoading(true);
 
@@ -112,32 +96,18 @@ function Login() {
         JSON.stringify(savedUser)
       );
 
-      // Remember Me
-      if (rememberMe) {
-        localStorage.setItem(
-          "rememberMe",
-          "true"
-        );
-      } else {
-        localStorage.removeItem("rememberMe");
-      }
-
       alert("Login Successful!");
 
       navigate("/dashboard");
-    }, 1000);
+    }, 800);
   };
-
-  // ==============================
-  // UI
-  // ==============================
 
   return (
     <div className="login-page">
 
-      {/* =================================
+      {/* =====================================
           LEFT SIDE
-      ================================= */}
+      ===================================== */}
 
       <div className="login-left">
 
@@ -151,55 +121,43 @@ function Login() {
             Welcome Back 👋
           </h1>
 
-          <h2>
-            Discover. Participate. Achieve.
-          </h2>
-
-          <p>
-            Login to explore amazing college events,
+          <p className="login-description">
+            Login to discover amazing college events,
             workshops, hackathons and competitions.
-            Manage your registrations and track your
-            participation in one place.
           </p>
 
-          {/* ============================
-              WELCOME BOX
-          ============================ */}
+          {/* WHY JOIN CARD */}
 
-          <div className="welcome-box">
+          <div className="login-welcome-box">
 
             <h3>
               Why Join Campus Event Hub?
             </h3>
 
-            <ul>
+            <div className="login-feature">
+              <span>🎯</span>
+              <p>Register for Events</p>
+            </div>
 
-              <li>
-                <span>🎯</span>
-                Register for exciting events
-              </li>
+            <div className="login-feature">
+              <span>🏆</span>
+              <p>Win Digital Certificates</p>
+            </div>
 
-              <li>
-                <span>🏆</span>
-                Earn digital certificates
-              </li>
+            <div className="login-feature">
+              <span>📅</span>
+              <p>Track Your Registrations</p>
+            </div>
 
-              <li>
-                <span>📅</span>
-                Track your registrations
-              </li>
+            <div className="login-feature">
+              <span>👨‍💻</span>
+              <p>Participate in Hackathons</p>
+            </div>
 
-              <li>
-                <span>👨‍💻</span>
-                Participate in hackathons
-              </li>
-
-              <li>
-                <span>🎁</span>
-                Win exciting prizes
-              </li>
-
-            </ul>
+            <div className="login-feature">
+              <span>🎁</span>
+              <p>Win Exciting Prizes</p>
+            </div>
 
           </div>
 
@@ -208,9 +166,9 @@ function Login() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================
           RIGHT SIDE
-      ================================= */}
+      ===================================== */}
 
       <div className="login-right">
 
@@ -219,40 +177,36 @@ function Login() {
           onSubmit={handleSubmit}
         >
 
-          {/* ============================
-              HEADER
-          ============================ */}
+          <div className="login-card-header">
 
-          <div className="login-header">
-
-            <div className="login-icon">
-              <FaSignInAlt />
-            </div>
+            <span className="login-card-icon">
+              🔐
+            </span>
 
             <h2>
               Sign In
             </h2>
 
             <p>
-              Login to your Campus Event Hub account
+              Login to continue to your account
             </p>
 
           </div>
 
 
-          {/* ============================
+          {/* =====================================
               EMAIL
-          ============================ */}
+          ===================================== */}
 
-          <div className="input-box">
+          <div className="login-input-box">
 
             <label>
               Email Address
             </label>
 
-            <div className="input-field">
+            <div className="login-input-field">
 
-              <FaEnvelope className="input-icon" />
+              <FaEnvelope className="login-input-icon" />
 
               <input
                 type="email"
@@ -269,19 +223,19 @@ function Login() {
           </div>
 
 
-          {/* ============================
+          {/* =====================================
               PASSWORD
-          ============================ */}
+          ===================================== */}
 
-          <div className="input-box">
+          <div className="login-input-box">
 
             <label>
               Password
             </label>
 
-            <div className="input-field">
+            <div className="login-input-field">
 
-              <FaLock className="input-icon" />
+              <FaLock className="login-input-icon" />
 
               <input
                 type={
@@ -299,16 +253,9 @@ function Login() {
 
               <button
                 type="button"
-                className="eye-icon"
+                className="login-eye-button"
                 onClick={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
-                aria-label={
-                  showPassword
-                    ? "Hide password"
-                    : "Show password"
+                  setShowPassword(!showPassword)
                 }
               >
                 {showPassword ? (
@@ -323,21 +270,19 @@ function Login() {
           </div>
 
 
-          {/* ============================
+          {/* =====================================
               OPTIONS
-          ============================ */}
+          ===================================== */}
 
           <div className="login-options">
 
-            <label className="remember">
+            <label className="login-remember">
 
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) =>
-                  setRememberMe(
-                    e.target.checked
-                  )
+                  setRememberMe(e.target.checked)
                 }
               />
 
@@ -346,7 +291,6 @@ function Login() {
               </span>
 
             </label>
-
 
             <button
               type="button"
@@ -359,9 +303,9 @@ function Login() {
           </div>
 
 
-          {/* ============================
+          {/* =====================================
               LOGIN BUTTON
-          ============================ */}
+          ===================================== */}
 
           <button
             type="submit"
@@ -370,37 +314,35 @@ function Login() {
           >
 
             {loading ? (
-              <>
-                <span className="loader"></span>
-                Logging In...
-              </>
+              "Logging In..."
             ) : (
               <>
                 <FaSignInAlt />
                 Login
-                <FaArrowRight className="login-arrow" />
               </>
             )}
 
           </button>
 
 
-          {/* ============================
+          {/* =====================================
               DIVIDER
-          ============================ */}
+          ===================================== */}
 
-          <div className="divider">
+          <div className="login-divider">
 
-            <span>
-              OR
-            </span>
+            <span></span>
+
+            <p>OR</p>
+
+            <span></span>
 
           </div>
 
 
-          {/* ============================
-              GOOGLE BUTTON
-          ============================ */}
+          {/* =====================================
+              GOOGLE
+          ===================================== */}
 
           <button
             type="button"
@@ -414,29 +356,23 @@ function Login() {
           </button>
 
 
-          {/* ============================
+          {/* =====================================
               REGISTER
-          ============================ */}
+          ===================================== */}
 
           <p className="register-text">
 
             Don't have an account?
 
             <Link to="/register">
-              Register Now
+              Register
             </Link>
 
           </p>
 
 
-          {/* ============================
-              COPYRIGHT
-          ============================ */}
-
           <p className="copyright">
             © 2026 Campus Event Hub
-            <br />
-            All rights reserved.
           </p>
 
         </form>
