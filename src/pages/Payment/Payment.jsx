@@ -1,6 +1,7 @@
 import "./Payment.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 import {
   FaCalendarAlt,
@@ -16,6 +17,8 @@ import {
 function Payment() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const UPI_ID = "9699577041-2@ybl";
+  const UPI_NAME = "College Event";
 
   const [event, setEvent] = useState(null);
   const [transactionId, setTransactionId] = useState("");
@@ -38,6 +41,13 @@ function Payment() {
         console.log("Event Fetch Error:", err);
       });
   }, [id]);
+
+  const upiUrl =
+  event && Number(event.fee) > 0
+    ? `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(
+        UPI_NAME
+      )}&am=${Number(event.fee).toFixed(2)}&cu=INR`
+    : "";
 
   // Loading
   if (!event) {
@@ -293,11 +303,18 @@ function Payment() {
 
             <FaQrcode className="qr-icon" />
 
-            <img
-              src="https://i.ibb.co/wrNNpyxc/scanner.png"
-              alt="Payment QR Code"
-              className="qr-image"
-            />
+            {Number(event.fee) > 0 ? (
+  <QRCodeSVG
+    value={upiUrl}
+    size={220}
+    level="M"
+    includeMargin={true}
+  />
+) : (
+  <div className="free-payment">
+    FREE ENTRY
+  </div>
+)}
 
             <h3>
               Amount :
