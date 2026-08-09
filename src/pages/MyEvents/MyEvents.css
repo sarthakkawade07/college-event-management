@@ -1,516 +1,520 @@
-/* ===========================
-   PREMIUM MY EVENTS PAGE
-=========================== */
+/* ================================
+   MY EVENTS PAGE
+================================ */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+.my-events-page {
+  min-height: 100vh;
+  padding: 45px 60px 70px;
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.16), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.12), transparent 30%),
+    linear-gradient(135deg, #f8faff 0%, #eef2ff 50%, #f5f3ff 100%);
 }
 
-body{
-    background:#f5f7fb;
+
+/* ================================
+   PAGE TITLE
+================================ */
+
+.my-events-page h1 {
+  text-align: center;
+  margin: 10px 0 8px;
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1px;
+
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #4f46e5,
+    #7c3aed
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Page */
-
-.my-events-page{
-    min-height:100vh;
-    width:92%;
-    margin:auto;
-    padding:50px 0 80px;
+.my-events-page h1::after {
+  content: "";
+  display: block;
+  width: 85px;
+  height: 5px;
+  margin: 18px auto 35px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #7c3aed
+  );
 }
 
-/* Heading */
 
-.my-events-page h1{
-    text-align:center;
-    font-size:54px;
-    font-weight:800;
-    color:#1e3a8a;
-    margin-bottom:12px;
+/* ================================
+   SUB TITLE
+================================ */
+
+.my-events-page > p {
+  max-width: 1250px;
+  margin: 0 auto 25px;
+  color: #64748b;
+  font-size: 16px;
 }
 
-.my-events-page h1::after{
-    content:"";
-    display:block;
-    width:90px;
-    height:5px;
-    background:#2563eb;
-    border-radius:30px;
-    margin:18px auto;
+
+/* ================================
+   EVENTS GRID
+================================ */
+
+.events-container {
+  max-width: 1250px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
 }
 
-/* Grid */
 
-.events-container{
+/* ================================
+   EVENT CARD
+================================ */
 
-    display:grid;
+.event-card {
+  position: relative;
 
-    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(226, 232, 240, 0.9);
 
-    gap:35px;
+  border-radius: 22px;
 
+  padding: 26px;
+
+  box-shadow:
+    0 10px 30px rgba(30, 41, 59, 0.08),
+    0 2px 8px rgba(30, 41, 59, 0.04);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+
+  overflow: hidden;
 }
 
-/* Card */
 
-.event-card{
+/* Top gradient line */
 
-    background:white;
+.event-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
 
-    border-radius:22px;
-
-    overflow:hidden;
-
-    padding:28px;
-
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
-
-    transition:.35s;
-
-    position:relative;
-
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #4f46e5,
+    #7c3aed
+  );
 }
 
-.event-card:hover{
 
-    transform:translateY(-10px);
+.event-card:hover {
+  transform: translateY(-8px);
 
-    box-shadow:0 18px 40px rgba(37,99,235,.18);
+  box-shadow:
+    0 20px 45px rgba(79, 70, 229, 0.16);
 
+  border-color: #c7d2fe;
 }
 
-/* Top Blue Line */
 
-.event-card::before{
+/* ================================
+   EVENT TITLE
+================================ */
 
-    content:"";
+.event-card h2 {
+  margin: 12px 0 22px;
 
-    position:absolute;
+  color: #1e3a8a;
 
-    top:0;
+  font-size: 25px;
+  font-weight: 800;
 
-    left:0;
+  text-transform: capitalize;
 
-    width:100%;
-
-    height:6px;
-
-    background:linear-gradient(90deg,#2563eb,#4f46e5);
-
+  line-height: 1.25;
 }
 
-.event-card h2{
 
-    color:#1e3a8a;
+/* ================================
+   CARD TEXT
+================================ */
 
-    margin-bottom:18px;
+.event-card p {
+  margin: 13px 0;
 
-    font-size:28px;
+  color: #475569;
 
+  font-size: 14px;
+
+  line-height: 1.6;
 }
 
-.event-card p{
 
-    color:#4b5563;
-
-    margin:12px 0;
-
-    font-size:16px;
-
-    line-height:1.7;
-
+.event-card strong {
+  color: #2563eb;
+  font-weight: 700;
 }
 
-.event-card strong{
 
-    color:#2563eb;
+/* ================================
+   TRANSACTION ID
+================================ */
 
+.event-card p:nth-of-type(4) {
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 12px;
+
+  word-break: break-all;
 }
 
-/* Status */
 
-.registered{
+/* ================================
+   STATUS BADGES
+================================ */
 
-    display:inline-block;
+.registered,
+.completed,
+.approved,
+.pending,
+.rejected {
+  display: inline-flex;
 
-    margin-top:12px;
+  align-items: center;
+  justify-content: center;
 
-    padding:8px 16px;
+  min-width: 82px;
 
-    border-radius:30px;
+  padding: 6px 13px;
 
-    background:#dcfce7;
+  border-radius: 50px;
 
-    color:#15803d;
+  font-size: 12px;
 
-    font-weight:700;
+  font-weight: 800;
 
+  letter-spacing: 0.3px;
 }
 
-.completed{
 
-    display:inline-block;
+/* Registration */
 
-    margin-top:12px;
-
-    padding:8px 16px;
-
-    border-radius:30px;
-
-    background:#dbeafe;
-
-    color:#1d4ed8;
-
-    font-weight:700;
-
+.registered {
+  background: #dcfce7;
+  color: #15803d;
 }
 
-/* Register Button */
-
-.event-card button{
-
-    width:100%;
-
-    margin-top:22px;
-
-    padding:14px;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:linear-gradient(135deg,#2563eb,#4f46e5);
-
-    color:white;
-
-    font-size:17px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.35s;
-
+.completed {
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
-.event-card button:hover{
 
-    transform:translateY(-3px);
+/* Payment */
 
-    box-shadow:0 12px 25px rgba(37,99,235,.35);
-
+.approved {
+  background: #dcfce7;
+  color: #15803d;
 }
 
-/* Withdraw */
-
-.withdraw-btn{
-
-    width:100%;
-
-    margin-top:12px;
-
-    padding:14px;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-
-    color:white;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.35s;
-
+.pending {
+  background: #fef3c7;
+  color: #b45309;
 }
 
-.withdraw-btn:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:0 12px 25px rgba(239,68,68,.30);
-
+.rejected {
+  background: #fee2e2;
+  color: #dc2626;
 }
 
-/* Modal */
 
-.modal-overlay{
+/* ================================
+   BUTTON AREA
+================================ */
 
-    position:fixed;
+.event-card button {
+  width: 100%;
 
-    inset:0;
+  border: none;
 
-    background:rgba(15,23,42,.65);
+  padding: 13px 18px;
 
-    display:flex;
+  margin-top: 12px;
 
-    justify-content:center;
+  border-radius: 12px;
 
-    align-items:center;
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #4f46e5
+  );
 
-    z-index:999;
+  color: white;
 
-    backdrop-filter:blur(6px);
+  font-size: 14px;
 
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  box-shadow:
+    0 7px 18px rgba(37, 99, 235, 0.22);
 }
 
-.modal-box{
 
-    width:420px;
+.event-card button:hover {
+  transform: translateY(-2px);
 
-    max-width:95%;
+  background: linear-gradient(
+    135deg,
+    #1d4ed8,
+    #6d28d9
+  );
 
-    background:white;
-
-    border-radius:22px;
-
-    padding:35px;
-
-    text-align:center;
-
-    box-shadow:0 20px 50px rgba(0,0,0,.25);
-
-    animation:popup .35s ease;
-
+  box-shadow:
+    0 10px 24px rgba(79, 70, 229, 0.3);
 }
 
-.modal-box h2{
 
-    color:#1e3a8a;
+/* ================================
+   WITHDRAW BUTTON
+================================ */
 
-    margin-bottom:15px;
+.event-card .withdraw-btn {
+  background: #ffffff;
 
+  color: #dc2626;
+
+  border: 1px solid #fecaca;
+
+  box-shadow: none;
 }
 
-.modal-box p{
 
-    color:#555;
+.event-card .withdraw-btn:hover {
+  background: #fee2e2;
 
-    line-height:1.7;
+  color: #b91c1c;
 
+  border-color: #fca5a5;
+
+  box-shadow: none;
 }
 
-.modal-buttons{
 
-    display:flex;
+/* ================================
+   NO EVENTS
+================================ */
 
-    gap:15px;
+.no-events {
+  max-width: 600px;
 
-    margin-top:28px;
+  margin: 100px auto;
 
+  padding: 45px;
+
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border-radius: 22px;
+
+  color: #64748b;
+
+  font-size: 22px;
+
+  box-shadow:
+    0 15px 40px rgba(15, 23, 42, 0.08);
 }
 
-.yes-btn,
-.no-btn{
 
-    flex:1;
+/* ================================
+   MODAL
+================================ */
 
-    border:none;
+.modal-overlay {
+  position: fixed;
 
-    padding:14px;
+  inset: 0;
 
-    border-radius:12px;
+  z-index: 9999;
 
-    font-size:16px;
+  display: flex;
 
-    font-weight:700;
+  justify-content: center;
+  align-items: center;
 
-    cursor:pointer;
+  background: rgba(15, 23, 42, 0.6);
 
-    transition:.35s;
-
+  backdrop-filter: blur(7px);
 }
 
-.yes-btn{
 
-    background:#ef4444;
+.modal-box {
+  width: min(450px, 90%);
 
-    color:white;
+  padding: 32px;
 
+  background: white;
+
+  border-radius: 22px;
+
+  text-align: center;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.2);
+
+  animation: modalOpen 0.25s ease;
 }
 
-.yes-btn:hover{
 
-    background:#dc2626;
+.modal-box h2 {
+  margin-bottom: 12px;
 
+  color: #1e293b;
 }
 
-.no-btn{
 
-    background:#22c55e;
+.modal-box p {
+  color: #64748b;
 
-    color:white;
+  line-height: 1.6;
 
+  margin-bottom: 25px;
 }
 
-.no-btn:hover{
 
-    background:#16a34a;
+.modal-buttons {
+  display: flex;
 
+  gap: 12px;
 }
 
-/* Empty */
 
-.no-events{
+.modal-buttons button {
+  flex: 1;
 
-    text-align:center;
+  border: none;
 
-    padding:80px 20px;
+  padding: 12px;
 
-    color:#6b7280;
+  border-radius: 10px;
 
-    font-size:28px;
+  font-weight: 700;
 
-    font-weight:600;
-
+  cursor: pointer;
 }
 
-/* Background */
 
-.my-events-page::before{
+.yes-btn {
+  background: #dc2626;
 
-    content:"";
-
-    position:fixed;
-
-    width:320px;
-
-    height:320px;
-
-    background:#2563eb20;
-
-    border-radius:50%;
-
-    top:-100px;
-
-    right:-100px;
-
-    filter:blur(90px);
-
-    z-index:-1;
-
+  color: white;
 }
 
-.my-events-page::after{
 
-    content:"";
-
-    position:fixed;
-
-    width:280px;
-
-    height:280px;
-
-    background:#7c3aed20;
-
-    border-radius:50%;
-
-    bottom:-100px;
-
-    left:-100px;
-
-    filter:blur(90px);
-
-    z-index:-1;
-
+.yes-btn:hover {
+  background: #b91c1c;
 }
 
-/* Animation */
 
-@keyframes popup{
+.no-btn {
+  background: #e2e8f0;
 
-from{
-
-opacity:0;
-
-transform:scale(.8);
-
+  color: #334155;
 }
 
-to{
 
-opacity:1;
-
-transform:scale(1);
-
+.no-btn:hover {
+  background: #cbd5e1;
 }
 
+
+/* ================================
+   ANIMATION
+================================ */
+
+@keyframes modalOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-/* Responsive */
 
-@media(max-width:768px){
+/* ================================
+   TABLET
+================================ */
 
-.my-events-page{
+@media (max-width: 1000px) {
 
-width:95%;
+  .my-events-page {
+    padding: 35px 25px 60px;
+  }
 
+  .my-events-page h1 {
+    font-size: 40px;
+  }
+
+  .events-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.my-events-page h1{
 
-font-size:38px;
+/* ================================
+   MOBILE
+================================ */
 
-}
+@media (max-width: 650px) {
 
-.events-container{
+  .my-events-page {
+    padding: 25px 15px 50px;
+  }
 
-grid-template-columns:1fr;
+  .my-events-page h1 {
+    font-size: 31px;
+  }
 
-}
+  .events-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 
-.modal-buttons{
+  .event-card {
+    padding: 22px;
+  }
 
-flex-direction:column;
+  .event-card h2 {
+    font-size: 22px;
+  }
 
-}
-
-}
-.approved{
-    color:#16a34a;
-    font-weight:bold;
-    background:#dcfce7;
-    padding:5px 12px;
-    border-radius:20px;
-}
-
-.rejected{
-    color:#dc2626;
-    font-weight:bold;
-    background:#fee2e2;
-    padding:5px 12px;
-    border-radius:20px;
-}
-
-.pending{
-    color:#92400e;
-    font-weight:bold;
-    background:#fef3c7;
-    padding:5px 12px;
-    border-radius:20px;
-}
-.payment-msg{
-    margin-top:10px;
-    font-weight:bold;
-    text-align:center;
-}
-
-.approved-msg{
-    color:#16a34a;
-}
-
-.pending-msg{
-    color:#f59e0b;
-}
-
-.rejected-msg{
-    color:#dc2626;
+  .modal-box {
+    padding: 25px;
+  }
 }
