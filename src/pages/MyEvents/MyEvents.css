@@ -218,22 +218,30 @@
   color: #1d4ed8;
 }
 
+/* Pending */
 
-/* Payment */
+.payment-status.pending {
+  background: #fff3cd;
+  color: #b45309;
+  border-color: #f59e0b;
+}
 
-.approved {
+/* Approved */
+
+.payment-status.approved {
   background: #dcfce7;
   color: #15803d;
+  border-color: #22c55e;
 }
 
-.pending {
-  background: #fef3c7;
-  color: #b45309;
-}
+/* Rejected */
 
-.rejected {
+.payment-status.rejected {
   background: #fee2e2;
   color: #dc2626;
+  border: 2px solid #ef4444;
+
+  font-weight: 800;
 }
 
 
