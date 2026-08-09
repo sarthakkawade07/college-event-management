@@ -4,102 +4,274 @@ import "./PaymentVerification.css";
 function PaymentVerification() {
   const [payments, setPayments] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const API_URL =
+    "https://college-event-management-backend-2mzu.onrender.com/api/payments";
+
+  // ==============================
+  // Fetch Payments From MongoDB
+  // ==============================
 
   useEffect(() => {
-    const data =
-      JSON.parse(localStorage.getItem("paymentVerification")) || [];
-
-    setPayments(data);
+    fetchPayments();
   }, []);
 
-  const updateStatus = (id, status) => {
-    const updatedPayments = payments.map((item) =>
-      item.id === id
-        ? { ...item, status }
-        : item
-    );
+  const fetchPayments = async () => {
+    try {
+      const res = await fetch(API_URL);
 
-    setPayments(updatedPayments);
+      const data = await res.json();
 
-    localStorage.setItem(
-      "paymentVerification",
-      JSON.stringify(updatedPayments)
-    );
+      console.log("Payment Verification Data:", data);
 
-    // Update My Events
-    const myEvents =
-      JSON.parse(localStorage.getItem("myEvents")) || [];
-
-    const payment = updatedPayments.find(
-      (item) => item.id === id
-    );
-
-    const updatedMyEvents = myEvents.map((event) =>
-      event.transactionId === payment.transactionId
-        ? {
-            ...event,
-            paymentStatus: status,
-          }
-        : event
-    );
-
-    localStorage.setItem(
-      "myEvents",
-      JSON.stringify(updatedMyEvents)
-    );
-
-    alert(`Payment ${status} Successfully`);
+      if (res.ok) {
+        setPayments(data.payments || []);
+      } else {
+        alert(data.message || "Unable to fetch payments");
+      }
+    } catch (error) {
+      console.log("Fetch Payments Error:", error);
+      alert("Server Error");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filtered = payments.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // ==============================
+  // Update Payment Status
+  // ==============================
+
+  const updateStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: status,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setPayments((previousPayments) =>
+          previousPayments.map((payment) =>
+            payment._id === id
+              ? {
+                  ...payment,
+                  status: status,
+                }
+              : payment
+          )
+        );
+
+        alert(`Payment ${status} Successfully!`);
+      } else {
+        alert(
+          data.message || "Unable to update payment"
+        );
+      }
+    } catch (error) {
+      console.log("Update Payment Error:", error);
+      alert("Server Error");
+    }
+  };
+
+  // ==============================
+  // Search
+  // ==============================
+
+  const filteredPayments = payments.filter((item) => {
+    const studentName =
+      item.name?.toLowerCase() || "";
+
+    const email =
+      item.email?.toLowerCase() || "";
+
+    const eventTitle =
+      item.eventTitle?.toLowerCase() || "";
+
+    const transactionId =
+      item.transactionId?.toLowerCase() || "";
+
+    const searchText =
+      search.toLowerCase();
+
+    return (
+      studentName.includes(searchText) ||
+      email.includes(searchText) ||
+      eventTitle.includes(searchText) ||
+      transactionId.includes(searchText)
+    );
+  });
+
+  // ==============================
+  // Loading
+  // ==============================
+
+  if (loading) {
+    return (
+      <div className="payment-verification-page">
+        <h2>Loading Payments...</h2>
+      </div>
+    );
+  }
+
+  // ==============================
+  // UI
+  // ==============================
 
   return (
-    <div className="payment-verification">
+    <div className="payment-verification-page">
 
       <h1>💳 Payment Verification</h1>
 
+      <p className="verification-subtitle">
+        Review and verify student payment submissions
+      </p>
+
+      {/* Search */}
+
       <input
         type="text"
-        placeholder="Search Student..."
+        placeholder="Search Student, Email, Event or Transaction ID..."
         className="search-box"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) =>
+          setSearch(e.target.value)
+        }
       />
+
+      {/* Payments */}
 
       <div className="payment-grid">
 
-        {filtered.length === 0 ? (
+        {filteredPayments.length === 0 ? (
 
-          <h2>No Payments Found</h2>
+          <div className="no-payments">
+
+            <h2>
+              No Payments Found
+            </h2>
+
+            <p>
+              No payment submissions are available.
+            </p>
+
+          </div>
 
         ) : (
 
-          filtered.map((item) => (
+          filteredPayments.map((item) => (
 
-            <div className="payment-card" key={item.id}>
+            <div
+              className="payment-card"
+              key={item._id}
+            >
 
-              <h2>{item.name}</h2>
+              {/* Header */}
 
-              <p><strong>Email :</strong> {item.email}</p>
+              <div className="payment-card-header">
 
-              <p><strong>Event :</strong> {item.eventTitle}</p>
+                <span className="payment-label">
+                  PAYMENT
+                </span>
 
-              <p><strong>Amount :</strong> ₹{item.amount}</p>
+                <span
+                  className={`status ${
+                    item.status?.toLowerCase() ||
+                    "pending"
+                  }`}
+                >
+                  {item.status || "Pending"}
+                </span>
+
+              </div>
+
+              {/* Student */}
+
+              <h2>
+                👤 {item.name}
+              </h2>
 
               <p>
-                <strong>Transaction ID :</strong>
-                <br />
-                {item.transactionId}
+                <strong>📧 Email :</strong>{" "}
+                {item.email}
               </p>
 
+              {/* Event */}
+
               <p>
-                <strong>Status :</strong>{" "}
-                <span className={`status ${item.status.toLowerCase()}`}>
-                  {item.status}
+                <strong>🎟 Event :</strong>{" "}
+                {item.eventTitle}
+              </p>
+
+              {/* Amount */}
+
+              <p>
+                <strong>💰 Amount :</strong>{" "}
+                {item.amount === 0
+                  ? "Free"
+                  : `₹${item.amount}`}
+              </p>
+
+              {/* Transaction */}
+
+              <p>
+                <strong>
+                  🆔 Transaction ID :
+                </strong>
+
+                <br />
+
+                <span className="transaction-id">
+                  {item.transactionId}
                 </span>
               </p>
+
+              {/* Screenshot */}
+
+              <div className="screenshot-section">
+
+                <strong>
+                  📸 Payment Screenshot
+                </strong>
+
+                {item.screenshot ? (
+
+                  <p className="screenshot-name">
+                    {item.screenshot}
+                  </p>
+
+                ) : (
+
+                  <p>
+                    Screenshot not uploaded
+                  </p>
+
+                )}
+
+              </div>
+
+              {/* Date */}
+
+              {item.createdAt && (
+
+                <p>
+                  <strong>
+                    📅 Submitted :
+                  </strong>{" "}
+                  {new Date(
+                    item.createdAt
+                  ).toLocaleString()}
+                </p>
+
+              )}
+
+              {/* Buttons */}
 
               {item.status === "Pending" && (
 
@@ -108,7 +280,10 @@ function PaymentVerification() {
                   <button
                     className="approve"
                     onClick={() =>
-                      updateStatus(item.id, "Approved")
+                      updateStatus(
+                        item._id,
+                        "Approved"
+                      )
                     }
                   >
                     ✅ Approve
@@ -117,12 +292,31 @@ function PaymentVerification() {
                   <button
                     className="reject"
                     onClick={() =>
-                      updateStatus(item.id, "Rejected")
+                      updateStatus(
+                        item._id,
+                        "Rejected"
+                      )
                     }
                   >
                     ❌ Reject
                   </button>
 
+                </div>
+
+              )}
+
+              {item.status === "Approved" && (
+
+                <div className="approved-message">
+                  ✅ Payment Approved
+                </div>
+
+              )}
+
+              {item.status === "Rejected" && (
+
+                <div className="rejected-message">
+                  ❌ Payment Rejected
                 </div>
 
               )}
