@@ -11,78 +11,30 @@ function MyEvents() {
 
   const navigate = useNavigate();
 
-  // ==============================
-  // Logged In User
-  // ==============================
-
-  const registrationData =
-    JSON.parse(localStorage.getItem("registrationData")) || {};
-
-  const loggedInUser =
-    JSON.parse(localStorage.getItem("loggedInUser")) || {};
-
-  const userEmail =
-    registrationData.email || loggedInUser.email || "";
-
-  // ==============================
-  // Fetch My Registered Events
-  // ==============================
-
   useEffect(() => {
-    const fetchMyEvents = async () => {
-      try {
-        const res = await fetch(
-          "https://college-event-management-backend-2mzu.onrender.com/api/payments"
-        );
+    fetch(
+      "https://college-event-management-backend-2mzu.onrender.com/api/payments"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("PAYMENT API RESPONSE:", data);
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(
-            data.message || "Failed to fetch payments"
-          );
-        }
-
-        const payments = data.payments || [];
-
-        // फक्त current student चे payments
-        const filteredPayments = payments.filter(
-          (payment) =>
-            payment.email &&
-            userEmail &&
-            payment.email.toLowerCase() ===
-              userEmail.toLowerCase()
-        );
-
-        setMyEvents(filteredPayments);
-      } catch (error) {
-        console.log("My Events Error:", error);
-        setMyEvents([]);
-      } finally {
+        setMyEvents(data.payments || []);
         setLoading(false);
-      }
-    };
-
-    fetchMyEvents();
-  }, [userEmail]);
-
-  // ==============================
-  // Withdraw Button
-  // ==============================
+      })
+      .catch((error) => {
+        console.log("PAYMENT FETCH ERROR:", error);
+        setLoading(false);
+      });
+  }, []);
 
   const handleWithdraw = (paymentId) => {
     setSelectedPaymentId(paymentId);
     setShowModal(true);
   };
 
-  // ==============================
-  // Confirm Withdraw
-  // ==============================
-
   const confirmWithdraw = async () => {
-    if (!selectedPaymentId) {
-      return;
-    }
+    if (!selectedPaymentId) return;
 
     try {
       const res = await fetch(
@@ -95,39 +47,29 @@ function MyEvents() {
       const data = await res.json();
 
       if (res.ok) {
-        const updatedEvents = myEvents.filter(
-          (event) => event._id !== selectedPaymentId
+        setMyEvents(
+          myEvents.filter(
+            (event) => event._id !== selectedPaymentId
+          )
         );
-
-        setMyEvents(updatedEvents);
 
         setShowModal(false);
         setSelectedPaymentId(null);
 
         alert("Registration Withdrawn Successfully!");
       } else {
-        alert(
-          data.message || "Unable to withdraw registration"
-        );
+        alert(data.message || "Unable to withdraw");
       }
     } catch (error) {
-      console.log("Withdraw Error:", error);
+      console.log(error);
       alert("Server Error");
     }
   };
-
-  // ==============================
-  // Cancel Withdraw
-  // ==============================
 
   const cancelWithdraw = () => {
     setShowModal(false);
     setSelectedPaymentId(null);
   };
-
-  // ==============================
-  // Loading
-  // ==============================
 
   if (loading) {
     return (
@@ -139,10 +81,6 @@ function MyEvents() {
     );
   }
 
-  // ==============================
-  // Main UI
-  // ==============================
-
   return (
     <>
       <div className="my-events-page">
@@ -150,7 +88,7 @@ function MyEvents() {
         <h1>🎟 My Registered Events</h1>
 
         <p className="my-events-subtitle">
-          Events you have registered and made payment for
+          Your registered events and payment details
         </p>
 
         {myEvents.length === 0 ? (
@@ -186,10 +124,6 @@ function MyEvents() {
                 key={event._id}
               >
 
-                {/* =========================
-                    Event Header
-                ========================== */}
-
                 <div className="event-card-header">
 
                   <span className="event-badge">
@@ -210,35 +144,19 @@ function MyEvents() {
 
                 </div>
 
-                {/* =========================
-                    Event Title
-                ========================== */}
-
                 <h2>
                   {event.eventTitle}
                 </h2>
-
-                {/* =========================
-                    Student
-                ========================== */}
 
                 <p>
                   <strong>👤 Student :</strong>{" "}
                   {event.name || "-"}
                 </p>
 
-                {/* =========================
-                    Email
-                ========================== */}
-
                 <p>
                   <strong>📧 Email :</strong>{" "}
                   {event.email || "-"}
                 </p>
-
-                {/* =========================
-                    Amount
-                ========================== */}
 
                 <p>
                   <strong>💰 Amount :</strong>{" "}
@@ -247,25 +165,13 @@ function MyEvents() {
                     : `₹${event.amount}`}
                 </p>
 
-                {/* =========================
-                    Transaction ID
-                ========================== */}
-
                 <p>
-                  <strong>
-                    🆔 Transaction ID :
-                  </strong>
-
+                  <strong>🆔 Transaction ID :</strong>
                   <br />
-
                   <span className="transaction-id">
                     {event.transactionId || "-"}
                   </span>
                 </p>
-
-                {/* =========================
-                    Payment Status
-                ========================== */}
 
                 <p>
                   <strong>💳 Payment :</strong>{" "}
@@ -283,24 +189,14 @@ function MyEvents() {
                   </span>
                 </p>
 
-                {/* =========================
-                    Registered Date
-                ========================== */}
-
                 {event.createdAt && (
                   <p>
-                    <strong>
-                      📅 Registered On :
-                    </strong>{" "}
+                    <strong>📅 Registered On :</strong>{" "}
                     {new Date(
                       event.createdAt
                     ).toLocaleDateString()}
                   </p>
                 )}
-
-                {/* =========================
-                    Buttons
-                ========================== */}
 
                 <div className="event-buttons">
 
@@ -314,16 +210,14 @@ function MyEvents() {
                     View Details
                   </button>
 
-                  {event.status !== "Approved" && (
-                    <button
-                      className="withdraw-btn"
-                      onClick={() =>
-                        handleWithdraw(event._id)
-                      }
-                    >
-                      Withdraw
-                    </button>
-                  )}
+                  <button
+                    className="withdraw-btn"
+                    onClick={() =>
+                      handleWithdraw(event._id)
+                    }
+                  >
+                    Withdraw
+                  </button>
 
                 </div>
 
@@ -336,10 +230,6 @@ function MyEvents() {
         )}
 
       </div>
-
-      {/* ==============================
-          Withdraw Modal
-      ============================== */}
 
       {showModal && (
 
