@@ -1,13 +1,9 @@
-/* =========================================
-   GOOGLE FONT
-========================================= */
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
 
-/* =========================================
+/* ==============================
    RESET
-========================================= */
+============================== */
 
 * {
   margin: 0;
@@ -17,9 +13,9 @@
 }
 
 
-/* =========================================
+/* ==============================
    PAGE
-========================================= */
+============================== */
 
 .registration-page {
   min-height: 100vh;
@@ -28,7 +24,7 @@
   justify-content: center;
   align-items: center;
 
-  padding: 45px 20px;
+  padding: 40px 20px;
 
   background:
     radial-gradient(
@@ -49,9 +45,9 @@
 }
 
 
-/* =========================================
+/* ==============================
    MAIN CONTAINER
-========================================= */
+============================== */
 
 .registration-container {
   width: 100%;
@@ -64,16 +60,16 @@
 
   border-radius: 30px;
 
-  background: #ffffff;
+  background: white;
 
   box-shadow:
-    0 25px 70px rgba(31, 41, 55, 0.15);
+    0 25px 70px rgba(0, 0, 0, 0.12);
 }
 
 
-/* =========================================
+/* ==============================
    LEFT PANEL
-========================================= */
+============================== */
 
 .left-panel {
   position: relative;
@@ -95,22 +91,22 @@
 }
 
 
-/* Floating Circle */
+/* Decorative circles */
 
 .left-panel::before {
   content: "";
 
   position: absolute;
 
-  width: 300px;
-  height: 300px;
+  width: 320px;
+  height: 320px;
 
   border-radius: 50%;
 
   background: rgba(255, 255, 255, 0.08);
 
-  top: -120px;
-  right: -100px;
+  top: -150px;
+  right: -120px;
 }
 
 
@@ -119,27 +115,27 @@
 
   position: absolute;
 
-  width: 230px;
-  height: 230px;
+  width: 250px;
+  height: 250px;
 
   border-radius: 50%;
 
   background: rgba(255, 255, 255, 0.06);
 
-  bottom: -100px;
-  left: -80px;
+  bottom: -120px;
+  left: -100px;
 }
 
 
-/* =========================================
+/* ==============================
    BADGE
-========================================= */
+============================== */
 
 .badge {
   position: relative;
   z-index: 2;
 
-  display: inline-flex;
+  display: inline-block;
 
   padding: 9px 20px;
 
@@ -147,21 +143,19 @@
 
   background: rgba(255, 255, 255, 0.18);
 
-  backdrop-filter: blur(10px);
-
   font-size: 12px;
 
   font-weight: 700;
 
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
 
   margin-bottom: 25px;
 }
 
 
-/* =========================================
+/* ==============================
    LEFT HEADING
-========================================= */
+============================== */
 
 .left-panel h1 {
   position: relative;
@@ -181,36 +175,36 @@
   position: relative;
   z-index: 2;
 
-  max-width: 410px;
+  max-width: 420px;
 
   font-size: 14px;
 
   line-height: 1.8;
 
-  color: rgba(255, 255, 255, 0.92);
-
   margin-bottom: 30px;
+
+  color: rgba(255, 255, 255, 0.95);
 }
 
 
-/* =========================================
+/* ==============================
    EVENT CARD
-========================================= */
+============================== */
 
 .event-card {
   position: relative;
-  z-index: 5;
+  z-index: 10;
 
-  background: rgba(255, 255, 255, 0.97);
+  background: white;
 
   border-radius: 22px;
 
   padding: 25px;
 
-  color: #1f2937;
+  color: #374151;
 
   box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.16);
+    0 15px 40px rgba(0, 0, 0, 0.18);
 }
 
 
@@ -221,32 +215,30 @@
 
   font-weight: 800;
 
-  line-height: 1.3;
-
   margin-bottom: 22px;
+
+  line-height: 1.3;
 }
 
 
-/* =========================================
-   EVENT ITEM
-========================================= */
+/* ==============================
+   EVENT DETAILS
+============================== */
 
 .event-item {
   display: flex;
 
   align-items: flex-start;
 
-  gap: 13px;
+  gap: 14px;
 
-  margin-bottom: 17px;
-
-  color: #374151;
+  margin-bottom: 18px;
 
   font-size: 14px;
 }
 
 
-.event-item svg {
+.event-item > svg {
   flex-shrink: 0;
 
   color: #7c3aed;
@@ -263,6 +255,8 @@
   flex-direction: column;
 
   gap: 2px;
+
+  min-width: 0;
 }
 
 
@@ -282,12 +276,12 @@
 }
 
 
-/* =========================================
-   ABOUT EVENT
-========================================= */
+/* ==============================
+   ABOUT
+============================== */
 
 .about-title {
-  margin-top: 20px;
+  margin-top: 22px;
 
   margin-bottom: 8px;
 
@@ -308,9 +302,9 @@
 }
 
 
-/* =========================================
+/* ==============================
    RIGHT PANEL
-========================================= */
+============================== */
 
 .right-panel {
   padding: 55px 50px;
@@ -319,9 +313,9 @@
 }
 
 
-/* =========================================
+/* ==============================
    FORM HEADER
-========================================= */
+============================== */
 
 .form-header {
   margin-bottom: 28px;
@@ -346,98 +340,109 @@
 }
 
 
-/* =========================================
+/* ==============================
    INPUT BOX
-========================================= */
+============================== */
 
 .input-box {
-  position: relative;
-
-  width: 100%;
-
-  margin-bottom: 17px;
-}
-
-
-/* =========================================
-   INPUT ICON
-========================================= */
-
-.input-box .input-icon {
-  position: absolute;
-
-  left: 19px;
-
-  top: 50%;
-
-  transform: translateY(-50%);
-
-  z-index: 2;
-
-  color: #6d28d9;
-
-  font-size: 17px;
-
-  pointer-events: none;
-}
-
-
-/* =========================================
-   INPUT + SELECT
-========================================= */
-
-.input-box input,
-.input-box select {
   width: 100%;
 
   height: 56px;
+
+  display: flex;
+
+  align-items: center;
+
+  margin-bottom: 17px;
 
   border: 1.5px solid #e2e8f0;
 
   border-radius: 14px;
 
+  background: #f8fafc;
+
+  overflow: hidden;
+
+  transition: all 0.25s ease;
+}
+
+
+/* ==============================
+   ICON
+============================== */
+
+.icon-container {
+  width: 55px;
+
+  min-width: 55px;
+
+  height: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  color: #7c3aed;
+
+  font-size: 17px;
+
+  background: rgba(124, 58, 237, 0.04);
+}
+
+
+/* ==============================
+   INPUT
+============================== */
+
+.input-box input,
+.input-box select {
+  flex: 1;
+
+  width: 100%;
+
+  height: 100%;
+
+  border: none;
+
   outline: none;
 
-  padding-left: 52px;
+  padding: 0 18px;
 
-  padding-right: 18px;
-
-  background: #f8fafc;
+  background: transparent;
 
   color: #111827;
 
   font-size: 14px;
-
-  transition: 0.25s ease;
 }
 
 
-/* =========================================
+/* ==============================
    PLACEHOLDER
-========================================= */
+============================== */
 
 .input-box input::placeholder {
   color: #9ca3af;
 }
 
 
-/* =========================================
+/* ==============================
    SELECT
-========================================= */
+============================== */
 
 .input-box select {
-  appearance: auto;
-
   cursor: pointer;
+
+  appearance: auto;
 }
 
 
-/* =========================================
+/* ==============================
    FOCUS
-========================================= */
+============================== */
 
-.input-box input:focus,
-.input-box select:focus {
+.input-box:focus-within {
   background: #ffffff;
 
   border-color: #7c3aed;
@@ -447,27 +452,25 @@
 }
 
 
-.input-box:focus-within .input-icon {
+.input-box:focus-within .icon-container {
   color: #2563eb;
 }
 
 
-/* =========================================
-   REGISTER BUTTON
-========================================= */
+/* ==============================
+   BUTTON
+============================== */
 
 .register-btn {
   width: 100%;
 
   height: 58px;
 
+  margin-top: 8px;
+
   border: none;
 
   border-radius: 15px;
-
-  margin-top: 8px;
-
-  cursor: pointer;
 
   display: flex;
 
@@ -476,6 +479,8 @@
   align-items: center;
 
   gap: 12px;
+
+  cursor: pointer;
 
   color: white;
 
@@ -501,7 +506,7 @@
   transform: translateY(-3px);
 
   box-shadow:
-    0 18px 30px rgba(79, 70, 229, 0.35);
+    0 18px 35px rgba(79, 70, 229, 0.35);
 }
 
 
@@ -515,9 +520,9 @@
 }
 
 
-/* =========================================
+/* ==============================
    LOADING
-========================================= */
+============================== */
 
 .registration-loading {
   min-height: 100vh;
@@ -538,9 +543,9 @@
 }
 
 
-/* =========================================
+/* ==============================
    TABLET
-========================================= */
+============================== */
 
 @media (max-width: 992px) {
 
@@ -559,13 +564,12 @@
   .left-panel h1 {
     font-size: 40px;
   }
-
 }
 
 
-/* =========================================
+/* ==============================
    MOBILE
-========================================= */
+============================== */
 
 @media (max-width: 576px) {
 
@@ -601,13 +605,16 @@
     font-size: 23px;
   }
 
-  .input-box input,
-  .input-box select {
+  .input-box {
     height: 54px;
+  }
+
+  .icon-container {
+    width: 50px;
+    min-width: 50px;
   }
 
   .register-btn {
     height: 55px;
   }
-
 }

@@ -109,9 +109,9 @@ function Registration() {
 
       <div className="registration-container">
 
-        {/* =====================================
+        {/* =========================
             LEFT SIDE
-        ===================================== */}
+        ========================= */}
 
         <div className="left-panel">
 
@@ -130,7 +130,6 @@ function Registration() {
             your seat for this amazing event.
           </p>
 
-
           {/* EVENT CARD */}
 
           <div className="event-card">
@@ -141,6 +140,7 @@ function Registration() {
 
             <div className="event-item">
               <FaCalendarAlt />
+
               <div>
                 <strong>Date</strong>
                 <span>{selectedEvent.date}</span>
@@ -149,6 +149,7 @@ function Registration() {
 
             <div className="event-item">
               <FaMapMarkerAlt />
+
               <div>
                 <strong>Venue</strong>
                 <span>{selectedEvent.venue}</span>
@@ -157,8 +158,10 @@ function Registration() {
 
             <div className="event-item">
               <FaMoneyBillWave />
+
               <div>
                 <strong>Fee</strong>
+
                 <span>
                   {Number(selectedEvent.fee) === 0
                     ? "Free"
@@ -176,13 +179,12 @@ function Registration() {
             </p>
 
           </div>
-
         </div>
 
 
-        {/* =====================================
+        {/* =========================
             RIGHT SIDE
-        ===================================== */}
+        ========================= */}
 
         <div className="right-panel">
 
@@ -203,7 +205,9 @@ function Registration() {
 
             <div className="input-box">
 
-              <FaUser className="input-icon" />
+              <div className="icon-container">
+                <FaUser />
+              </div>
 
               <input
                 type="text"
@@ -221,7 +225,9 @@ function Registration() {
 
             <div className="input-box">
 
-              <FaEnvelope className="input-icon" />
+              <div className="icon-container">
+                <FaEnvelope />
+              </div>
 
               <input
                 type="email"
@@ -239,7 +245,9 @@ function Registration() {
 
             <div className="input-box">
 
-              <FaPhoneAlt className="input-icon" />
+              <div className="icon-container">
+                <FaPhoneAlt />
+              </div>
 
               <input
                 type="tel"
@@ -257,7 +265,9 @@ function Registration() {
 
             <div className="input-box">
 
-              <FaUniversity className="input-icon" />
+              <div className="icon-container">
+                <FaUniversity />
+              </div>
 
               <input
                 type="text"
@@ -275,7 +285,9 @@ function Registration() {
 
             <div className="input-box">
 
-              <FaLaptopCode className="input-icon" />
+              <div className="icon-container">
+                <FaLaptopCode />
+              </div>
 
               <input
                 type="text"
@@ -293,7 +305,9 @@ function Registration() {
 
             <div className="input-box">
 
-              <FaGraduationCap className="input-icon" />
+              <div className="icon-container">
+                <FaGraduationCap />
+              </div>
 
               <select
                 name="year"
@@ -301,7 +315,6 @@ function Registration() {
                 onChange={handleChange}
                 required
               >
-
                 <option value="">
                   Select Year
                 </option>
@@ -321,7 +334,6 @@ function Registration() {
                 <option value="Final Year">
                   Final Year
                 </option>
-
               </select>
 
             </div>
@@ -333,11 +345,11 @@ function Registration() {
               type="submit"
               className="register-btn"
             >
-
-              Continue to Payment
+              <span>
+                Continue to Payment
+              </span>
 
               <FaArrowRight />
-
             </button>
 
           </form>
