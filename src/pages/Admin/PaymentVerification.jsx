@@ -41,44 +41,55 @@ function PaymentVerification() {
   // ==============================
   // Update Payment Status
   // ==============================
-
-  const updateStatus = async (id, status) => {
-    try {
-      const res = await fetch(`${API_URL}/${id}`, {
+const updateStatus = async (id, status) => {
+  try {
+    const res = await fetch(
+      `https://college-event-management-backend-2mzu.onrender.com/api/payments/${id}`,
+      {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status: status,
+          status,
         }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setPayments((previousPayments) =>
-          previousPayments.map((payment) =>
-            payment._id === id
-              ? {
-                  ...payment,
-                  status: status,
-                }
-              : payment
-          )
-        );
-
-        alert(`Payment ${status} Successfully!`);
-      } else {
-        alert(
-          data.message || "Unable to update payment"
-        );
       }
-    } catch (error) {
-      console.log("Update Payment Error:", error);
-      alert("Server Error");
+    );
+
+    const data = await res.json();
+
+    console.log("Payment Update Response:", data);
+
+    if (!res.ok) {
+      alert(data.message || "Payment update failed");
+      return;
     }
-  };
+
+    // Update payment list on screen
+    const updatedPayments = payments.map((item) =>
+      item._id === id
+        ? {
+            ...item,
+            status,
+          }
+        : item
+    );
+
+    setPayments(updatedPayments);
+
+    // Keep localStorage updated
+    localStorage.setItem(
+      "paymentVerification",
+      JSON.stringify(updatedPayments)
+    );
+
+    alert(`Payment ${status} Successfully`);
+
+  } catch (error) {
+    console.log("Payment Update Error:", error);
+    alert("Server Error. Please try again.");
+  }
+};
 
   // ==============================
   // Search
