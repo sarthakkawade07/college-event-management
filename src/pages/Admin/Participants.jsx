@@ -11,7 +11,7 @@ function Participants() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("Participants Response:", data);
+        console.log("Participants Data:", data);
 
         setParticipants(data.participants || []);
         setLoading(false);
@@ -22,77 +22,75 @@ function Participants() {
       });
   }, []);
 
+  if (loading) {
+    return <h2>Loading Participants...</h2>;
+  }
+
   return (
-    <div className="participants-page">
+    <div className="participants-container">
 
       <h1>Participants List</h1>
 
-      {loading ? (
-        <h2>Loading Participants...</h2>
-      ) : (
-        <table>
+      <table>
 
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Event</th>
-              <th>Email</th>
-              <th>Transaction ID</th>
-              <th>Amount</th>
-              <th>Payment</th>
-            </tr>
-          </thead>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Event</th>
+            <th>Email</th>
+            <th>Transaction ID</th>
+            <th>Amount</th>
+            <th>Payment</th>
+          </tr>
+        </thead>
 
-          <tbody>
+        <tbody>
 
-            {participants.length > 0 ? (
+          {participants.length > 0 ? (
 
-              participants.map((item) => (
-                <tr key={item._id}>
+            participants.map((item) => (
+              <tr key={item._id}>
 
-                  <td>
-                    {item.participantName}
-                  </td>
-
-                  <td>
-                    {item.eventTitle}
-                  </td>
-
-                  <td>
-                    {item.email}
-                  </td>
-
-                  <td>
-                    {item.transactionId}
-                  </td>
-
-                  <td>
-                    ₹{item.amount}
-                  </td>
-
-                  <td>
-                    <span className="participant-approved">
-                      Approved
-                    </span>
-                  </td>
-
-                </tr>
-              ))
-
-            ) : (
-
-              <tr>
-                <td colSpan="6">
-                  No Participants Yet
+                <td>
+                  {item.participantName}
                 </td>
+
+                <td>
+                  {item.eventTitle}
+                </td>
+
+                <td>
+                  {item.email}
+                </td>
+
+                <td>
+                  {item.transactionId}
+                </td>
+
+                <td>
+                  ₹{item.amount}
+                </td>
+
+                <td>
+                  {item.paymentStatus}
+                </td>
+
               </tr>
+            ))
 
-            )}
+          ) : (
 
-          </tbody>
+            <tr>
+              <td colSpan="6">
+                No Participants Yet
+              </td>
+            </tr>
 
-        </table>
-      )}
+          )}
+
+        </tbody>
+
+      </table>
 
     </div>
   );
