@@ -33,14 +33,27 @@ function Registration() {
     year: loggedInUser.year || "",
   });
 
+  // ==============================
+  // GET EVENT
+  // ==============================
+
   useEffect(() => {
     fetch(
       `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
     )
       .then((res) => res.json())
-      .then((data) => setSelectedEvent(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        console.log("EVENT:", data);
+        setSelectedEvent(data);
+      })
+      .catch((err) => {
+        console.log("EVENT ERROR:", err);
+      });
   }, [id]);
+
+  // ==============================
+  // INPUT CHANGE
+  // ==============================
 
   const handleChange = (e) => {
     setFormData({
@@ -48,6 +61,10 @@ function Registration() {
       [e.target.name]: e.target.value,
     });
   };
+
+  // ==============================
+  // SUBMIT
+  // ==============================
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,8 +92,16 @@ function Registration() {
     navigate(`/payment/${selectedEvent._id}`);
   };
 
+  // ==============================
+  // LOADING
+  // ==============================
+
   if (!selectedEvent) {
-    return <h2 className="loading">Loading...</h2>;
+    return (
+      <div className="registration-loading">
+        Loading Event...
+      </div>
+    );
   }
 
   return (
@@ -84,7 +109,9 @@ function Registration() {
 
       <div className="registration-container">
 
-        {/* LEFT SIDE */}
+        {/* =====================================
+            LEFT SIDE
+        ===================================== */}
 
         <div className="left-panel">
 
@@ -92,53 +119,70 @@ function Registration() {
             EVENT REGISTRATION
           </span>
 
-          <h1>Register Your Event</h1>
+          <h1>
+            Register Your
+            <br />
+            Event
+          </h1>
 
-          <p>
+          <p className="left-description">
             Fill out the registration form and secure
             your seat for this amazing event.
           </p>
-<div className="event-card">
 
-  <h2>{selectedEvent.title}</h2>
 
-  <div className="event-item">
-    <FaCalendarAlt />
-    <span>
-      <strong>Date :</strong> {selectedEvent.date}
-    </span>
-  </div>
+          {/* EVENT CARD */}
 
-  <div className="event-item">
-    <FaMapMarkerAlt />
-    <span>
-      <strong>Venue :</strong> {selectedEvent.venue}
-    </span>
-  </div>
+          <div className="event-card">
 
-  <div className="event-item">
-    <FaMoneyBillWave />
-    <span>
-      <strong>Fee :</strong>{" "}
-      {selectedEvent.fee === 0
-        ? "Free Entry"
-        : `₹${selectedEvent.fee}`}
-    </span>
-  </div>
+            <h2>
+              {selectedEvent.title}
+            </h2>
 
-  <h3 className="about-title">
-    About Event
-  </h3>
+            <div className="event-item">
+              <FaCalendarAlt />
+              <div>
+                <strong>Date</strong>
+                <span>{selectedEvent.date}</span>
+              </div>
+            </div>
 
-  <p className="about-text">
-    {selectedEvent.description}
-  </p>
+            <div className="event-item">
+              <FaMapMarkerAlt />
+              <div>
+                <strong>Venue</strong>
+                <span>{selectedEvent.venue}</span>
+              </div>
+            </div>
 
-</div>
+            <div className="event-item">
+              <FaMoneyBillWave />
+              <div>
+                <strong>Fee</strong>
+                <span>
+                  {Number(selectedEvent.fee) === 0
+                    ? "Free"
+                    : `₹${selectedEvent.fee}`}
+                </span>
+              </div>
+            </div>
+
+            <h3 className="about-title">
+              About Event
+            </h3>
+
+            <p className="about-text">
+              {selectedEvent.description}
+            </p>
+
+          </div>
 
         </div>
 
-        {/* RIGHT SIDE */}
+
+        {/* =====================================
+            RIGHT SIDE
+        ===================================== */}
 
         <div className="right-panel">
 
@@ -152,9 +196,15 @@ function Registration() {
 
           </div>
 
+
           <form onSubmit={handleSubmit}>
-                        <div className="input-box">
-              <FaUser />
+
+            {/* FULL NAME */}
+
+            <div className="input-box">
+
+              <FaUser className="input-icon" />
+
               <input
                 type="text"
                 name="fullName"
@@ -163,10 +213,16 @@ function Registration() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+
+            {/* EMAIL */}
+
             <div className="input-box">
-              <FaEnvelope />
+
+              <FaEnvelope className="input-icon" />
+
               <input
                 type="email"
                 name="email"
@@ -175,22 +231,34 @@ function Registration() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+
+            {/* MOBILE */}
+
             <div className="input-box">
-              <FaPhoneAlt />
+
+              <FaPhoneAlt className="input-icon" />
+
               <input
-                type="text"
+                type="tel"
                 name="mobile"
                 placeholder="Mobile Number"
                 value={formData.mobile}
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+
+            {/* COLLEGE */}
+
             <div className="input-box">
-              <FaUniversity />
+
+              <FaUniversity className="input-icon" />
+
               <input
                 type="text"
                 name="college"
@@ -199,10 +267,16 @@ function Registration() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+
+            {/* DEPARTMENT */}
+
             <div className="input-box">
-              <FaLaptopCode />
+
+              <FaLaptopCode className="input-icon" />
+
               <input
                 type="text"
                 name="department"
@@ -211,10 +285,15 @@ function Registration() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+
+            {/* YEAR */}
+
             <div className="input-box">
-              <FaGraduationCap />
+
+              <FaGraduationCap className="input-icon" />
 
               <select
                 name="year"
@@ -222,20 +301,43 @@ function Registration() {
                 onChange={handleChange}
                 required
               >
-                <option value="">Select Year</option>
-                <option value="First Year">First Year</option>
-                <option value="Second Year">Second Year</option>
-                <option value="Third Year">Third Year</option>
-                <option value="Final Year">Final Year</option>
+
+                <option value="">
+                  Select Year
+                </option>
+
+                <option value="First Year">
+                  First Year
+                </option>
+
+                <option value="Second Year">
+                  Second Year
+                </option>
+
+                <option value="Third Year">
+                  Third Year
+                </option>
+
+                <option value="Final Year">
+                  Final Year
+                </option>
+
               </select>
+
             </div>
+
+
+            {/* BUTTON */}
 
             <button
               type="submit"
               className="register-btn"
             >
+
               Continue to Payment
+
               <FaArrowRight />
+
             </button>
 
           </form>
@@ -249,4 +351,3 @@ function Registration() {
 }
 
 export default Registration;
-          

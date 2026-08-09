@@ -1,13 +1,13 @@
-/* ================================
+/* =========================================
    GOOGLE FONT
-================================ */
+========================================= */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
 
-/* ================================
-   GLOBAL
-================================ */
+/* =========================================
+   RESET
+========================================= */
 
 * {
   margin: 0;
@@ -16,14 +16,10 @@
   font-family: "Poppins", sans-serif;
 }
 
-body {
-  background: #eef3ff;
-}
 
-
-/* ================================
-   MAIN PAGE
-================================ */
+/* =========================================
+   PAGE
+========================================= */
 
 .registration-page {
   min-height: 100vh;
@@ -32,17 +28,17 @@ body {
   justify-content: center;
   align-items: center;
 
-  padding: 40px 20px;
+  padding: 45px 20px;
 
   background:
     radial-gradient(
       circle at top left,
-      rgba(139, 92, 246, 0.12) 0%,
+      rgba(124, 58, 237, 0.12),
       transparent 30%
     ),
     radial-gradient(
       circle at bottom right,
-      rgba(59, 130, 246, 0.12) 0%,
+      rgba(37, 99, 235, 0.12),
       transparent 30%
     ),
     linear-gradient(
@@ -53,38 +49,38 @@ body {
 }
 
 
-/* ================================
+/* =========================================
    MAIN CONTAINER
-================================ */
+========================================= */
 
 .registration-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1250px;
 
   display: grid;
   grid-template-columns: 45% 55%;
 
-  border-radius: 28px;
-
   overflow: hidden;
+
+  border-radius: 30px;
 
   background: #ffffff;
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.12);
+    0 25px 70px rgba(31, 41, 55, 0.15);
 }
 
 
-/* ================================
+/* =========================================
    LEFT PANEL
-================================ */
+========================================= */
 
 .left-panel {
   position: relative;
 
-  padding: 55px 50px;
+  padding: 55px 45px;
 
-  color: #ffffff;
+  color: white;
 
   overflow: hidden;
 
@@ -99,15 +95,15 @@ body {
 }
 
 
-/* Floating Circle - Top */
+/* Floating Circle */
 
 .left-panel::before {
   content: "";
 
   position: absolute;
 
-  width: 320px;
-  height: 320px;
+  width: 300px;
+  height: 300px;
 
   border-radius: 50%;
 
@@ -118,35 +114,32 @@ body {
 }
 
 
-/* Floating Circle - Bottom */
-
 .left-panel::after {
   content: "";
 
   position: absolute;
 
-  width: 250px;
-  height: 250px;
+  width: 230px;
+  height: 230px;
 
   border-radius: 50%;
 
   background: rgba(255, 255, 255, 0.06);
 
-  bottom: -90px;
-  left: -70px;
+  bottom: -100px;
+  left: -80px;
 }
 
 
-/* ================================
+/* =========================================
    BADGE
-================================ */
+========================================= */
 
 .badge {
   position: relative;
   z-index: 2;
 
   display: inline-flex;
-  align-items: center;
 
   padding: 9px 20px;
 
@@ -157,17 +150,18 @@ body {
   backdrop-filter: blur(10px);
 
   font-size: 12px;
-  font-weight: 600;
 
-  letter-spacing: 1px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
 
   margin-bottom: 25px;
 }
 
 
-/* ================================
+/* =========================================
    LEFT HEADING
-================================ */
+========================================= */
 
 .left-panel h1 {
   position: relative;
@@ -175,7 +169,7 @@ body {
 
   font-size: 48px;
 
-  line-height: 1.2;
+  line-height: 1.15;
 
   font-weight: 800;
 
@@ -183,72 +177,72 @@ body {
 }
 
 
-.left-panel > p {
+.left-description {
   position: relative;
   z-index: 2;
 
-  font-size: 15px;
+  max-width: 410px;
+
+  font-size: 14px;
 
   line-height: 1.8;
 
-  opacity: 0.95;
+  color: rgba(255, 255, 255, 0.92);
 
-  max-width: 430px;
+  margin-bottom: 30px;
 }
 
 
-/* ================================
+/* =========================================
    EVENT CARD
-================================ */
+========================================= */
 
 .event-card {
   position: relative;
-  z-index: 3;
+  z-index: 5;
 
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
 
   border-radius: 22px;
 
-  padding: 26px;
+  padding: 25px;
 
-  margin-top: 30px;
+  color: #1f2937;
 
   box-shadow:
     0 15px 35px rgba(0, 0, 0, 0.16);
 }
 
 
-/* Event title */
-
 .event-card h2 {
   color: #1e3a8a;
 
-  font-size: 28px;
+  font-size: 27px;
 
-  font-weight: 700;
-
-  margin-bottom: 20px;
+  font-weight: 800;
 
   line-height: 1.3;
+
+  margin-bottom: 22px;
 }
 
 
-/* Event information */
+/* =========================================
+   EVENT ITEM
+========================================= */
 
 .event-item {
   display: flex;
 
   align-items: flex-start;
 
-  gap: 12px;
+  gap: 13px;
 
-  margin-bottom: 15px;
+  margin-bottom: 17px;
 
   color: #374151;
 
   font-size: 14px;
-
-  line-height: 1.5;
 }
 
 
@@ -257,21 +251,43 @@ body {
 
   color: #7c3aed;
 
-  font-size: 17px;
+  font-size: 18px;
 
   margin-top: 3px;
 }
 
 
-.event-item strong {
-  color: #111827;
+.event-item div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
 }
 
 
-/* About Event */
+.event-item strong {
+  color: #111827;
+
+  font-size: 13px;
+}
+
+
+.event-item span {
+  color: #4b5563;
+
+  font-size: 13px;
+
+  word-break: break-word;
+}
+
+
+/* =========================================
+   ABOUT EVENT
+========================================= */
 
 .about-title {
-  margin-top: 22px;
+  margin-top: 20px;
 
   margin-bottom: 8px;
 
@@ -286,26 +302,26 @@ body {
 .about-text {
   color: #4b5563;
 
-  line-height: 1.7;
-
   font-size: 13px;
+
+  line-height: 1.7;
 }
 
 
-/* ================================
+/* =========================================
    RIGHT PANEL
-================================ */
+========================================= */
 
 .right-panel {
-  padding: 50px 55px;
+  padding: 55px 50px;
 
   background: #ffffff;
 }
 
 
-/* ================================
+/* =========================================
    FORM HEADER
-================================ */
+========================================= */
 
 .form-header {
   margin-bottom: 28px;
@@ -313,118 +329,112 @@ body {
 
 
 .form-header h2 {
-  font-size: 34px;
-
   color: #111827;
+
+  font-size: 34px;
 
   font-weight: 700;
 
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 
 .form-header p {
   color: #6b7280;
 
-  font-size: 13px;
+  font-size: 14px;
 }
 
 
-/* ================================
+/* =========================================
    INPUT BOX
-================================ */
+========================================= */
 
 .input-box {
   position: relative;
 
   width: 100%;
 
-  margin-bottom: 18px;
+  margin-bottom: 17px;
 }
 
 
-/* ================================
+/* =========================================
    INPUT ICON
-================================ */
+========================================= */
 
-.input-box svg {
+.input-box .input-icon {
   position: absolute;
 
-  left: 17px;
+  left: 19px;
 
   top: 50%;
 
   transform: translateY(-50%);
 
+  z-index: 2;
+
   color: #6d28d9;
 
   font-size: 17px;
 
-  z-index: 5;
-
   pointer-events: none;
-
-  transition: 0.3s ease;
 }
 
 
-/* ================================
+/* =========================================
    INPUT + SELECT
-================================ */
+========================================= */
 
 .input-box input,
 .input-box select {
-  display: block;
-
   width: 100%;
 
-  height: 54px;
+  height: 56px;
 
   border: 1.5px solid #e2e8f0;
 
-  border-radius: 13px;
-
-  padding: 0 18px 0 50px;
-
-  background: #f8fafc;
-
-  color: #1e293b;
-
-  font-size: 14px;
+  border-radius: 14px;
 
   outline: none;
 
-  transition: 0.3s ease;
+  padding-left: 52px;
 
-  box-sizing: border-box;
+  padding-right: 18px;
+
+  background: #f8fafc;
+
+  color: #111827;
+
+  font-size: 14px;
+
+  transition: 0.25s ease;
 }
 
 
-/* ================================
+/* =========================================
    PLACEHOLDER
-================================ */
+========================================= */
 
 .input-box input::placeholder {
-  color: #94a3b8;
-
-  opacity: 1;
+  color: #9ca3af;
 }
 
 
-/* ================================
+/* =========================================
    SELECT
-================================ */
+========================================= */
 
 .input-box select {
-  cursor: pointer;
-
   appearance: auto;
+
+  cursor: pointer;
 }
 
 
-/* ================================
-   INPUT FOCUS
-================================ */
+/* =========================================
+   FOCUS
+========================================= */
 
 .input-box input:focus,
 .input-box select:focus {
@@ -433,31 +443,23 @@ body {
   border-color: #7c3aed;
 
   box-shadow:
-    0 0 0 3px rgba(124, 58, 237, 0.10);
+    0 0 0 4px rgba(124, 58, 237, 0.08);
 }
 
 
-/* ================================
-   ICON FOCUS
-================================ */
-
-.input-box:focus-within svg {
+.input-box:focus-within .input-icon {
   color: #2563eb;
-
-  transform:
-    translateY(-50%)
-    scale(1.08);
 }
 
 
-/* ================================
+/* =========================================
    REGISTER BUTTON
-================================ */
+========================================= */
 
 .register-btn {
   width: 100%;
 
-  height: 56px;
+  height: 58px;
 
   border: none;
 
@@ -467,19 +469,19 @@ body {
 
   cursor: pointer;
 
-  font-size: 15px;
-
-  font-weight: 700;
-
-  color: #ffffff;
-
   display: flex;
 
   justify-content: center;
 
   align-items: center;
 
-  gap: 10px;
+  gap: 12px;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
 
   background:
     linear-gradient(
@@ -489,9 +491,9 @@ body {
     );
 
   box-shadow:
-    0 10px 25px rgba(79, 70, 229, 0.25);
+    0 12px 25px rgba(79, 70, 229, 0.25);
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 
@@ -499,7 +501,7 @@ body {
   transform: translateY(-3px);
 
   box-shadow:
-    0 18px 30px rgba(124, 58, 237, 0.35);
+    0 18px 30px rgba(79, 70, 229, 0.35);
 }
 
 
@@ -513,12 +515,12 @@ body {
 }
 
 
-/* ================================
+/* =========================================
    LOADING
-================================ */
+========================================= */
 
-.loading {
-  height: 100vh;
+.registration-loading {
+  min-height: 100vh;
 
   display: flex;
 
@@ -526,17 +528,19 @@ body {
 
   align-items: center;
 
-  font-size: 30px;
+  font-size: 28px;
 
   font-weight: 700;
 
   color: #7c3aed;
+
+  background: #f3f4ff;
 }
 
 
-/* ================================
-   RESPONSIVE - TABLET
-================================ */
+/* =========================================
+   TABLET
+========================================= */
 
 @media (max-width: 992px) {
 
@@ -549,7 +553,7 @@ body {
   }
 
   .right-panel {
-    padding: 40px 35px;
+    padding: 45px 35px;
   }
 
   .left-panel h1 {
@@ -559,9 +563,9 @@ body {
 }
 
 
-/* ================================
-   RESPONSIVE - MOBILE
-================================ */
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 576px) {
 
@@ -574,15 +578,19 @@ body {
   }
 
   .left-panel {
-    padding: 30px 20px;
+    padding: 35px 22px;
   }
 
   .right-panel {
-    padding: 30px 20px;
+    padding: 30px 22px;
   }
 
   .left-panel h1 {
-    font-size: 30px;
+    font-size: 32px;
+  }
+
+  .form-header h2 {
+    font-size: 27px;
   }
 
   .event-card {
@@ -590,20 +598,16 @@ body {
   }
 
   .event-card h2 {
-    font-size: 24px;
-  }
-
-  .form-header h2 {
-    font-size: 27px;
+    font-size: 23px;
   }
 
   .input-box input,
   .input-box select {
-    height: 52px;
+    height: 54px;
   }
 
   .register-btn {
-    height: 54px;
+    height: 55px;
   }
 
 }
