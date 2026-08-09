@@ -172,23 +172,20 @@ function MyEvents() {
                     {event.transactionId || "-"}
                   </span>
                 </p>
-
-                <p>
-                  <strong>💳 Payment :</strong>{" "}
-
-                  <span
-                    className={
-                      event.status === "Approved"
-                        ? "approved"
-                        : event.status === "Rejected"
-                        ? "rejected"
-                        : "pending"
-                    }
-                  >
-                    {event.status || "Pending"}
-                  </span>
-                </p>
-
+<p>
+  <strong>💳 Payment :</strong>{" "}
+  <span
+    className={
+      event.paymentStatus === "Approved"
+        ? "approved"
+        : event.paymentStatus === "Rejected"
+        ? "rejected"
+        : "pending"
+    }
+  >
+    {event.paymentStatus || "Pending"}
+  </span>
+</p>
                 {event.createdAt && (
                   <p>
                     <strong>📅 Registered On :</strong>{" "}
