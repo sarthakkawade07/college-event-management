@@ -3,12 +3,23 @@ import "./Participants.css";
 
 function Participants() {
   const [participants, setParticipants] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const data =
-      JSON.parse(localStorage.getItem("participants")) || [];
+    fetch(
+      "https://college-event-management-backend-2mzu.onrender.com/api/participants"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Participants Response:", data);
 
-    setParticipants(data);
+        setParticipants(data.participants || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log("Participants Fetch Error:", error);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -16,45 +27,72 @@ function Participants() {
 
       <h1>Participants List</h1>
 
-      <table>
+      {loading ? (
+        <h2>Loading Participants...</h2>
+      ) : (
+        <table>
 
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Event</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Department</th>
-            <th>Year</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          {participants.length > 0 ? (
-
-            participants.map((item, index) => (
-              <tr key={index}>
-                <td>{item.fullName}</td>
-                <td>{item.eventTitle}</td>
-                <td>{item.email}</td>
-                <td>{item.mobile}</td>
-                <td>{item.department}</td>
-                <td>{item.year}</td>
-              </tr>
-            ))
-
-          ) : (
-
+          <thead>
             <tr>
-              <td colSpan="6">No Participants Yet</td>
+              <th>Name</th>
+              <th>Event</th>
+              <th>Email</th>
+              <th>Transaction ID</th>
+              <th>Amount</th>
+              <th>Payment</th>
             </tr>
+          </thead>
 
-          )}
+          <tbody>
 
-        </tbody>
+            {participants.length > 0 ? (
 
-      </table>
+              participants.map((item) => (
+                <tr key={item._id}>
+
+                  <td>
+                    {item.participantName}
+                  </td>
+
+                  <td>
+                    {item.eventTitle}
+                  </td>
+
+                  <td>
+                    {item.email}
+                  </td>
+
+                  <td>
+                    {item.transactionId}
+                  </td>
+
+                  <td>
+                    ₹{item.amount}
+                  </td>
+
+                  <td>
+                    <span className="participant-approved">
+                      Approved
+                    </span>
+                  </td>
+
+                </tr>
+              ))
+
+            ) : (
+
+              <tr>
+                <td colSpan="6">
+                  No Participants Yet
+                </td>
+              </tr>
+
+            )}
+
+          </tbody>
+
+        </table>
+      )}
 
     </div>
   );
