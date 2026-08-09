@@ -21,8 +21,8 @@ function Payment() {
   const [transactionId, setTransactionId] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
 
-  const user =
-    JSON.parse(localStorage.getItem("loggedInUser")) || {};
+const registrationData =
+  JSON.parse(localStorage.getItem("registrationData")) || {};
 
   useEffect(() => {
     fetch(
@@ -43,19 +43,18 @@ function Payment() {
       return;
     }
 
-    const paymentData = {
-      eventId: event._id,
-      eventTitle: event.title,
-      name: user.fullName || "",
-      email: user.email || "",
-      amount: event.fee,
-      transactionId,
-      screenshot: paymentScreenshot
-        ? paymentScreenshot.name
-        : "",
-      status: "Pending",
-    };
-
+   const paymentData = {
+  eventId: event._id,
+  eventTitle: event.title,
+  name: registrationData.fullName,
+  email: registrationData.email,
+  amount: event.fee,
+  transactionId,
+  screenshot: paymentScreenshot
+    ? paymentScreenshot.name
+    : "",
+  status: "Pending",
+};
     try {
       const res = await fetch(
         "https://college-event-management-backend-2mzu.onrender.com/api/payments",
