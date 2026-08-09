@@ -5,12 +5,12 @@ import {
   FaUser,
   FaEnvelope,
   FaLock,
-  FaEye,
-  FaEyeSlash,
-  FaPhone,
+  FaPhoneAlt,
   FaUniversity,
   FaLaptopCode,
   FaGraduationCap,
+  FaEye,
+  FaEyeSlash,
   FaUserPlus,
 } from "react-icons/fa";
 
@@ -18,6 +18,10 @@ import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -30,16 +34,6 @@ function Register() {
     confirmPassword: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
-
-  const [loading, setLoading] = useState(false);
-
-  // ==============================
-  // HANDLE INPUT
-  // ==============================
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -47,175 +41,96 @@ function Register() {
     });
   };
 
-  // ==============================
-  // REGISTER
-  // ==============================
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const {
-      fullName,
-      email,
-      mobile,
-      college,
-      department,
-      year,
-      password,
-      confirmPassword,
-    } = formData;
-
     if (
-      !fullName.trim() ||
-      !email.trim() ||
-      !mobile.trim() ||
-      !college.trim() ||
-      !department.trim() ||
-      !year ||
-      !password ||
-      !confirmPassword
+      !formData.fullName ||
+      !formData.email ||
+      !formData.mobile ||
+      !formData.college ||
+      !formData.department ||
+      !formData.year ||
+      !formData.password ||
+      !formData.confirmPassword
     ) {
-      alert("Please fill all required fields.");
+      alert("Please fill all fields.");
       return;
     }
 
-    if (!email.includes("@")) {
+    if (!formData.email.includes("@")) {
       alert("Please enter a valid email.");
       return;
     }
 
-    if (mobile.length !== 10) {
-      alert("Please enter a valid 10 digit mobile number.");
+    if (formData.password.length < 6) {
+      alert("Password must be at least 6 characters.");
       return;
     }
 
-    if (password.length < 6) {
-      alert("Password must contain at least 6 characters.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
-    // ==============================
-    // CHECK EXISTING USER
-    // ==============================
-
-    const existingUser =
-      JSON.parse(localStorage.getItem("user")) || null;
-
-    if (
-      existingUser &&
-      existingUser.email.toLowerCase() ===
-        email.trim().toLowerCase()
-    ) {
-      alert("This email is already registered.");
-      navigate("/login");
-      return;
-    }
-
-    // ==============================
-    // SAVE USER
-    // ==============================
-
-    const user = {
-      fullName: fullName.trim(),
-      email: email.trim().toLowerCase(),
-      mobile: mobile.trim(),
-      college: college.trim(),
-      department: department.trim(),
-      year,
-      password,
-    };
-
     setLoading(true);
 
-    setTimeout(() => {
-      localStorage.setItem(
-        "user",
-        JSON.stringify(user)
-      );
+    const userData = {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim().toLowerCase(),
+      mobile: formData.mobile.trim(),
+      college: formData.college.trim(),
+      department: formData.department.trim(),
+      year: formData.year,
+      password: formData.password,
+    };
 
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    setTimeout(() => {
       setLoading(false);
 
       alert("Registration Successful!");
 
       navigate("/login");
-    }, 800);
+    }, 1000);
   };
 
   return (
     <div className="register-page">
 
-      {/* =====================================
-          LEFT SIDE
-      ===================================== */}
+      {/* LEFT SIDE */}
 
       <div className="register-left">
 
-        <div className="register-left-content">
+        <h1>Campus Event Hub</h1>
 
-          <span className="register-badge">
-            CAMPUS EVENT HUB
-          </span>
+        <h2>Create Your Account 🚀</h2>
 
-          <h1>
-            Join the
-            <br />
-            Community 🚀
-          </h1>
+        <p>
+          Join Campus Event Hub and discover amazing
+          college events, workshops, hackathons and
+          competitions.
+        </p>
 
-          <p className="register-description">
-            Create your account and start discovering
-            amazing college events, workshops,
-            hackathons and competitions.
-          </p>
+        <div className="register-welcome-box">
 
-          {/* FEATURES */}
+          <h3>Why Create Account?</h3>
 
-          <div className="register-feature-box">
-
-            <h3>
-              What You Can Do
-            </h3>
-
-            <div className="register-feature">
-              <span>🎯</span>
-              <p>Register for exciting events</p>
-            </div>
-
-            <div className="register-feature">
-              <span>📅</span>
-              <p>Track all your registrations</p>
-            </div>
-
-            <div className="register-feature">
-              <span>🏆</span>
-              <p>Get digital certificates</p>
-            </div>
-
-            <div className="register-feature">
-              <span>👨‍💻</span>
-              <p>Participate in hackathons</p>
-            </div>
-
-            <div className="register-feature">
-              <span>🎁</span>
-              <p>Win exciting prizes</p>
-            </div>
-
-          </div>
+          <ul>
+            <li>🎯 Register for Events</li>
+            <li>🏆 Get Digital Certificates</li>
+            <li>📅 Track Your Registrations</li>
+            <li>👨‍💻 Join Hackathons</li>
+            <li>🎁 Discover Exciting Events</li>
+          </ul>
 
         </div>
 
       </div>
 
 
-      {/* =====================================
-          RIGHT SIDE
-      ===================================== */}
+      {/* RIGHT SIDE */}
 
       <div className="register-right">
 
@@ -224,34 +139,22 @@ function Register() {
           onSubmit={handleSubmit}
         >
 
-          {/* HEADER */}
+          <div className="register-header">
 
-          <div className="register-card-header">
-
-            <span className="register-card-icon">
-              👤
-            </span>
-
-            <h2>
-              Create Account
-            </h2>
+            <h2>Create Account</h2>
 
             <p>
-              Fill in your details to get started
+              Fill in your details to get started.
             </p>
 
           </div>
 
 
-          {/* =====================================
-              FULL NAME
-          ===================================== */}
+          {/* FULL NAME */}
 
           <div className="register-input-box">
 
-            <label>
-              Full Name
-            </label>
+            <label>Full Name</label>
 
             <div className="register-input-field">
 
@@ -263,7 +166,6 @@ function Register() {
                 placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={handleChange}
-                required
               />
 
             </div>
@@ -271,15 +173,11 @@ function Register() {
           </div>
 
 
-          {/* =====================================
-              EMAIL
-          ===================================== */}
+          {/* EMAIL */}
 
           <div className="register-input-box">
 
-            <label>
-              Email Address
-            </label>
+            <label>Email Address</label>
 
             <div className="register-input-field">
 
@@ -291,7 +189,6 @@ function Register() {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
-                required
               />
 
             </div>
@@ -299,28 +196,22 @@ function Register() {
           </div>
 
 
-          {/* =====================================
-              MOBILE
-          ===================================== */}
+          {/* MOBILE */}
 
           <div className="register-input-box">
 
-            <label>
-              Mobile Number
-            </label>
+            <label>Mobile Number</label>
 
             <div className="register-input-field">
 
-              <FaPhone className="register-input-icon" />
+              <FaPhoneAlt className="register-input-icon" />
 
               <input
                 type="tel"
                 name="mobile"
-                placeholder="Enter 10 digit mobile number"
+                placeholder="Enter your mobile number"
                 value={formData.mobile}
                 onChange={handleChange}
-                maxLength="10"
-                required
               />
 
             </div>
@@ -328,15 +219,11 @@ function Register() {
           </div>
 
 
-          {/* =====================================
-              COLLEGE
-          ===================================== */}
+          {/* COLLEGE */}
 
           <div className="register-input-box">
 
-            <label>
-              College Name
-            </label>
+            <label>College Name</label>
 
             <div className="register-input-field">
 
@@ -348,7 +235,6 @@ function Register() {
                 placeholder="Enter your college name"
                 value={formData.college}
                 onChange={handleChange}
-                required
               />
 
             </div>
@@ -356,15 +242,11 @@ function Register() {
           </div>
 
 
-          {/* =====================================
-              DEPARTMENT
-          ===================================== */}
+          {/* DEPARTMENT */}
 
           <div className="register-input-box">
 
-            <label>
-              Department
-            </label>
+            <label>Department</label>
 
             <div className="register-input-field">
 
@@ -373,10 +255,9 @@ function Register() {
               <input
                 type="text"
                 name="department"
-                placeholder="e.g. Computer Engineering"
+                placeholder="Enter your department"
                 value={formData.department}
                 onChange={handleChange}
-                required
               />
 
             </div>
@@ -384,15 +265,11 @@ function Register() {
           </div>
 
 
-          {/* =====================================
-              YEAR
-          ===================================== */}
+          {/* YEAR */}
 
           <div className="register-input-box">
 
-            <label>
-              Academic Year
-            </label>
+            <label>Year</label>
 
             <div className="register-input-field">
 
@@ -402,7 +279,6 @@ function Register() {
                 name="year"
                 value={formData.year}
                 onChange={handleChange}
-                required
               >
 
                 <option value="">
@@ -432,36 +308,26 @@ function Register() {
           </div>
 
 
-          {/* =====================================
-              PASSWORD
-          ===================================== */}
+          {/* PASSWORD */}
 
           <div className="register-input-box">
 
-            <label>
-              Password
-            </label>
+            <label>Password</label>
 
             <div className="register-input-field">
 
               <FaLock className="register-input-icon" />
 
               <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Create a password"
                 value={formData.password}
                 onChange={handleChange}
-                required
               />
 
-              <button
-                type="button"
-                className="register-eye-button"
+              <span
+                className="register-eye"
                 onClick={() =>
                   setShowPassword(!showPassword)
                 }
@@ -471,22 +337,18 @@ function Register() {
                 ) : (
                   <FaEye />
                 )}
-              </button>
+              </span>
 
             </div>
 
           </div>
 
 
-          {/* =====================================
-              CONFIRM PASSWORD
-          ===================================== */}
+          {/* CONFIRM PASSWORD */}
 
           <div className="register-input-box">
 
-            <label>
-              Confirm Password
-            </label>
+            <label>Confirm Password</label>
 
             <div className="register-input-field">
 
@@ -502,12 +364,10 @@ function Register() {
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                required
               />
 
-              <button
-                type="button"
-                className="register-eye-button"
+              <span
+                className="register-eye"
                 onClick={() =>
                   setShowConfirmPassword(
                     !showConfirmPassword
@@ -519,16 +379,14 @@ function Register() {
                 ) : (
                   <FaEye />
                 )}
-              </button>
+              </span>
 
             </div>
 
           </div>
 
 
-          {/* =====================================
-              REGISTER BUTTON
-          ===================================== */}
+          {/* BUTTON */}
 
           <button
             type="submit"
@@ -548,9 +406,7 @@ function Register() {
           </button>
 
 
-          {/* LOGIN LINK */}
-
-          <p className="register-login-text">
+          <p className="login-text">
 
             Already have an account?
 
