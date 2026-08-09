@@ -20,6 +20,7 @@ function Payment() {
   const [event, setEvent] = useState(null);
   const [transactionId, setTransactionId] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Registration page वर save केलेली माहिती
   const registrationData =
@@ -40,10 +41,13 @@ function Payment() {
 
   // Loading
   if (!event) {
-    return <h2 className="loading">Loading...</h2>;
+    return <div>Loading...</div>;
   }
 
-  // Submit Payment
+  // ==========================================
+  // SUBMIT PAYMENT
+  // ==========================================
+
   const handlePayment = async () => {
     if (!registrationData.fullName) {
       alert("Student name not found. Please register again.");
@@ -65,28 +69,49 @@ function Payment() {
       return;
     }
 
-    const paymentData = {
-      eventId: event._id,
-      eventTitle: event.title,
-      name: registrationData.fullName,
-      email: registrationData.email,
-      amount: event.fee,
-      transactionId: transactionId.trim(),
-      screenshot: paymentScreenshot.name,
-      status: "Pending",
-    };
+    // ==========================================
+    // FILE VALIDATION
+    // ==========================================
 
-    console.log("Payment Data:", paymentData);
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(paymentScreenshot.type)) {
+      alert("Only JPG, PNG and WEBP images are allowed.");
+      return;
+    }
+
+    // Maximum 5 MB
+    if (paymentScreenshot.size > 5 * 1024 * 1024) {
+      alert("Screenshot size must be less than 5 MB.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // ==========================================
+    // FORMDATA
+    // ==========================================
+
+    const formData = new FormData();
+
+    formData.append("eventId", event._id);
+    formData.append("name", registrationData.fullName);
+    formData.append("email", registrationData.email);
+    formData.append("transactionId", transactionId.trim());
+    formData.append("screenshot", paymentScreenshot);
+
+    console.log("Payment FormData Ready");
 
     try {
       const res = await fetch(
         "https://college-event-management-backend-2mzu.onrender.com/api/payments",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(paymentData),
+          body: formData,
         }
       );
 
@@ -95,19 +120,56 @@ function Payment() {
       console.log("Payment Response:", data);
 
       if (res.ok) {
-        alert("Payment Submitted Successfully! 🎉");
+        alert(
+          "Payment Submitted Successfully! 🎉\n\nAdmin verification is pending."
+        );
 
-        // Payment successful झाल्यावर registration data ठेवतो
-        // पुढे My Events मध्ये वापरता येईल
+        // ==========================================
+        // SAVE LOCAL MY EVENT
+        // ==========================================
+
+        const existingEvents =
+          JSON.parse(localStorage.getItem("myEvents")) || [];
+
+        const newEvent = {
+          id: event._id,
+          title: event.title,
+          date: event.date,
+          amount: event.fee,
+          transactionId: transactionId.trim(),
+          paymentStatus: "Pending",
+          status: "Registered",
+        };
+
+        const alreadyExists = existingEvents.some(
+          (item) =>
+            item.transactionId === transactionId.trim()
+        );
+
+        if (!alreadyExists) {
+          localStorage.setItem(
+            "myEvents",
+            JSON.stringify([
+              ...existingEvents,
+              newEvent,
+            ])
+          );
+        }
+
         navigate("/my-events");
       } else {
         alert(
-          data.message || "Payment submission failed"
+          data.message ||
+            "Payment submission failed."
         );
       }
     } catch (error) {
       console.log("Payment Error:", error);
-      alert("Server Error. Please try again.");
+      alert(
+        "Server Error. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -179,7 +241,6 @@ function Payment() {
 
         </div>
 
-
         {/* ================= RIGHT PANEL ================= */}
 
         <div className="payment-right">
@@ -198,7 +259,6 @@ function Payment() {
 
           </div>
 
-
           {/* Student Details */}
 
           <div className="student-card">
@@ -214,7 +274,6 @@ function Payment() {
 
             </div>
 
-
             <div className="student-item">
 
               <FaEnvelope />
@@ -227,7 +286,6 @@ function Payment() {
             </div>
 
           </div>
-
 
           {/* QR CARD */}
 
@@ -253,7 +311,6 @@ function Payment() {
 
           </div>
 
-
           {/* Amount Card */}
 
           <div className="amount-card">
@@ -274,7 +331,6 @@ function Payment() {
 
           </div>
 
-
           {/* Transaction ID */}
 
           <div className="input-box">
@@ -290,7 +346,6 @@ function Payment() {
 
           </div>
 
-
           {/* Screenshot Upload */}
 
           <div className="upload-box">
@@ -301,20 +356,23 @@ function Payment() {
 
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
               onChange={(e) => {
-                const file = e.target.files?.[0];
+
+                const file =
+                  e.target.files?.[0];
 
                 if (file) {
                   setPaymentScreenshot(file);
                 }
+
               }}
             />
-
 
             {/* Screenshot Preview */}
 
             {paymentScreenshot && (
+
               <div className="preview-box">
 
                 <img
@@ -330,10 +388,10 @@ function Payment() {
                 </p>
 
               </div>
+
             )}
 
           </div>
-
 
           {/* Submit Button */}
 
@@ -341,11 +399,16 @@ function Payment() {
             type="button"
             className="payment-btn"
             onClick={handlePayment}
+            disabled={isSubmitting}
           >
 
-            Submit Payment
+            {isSubmitting
+              ? "Uploading..."
+              : "Submit Payment"}
 
-            <FaArrowRight />
+            {!isSubmitting && (
+              <FaArrowRight />
+            )}
 
           </button>
 
