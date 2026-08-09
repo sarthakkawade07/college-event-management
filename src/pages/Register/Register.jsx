@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   FaUser,
   FaEnvelope,
-  FaPhone,
   FaLock,
   FaEye,
   FaEyeSlash,
+  FaPhone,
+  FaUniversity,
+  FaLaptopCode,
+  FaGraduationCap,
   FaUserPlus,
 } from "react-icons/fa";
+
 import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -26,282 +28,545 @@ function Register() {
     year: "",
     password: "",
     confirmPassword: "",
-    terms: false,
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
 
+  const [loading, setLoading] = useState(false);
+
+  // ==============================
+  // HANDLE INPUT
+  // ==============================
+
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [e.target.name]: e.target.value,
     });
   };
+
+  // ==============================
+  // REGISTER
+  // ==============================
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formData.fullName.trim() === "") {
-      alert("Enter Full Name");
+    const {
+      fullName,
+      email,
+      mobile,
+      college,
+      department,
+      year,
+      password,
+      confirmPassword,
+    } = formData;
+
+    if (
+      !fullName.trim() ||
+      !email.trim() ||
+      !mobile.trim() ||
+      !college.trim() ||
+      !department.trim() ||
+      !year ||
+      !password ||
+      !confirmPassword
+    ) {
+      alert("Please fill all required fields.");
       return;
     }
 
-    if (formData.email.trim() === "") {
-      alert("Enter Email");
+    if (!email.includes("@")) {
+      alert("Please enter a valid email.");
       return;
     }
 
-    if (!formData.email.includes("@")) {
-      alert("Enter Valid Email");
+    if (mobile.length !== 10) {
+      alert("Please enter a valid 10 digit mobile number.");
       return;
     }
 
-    if (formData.mobile.length !== 10) {
-      alert("Enter Valid Mobile Number");
+    if (password.length < 6) {
+      alert("Password must contain at least 6 characters.");
       return;
     }
 
-    if (formData.college.trim() === "") {
-      alert("Enter College Name");
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
       return;
     }
 
-    if (formData.department.trim() === "") {
-      alert("Enter Department");
+    // ==============================
+    // CHECK EXISTING USER
+    // ==============================
+
+    const existingUser =
+      JSON.parse(localStorage.getItem("user")) || null;
+
+    if (
+      existingUser &&
+      existingUser.email.toLowerCase() ===
+        email.trim().toLowerCase()
+    ) {
+      alert("This email is already registered.");
+      navigate("/login");
       return;
     }
 
-    if (formData.year === "") {
-      alert("Select Year");
-      return;
-    }
+    // ==============================
+    // SAVE USER
+    // ==============================
 
-    if (formData.password.length < 6) {
-      alert("Password must be at least 6 characters");
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    if (!formData.terms) {
-      alert("Accept Terms & Conditions");
-      return;
-    }
-
-    // Save User
     const user = {
-      fullName: formData.fullName,
-      email: formData.email,
-      mobile: formData.mobile,
-      college: formData.college,
-      department: formData.department,
-      year: formData.year,
-      password: formData.password,
+      fullName: fullName.trim(),
+      email: email.trim().toLowerCase(),
+      mobile: mobile.trim(),
+      college: college.trim(),
+      department: department.trim(),
+      year,
+      password,
     };
 
-    localStorage.setItem("user", JSON.stringify(user));
+    setLoading(true);
 
-    alert("Registration Successful!");
+    setTimeout(() => {
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
 
-    navigate("/login");
+      setLoading(false);
+
+      alert("Registration Successful!");
+
+      navigate("/login");
+    }, 800);
   };
-    return (
+
+  return (
     <div className="register-page">
 
+      {/* =====================================
+          LEFT SIDE
+      ===================================== */}
+
       <div className="register-left">
-        <h1>Campus Event Hub</h1>
 
-        <h2>Create Your Account 🚀</h2>
+        <div className="register-left-content">
 
-        <p>
-          Join thousands of students and participate in exciting college events,
-          hackathons, workshops and competitions.
-        </p>
+          <span className="register-badge">
+            CAMPUS EVENT HUB
+          </span>
+
+          <h1>
+            Join the
+            <br />
+            Community 🚀
+          </h1>
+
+          <p className="register-description">
+            Create your account and start discovering
+            amazing college events, workshops,
+            hackathons and competitions.
+          </p>
+
+          {/* FEATURES */}
+
+          <div className="register-feature-box">
+
+            <h3>
+              What You Can Do
+            </h3>
+
+            <div className="register-feature">
+              <span>🎯</span>
+              <p>Register for exciting events</p>
+            </div>
+
+            <div className="register-feature">
+              <span>📅</span>
+              <p>Track all your registrations</p>
+            </div>
+
+            <div className="register-feature">
+              <span>🏆</span>
+              <p>Get digital certificates</p>
+            </div>
+
+            <div className="register-feature">
+              <span>👨‍💻</span>
+              <p>Participate in hackathons</p>
+            </div>
+
+            <div className="register-feature">
+              <span>🎁</span>
+              <p>Win exciting prizes</p>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
+
+      {/* =====================================
+          RIGHT SIDE
+      ===================================== */}
+
       <div className="register-right">
-        <form className="register-card" onSubmit={handleSubmit}>
 
-          <h2>Register</h2>
+        <form
+          className="register-card"
+          onSubmit={handleSubmit}
+        >
 
-          {/* Full Name */}
-          <div className="input-box">
-            <label>Full Name</label>
+          {/* HEADER */}
 
-            <div className="input-field">
-              <FaUser className="input-icon" />
+          <div className="register-card-header">
+
+            <span className="register-card-icon">
+              👤
+            </span>
+
+            <h2>
+              Create Account
+            </h2>
+
+            <p>
+              Fill in your details to get started
+            </p>
+
+          </div>
+
+
+          {/* =====================================
+              FULL NAME
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              Full Name
+            </label>
+
+            <div className="register-input-field">
+
+              <FaUser className="register-input-icon" />
 
               <input
                 type="text"
                 name="fullName"
-                placeholder="Enter Full Name"
+                placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={handleChange}
+                required
               />
+
             </div>
+
           </div>
 
-          {/* Email */}
-          <div className="input-box">
-            <label>Email</label>
 
-            <div className="input-field">
-              <FaEnvelope className="input-icon" />
+          {/* =====================================
+              EMAIL
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              Email Address
+            </label>
+
+            <div className="register-input-field">
+
+              <FaEnvelope className="register-input-icon" />
 
               <input
                 type="email"
                 name="email"
-                placeholder="Enter Email"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
+
             </div>
+
           </div>
 
-          {/* Mobile */}
-          <div className="input-box">
-            <label>Mobile Number</label>
 
-            <div className="input-field">
-              <FaPhone className="input-icon" />
+          {/* =====================================
+              MOBILE
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              Mobile Number
+            </label>
+
+            <div className="register-input-field">
+
+              <FaPhone className="register-input-icon" />
 
               <input
                 type="tel"
                 name="mobile"
-                placeholder="Enter Mobile Number"
+                placeholder="Enter 10 digit mobile number"
                 value={formData.mobile}
                 onChange={handleChange}
+                maxLength="10"
+                required
               />
+
             </div>
+
           </div>
 
-          {/* College */}
-          <div className="input-box">
-            <label>College Name</label>
 
-            <div className="input-field">
-              <FaUser className="input-icon" />
+          {/* =====================================
+              COLLEGE
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              College Name
+            </label>
+
+            <div className="register-input-field">
+
+              <FaUniversity className="register-input-icon" />
 
               <input
                 type="text"
                 name="college"
-                placeholder="Enter College Name"
+                placeholder="Enter your college name"
                 value={formData.college}
                 onChange={handleChange}
+                required
               />
+
             </div>
+
           </div>
 
-          {/* Department */}
-          <div className="input-box">
-            <label>Department</label>
 
-            <div className="input-field">
-              <FaUser className="input-icon" />
+          {/* =====================================
+              DEPARTMENT
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              Department
+            </label>
+
+            <div className="register-input-field">
+
+              <FaLaptopCode className="register-input-icon" />
 
               <input
                 type="text"
                 name="department"
-                placeholder="Enter Department"
+                placeholder="e.g. Computer Engineering"
                 value={formData.department}
                 onChange={handleChange}
+                required
               />
+
             </div>
+
           </div>
 
-          {/* Year */}
-          <div className="input-box">
-            <label>Year</label>
 
-            <select
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
-            >
-              <option value="">Select Year</option>
-              <option value="First Year">First Year</option>
-              <option value="Second Year">Second Year</option>
-              <option value="Third Year">Third Year</option>
-              <option value="Final Year">Final Year</option>
-            </select>
+          {/* =====================================
+              YEAR
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              Academic Year
+            </label>
+
+            <div className="register-input-field">
+
+              <FaGraduationCap className="register-input-icon" />
+
+              <select
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                required
+              >
+
+                <option value="">
+                  Select Year
+                </option>
+
+                <option value="First Year">
+                  First Year
+                </option>
+
+                <option value="Second Year">
+                  Second Year
+                </option>
+
+                <option value="Third Year">
+                  Third Year
+                </option>
+
+                <option value="Final Year">
+                  Final Year
+                </option>
+
+              </select>
+
+            </div>
+
           </div>
 
-          {/* Password */}
-          <div className="input-box">
-            <label>Password</label>
 
-            <div className="input-field">
-              <FaLock className="input-icon" />
+          {/* =====================================
+              PASSWORD
+          ===================================== */}
+
+          <div className="register-input-box">
+
+            <label>
+              Password
+            </label>
+
+            <div className="register-input-field">
+
+              <FaLock className="register-input-icon" />
 
               <input
-                type={showPassword ? "text" : "password"}
+                type={
+                  showPassword
+                    ? "text"
+                    : "password"
+                }
                 name="password"
-                placeholder="Enter Password"
+                placeholder="Create a password"
                 value={formData.password}
                 onChange={handleChange}
+                required
               />
 
-              <span
-                className="eye-icon"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-          </div>
-
-          {/* Confirm Password */}
-          <div className="input-box">
-            <label>Confirm Password</label>
-
-            <div className="input-field">
-              <FaLock className="input-icon" />
-
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-
-              <span
-                className="eye-icon"
+              <button
+                type="button"
+                className="register-eye-button"
                 onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
+                  setShowPassword(!showPassword)
                 }
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+                {showPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
+              </button>
+
             </div>
+
           </div>
 
-          {/* Terms */}
-          <div className="terms-box">
+
+          {/* =====================================
+              CONFIRM PASSWORD
+          ===================================== */}
+
+          <div className="register-input-box">
+
             <label>
-              <input
-                type="checkbox"
-                name="terms"
-                checked={formData.terms}
-                onChange={handleChange}
-              />
-              I accept Terms & Conditions
+              Confirm Password
             </label>
+
+            <div className="register-input-field">
+
+              <FaLock className="register-input-icon" />
+
+              <input
+                type={
+                  showConfirmPassword
+                    ? "text"
+                    : "password"
+                }
+                name="confirmPassword"
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+
+              <button
+                type="button"
+                className="register-eye-button"
+                onClick={() =>
+                  setShowConfirmPassword(
+                    !showConfirmPassword
+                  )
+                }
+              >
+                {showConfirmPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
+              </button>
+
+            </div>
+
           </div>
 
-          <button type="submit" className="register-btn">
-            <FaUserPlus /> Register
+
+          {/* =====================================
+              REGISTER BUTTON
+          ===================================== */}
+
+          <button
+            type="submit"
+            className="register-submit-btn"
+            disabled={loading}
+          >
+
+            {loading ? (
+              "Creating Account..."
+            ) : (
+              <>
+                <FaUserPlus />
+                Create Account
+              </>
+            )}
+
           </button>
 
-          <p className="login-text">
+
+          {/* LOGIN LINK */}
+
+          <p className="register-login-text">
+
             Already have an account?
-            <Link to="/login"> Login</Link>
+
+            <Link to="/login">
+              Login
+            </Link>
+
+          </p>
+
+
+          <p className="register-copyright">
+            © 2026 Campus Event Hub
           </p>
 
         </form>
+
       </div>
 
     </div>
