@@ -23,17 +23,8 @@
   font-weight: 800;
   letter-spacing: -1px;
 
-  background: linear-gradient(
-    90deg,
-    #2563eb,
-    #4f46e5,
-    #7c3aed
-  );
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #2446a8;
 }
-
 .my-events-page h1::after {
   content: "";
   display: block;
