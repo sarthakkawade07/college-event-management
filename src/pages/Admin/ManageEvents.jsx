@@ -1,8 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import "./ManageEvents.css";
 
+const API_URL =
+  "https://college-event-management-backend-2mzu.onrender.com/api/events";
+
+// ==========================================
+// GET ALL EVENTS
+// ==========================================
+
+const fetchEvents = async () => {
+  const response = await fetch(API_URL);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch events");
+  }
+
+  return response.json();
+};
+
 function ManageEvents() {
-  const [events, setEvents] = useState([]);
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState(null);
 
@@ -18,69 +35,167 @@ function ManageEvents() {
     image: "",
   });
 
-  useEffect(() => {
-    fetch("https://college-event-management-backend-2mzu.onrender.com/api/events")
-      .then((res) => res.json())
-      .then((data) => setEvents(data))
-      .catch((err) => console.log(err));
-  }, []);
+  const queryClient = useQueryClient();
 
-  const filteredEvents = events.filter((event) =>
-    event.title.toLowerCase().includes(search.toLowerCase())
-  );
+  // ==========================================
+  // TANSTACK - GET EVENTS
+  // ==========================================
 
-  const deleteEvent = async (id) => {
-    if (!window.confirm("Delete this event?")) return;
+  const {
+    data: events = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["events"],
+    queryFn: fetchEvents,
+  });
 
-    try {
-      await fetch(`https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`, {
+  // ==========================================
+  // DELETE EVENT
+  // ==========================================
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id) => {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
       });
 
-      setEvents(events.filter((event) => event._id !== id));
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to delete event");
+      }
+
+      return response.json();
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
+      });
 
       alert("✅ Event Deleted Successfully");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    },
 
-  const saveEdit = async (id) => {
-  try {
-    const response = await fetch(`https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`, {
+    onError: (error) => {
+      console.log("Delete Error:", error);
+      alert(error.message || "Unable to delete event");
+    },
+  });
+
+  // ==========================================
+  // UPDATE EVENT
+  // ==========================================
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, eventData }) => {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(editedEvent),
+        body: JSON.stringify(eventData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to update event");
       }
-    );
 
-    const result = await response.json();
+      return result;
+    },
 
-    if (response.ok) {
-
-      // Update UI immediately
-      setEvents((prevEvents) =>
-        prevEvents.map((event) =>
-          event._id === id
-            ? { ...event, ...editedEvent }
-            : event
-        )
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
+      });
 
       setEditingId(null);
 
       alert("✅ Event Updated Successfully");
+    },
 
-    } else {
-      alert(result.message);
+    onError: (error) => {
+      console.log("Update Error:", error);
+      alert(error.message || "Unable to update event");
+    },
+  });
+
+  // ==========================================
+  // SEARCH
+  // ==========================================
+
+  const filteredEvents = events.filter((event) =>
+    event.title?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // ==========================================
+  // DELETE
+  // ==========================================
+
+  const deleteEvent = (id) => {
+    if (!window.confirm("Delete this event?")) {
+      return;
     }
 
-  } catch (err) {
-    console.log(err);
+    deleteMutation.mutate(id);
+  };
+
+  // ==========================================
+  // SAVE EDIT
+  // ==========================================
+
+  const saveEdit = (id) => {
+    updateMutation.mutate({
+      id,
+      eventData: editedEvent,
+    });
+  };
+
+  // ==========================================
+  // LOADING
+  // ==========================================
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "100px",
+          fontSize: "30px",
+          fontWeight: "bold",
+        }}
+      >
+        Loading Events...
+      </div>
+    );
   }
-};
+
+  // ==========================================
+  // ERROR
+  // ==========================================
+
+  if (isError) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "100px",
+          fontSize: "25px",
+          color: "red",
+        }}
+      >
+        Failed to load events.
+        <br />
+        {error.message}
+      </div>
+    );
+  }
+
+  // ==========================================
+  // UI
+  // ==========================================
 
   return (
     <div className="manage-events-page">
@@ -98,150 +213,201 @@ function ManageEvents() {
       <div className="events-list">
 
         {filteredEvents.map((event) => (
-          <div className="event-box" key={event._id}>
 
-  <h2>{event.title}</h2>
+          <div
+            className="event-box"
+            key={event._id}
+          >
 
-  <p>📅 {event.date}</p>
-  <p>🕒 {event.time}</p>
-  <p>📍 {event.venue}</p>
-  <p>🏷 {event.category}</p>
-  <p>👤 {event.organizer}</p>
-  <p>💰 ₹{event.fee}</p>
+            {editingId === event._id ? (
 
-  {editingId === event._id ? (
+              <>
+                {/* ================= EDIT FORM ================= */}
 
-    <>
-      <div className="edit-form">
+                <div className="edit-form">
 
-        <input
-          type="text"
-          placeholder="Title"
-          value={editedEvent.title}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              title: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    value={editedEvent.title}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        title: e.target.value,
+                      })
+                    }
+                  />
 
-        <textarea
-          placeholder="Description"
-          value={editedEvent.description}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              description: e.target.value,
-            })
-          }
-        />
+                  <textarea
+                    placeholder="Description"
+                    value={editedEvent.description}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        description: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="date"
-          value={editedEvent.date}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              date: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="date"
+                    value={editedEvent.date}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        date: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="time"
-          value={editedEvent.time}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              time: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="time"
+                    value={editedEvent.time}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        time: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="text"
-          placeholder="Venue"
-          value={editedEvent.venue}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              venue: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="text"
+                    placeholder="Venue"
+                    value={editedEvent.venue}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        venue: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="text"
-          placeholder="Category"
-          value={editedEvent.category}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              category: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="text"
+                    placeholder="Category"
+                    value={editedEvent.category}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        category: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="text"
-          placeholder="Organizer"
-          value={editedEvent.organizer}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              organizer: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="text"
+                    placeholder="Organizer"
+                    value={editedEvent.organizer}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        organizer: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="number"
-          placeholder="Fee"
-          value={editedEvent.fee}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              fee: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="number"
+                    placeholder="Fee"
+                    value={editedEvent.fee}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        fee: e.target.value,
+                      })
+                    }
+                  />
 
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={editedEvent.image}
-          onChange={(e) =>
-            setEditedEvent({
-              ...editedEvent,
-              image: e.target.value,
-            })
-          }
-        />
+                  <input
+                    type="text"
+                    placeholder="Image URL"
+                    value={editedEvent.image}
+                    onChange={(e) =>
+                      setEditedEvent({
+                        ...editedEvent,
+                        image: e.target.value,
+                      })
+                    }
+                  />
 
-      </div>
+                </div>
 
-      <div className="btn-group">
+                {/* ================= BUTTONS ================= */}
 
-        <button
-          className="edit-btn"
-          onClick={() => saveEdit(event._id)}
-        >
-          💾 Save
-        </button>
+                <div className="btn-group">
 
-        <button
-          className="delete-btn"
-          onClick={() => setEditingId(null)}
-        >
-          ❌ Cancel
-        </button>
+                  <button
+                    className="edit-btn"
+                    onClick={() => saveEdit(event._id)}
+                    disabled={updateMutation.isPending}
+                  >
+                    {updateMutation.isPending
+                      ? "Saving..."
+                      : "💾 Save"}
+                  </button>
 
-      </div>
+                  <button
+                    className="delete-btn"
+                    onClick={() => setEditingId(null)}
+                    disabled={updateMutation.isPending}
+                  >
+                    ❌ Cancel
+                  </button>
 
-    </>
-  ) : (
-                  <>
+                </div>
+              </>
+
+            ) : (
+
+              <>
+                {/* ================= EVENT DETAILS ================= */}
+
+                <div className="event-details">
+
+                  <h2>{event.title}</h2>
+
+                  <p>
+                    <strong>Description:</strong>{" "}
+                    {event.description}
+                  </p>
+
+                  <p>
+                    <strong>Date:</strong>{" "}
+                    {event.date}
+                  </p>
+
+                  <p>
+                    <strong>Time:</strong>{" "}
+                    {event.time}
+                  </p>
+
+                  <p>
+                    <strong>Venue:</strong>{" "}
+                    {event.venue}
+                  </p>
+
+                  <p>
+                    <strong>Category:</strong>{" "}
+                    {event.category}
+                  </p>
+
+                  <p>
+                    <strong>Organizer:</strong>{" "}
+                    {event.organizer}
+                  </p>
+
+                  <p>
+                    <strong>Fee:</strong>{" "}
+                    {Number(event.fee) === 0
+                      ? "Free"
+                      : `₹${event.fee}`}
+                  </p>
+
+                </div>
+
+                {/* ================= ACTION BUTTONS ================= */}
+
                 <div className="btn-group">
 
                   <button
@@ -250,15 +416,15 @@ function ManageEvents() {
                       setEditingId(event._id);
 
                       setEditedEvent({
-                        title: event.title,
-                        description: event.description,
-                        date: event.date,
-                        time: event.time,
-                        venue: event.venue,
-                        category: event.category,
-                        organizer: event.organizer,
-                        fee: event.fee,
-                        image: event.image,
+                        title: event.title || "",
+                        description: event.description || "",
+                        date: event.date || "",
+                        time: event.time || "",
+                        venue: event.venue || "",
+                        category: event.category || "",
+                        organizer: event.organizer || "",
+                        fee: event.fee ?? "",
+                        image: event.image || "",
                       });
                     }}
                   >
@@ -268,12 +434,16 @@ function ManageEvents() {
                   <button
                     className="delete-btn"
                     onClick={() => deleteEvent(event._id)}
+                    disabled={deleteMutation.isPending}
                   >
-                    🗑 Delete
+                    {deleteMutation.isPending
+                      ? "Deleting..."
+                      : "🗑 Delete"}
                   </button>
 
                 </div>
               </>
+
             )}
 
           </div>
@@ -281,7 +451,12 @@ function ManageEvents() {
         ))}
 
         {filteredEvents.length === 0 && (
-          <h2 style={{ textAlign: "center", width: "100%" }}>
+          <h2
+            style={{
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
             No Events Found
           </h2>
         )}
