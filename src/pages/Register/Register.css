@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;500;600;700;800&display=swap");
 
 * {
   margin: 0;
@@ -8,25 +8,27 @@
 }
 
 body {
-  background: #f5f6ff;
+  margin: 0;
+  background: #f7f8ff;
 }
 
-/* =====================================
-   MAIN
-===================================== */
+/* =========================
+   MAIN PAGE
+========================= */
 
 .register-page {
   min-height: 100vh;
-  background: #f6f7ff;
+  background: #f8f9ff;
+  overflow-x: hidden;
 }
 
-/* =====================================
+/* =========================
    NAVBAR
-===================================== */
+========================= */
 
 .register-navbar {
   height: 72px;
-
+  width: 100%;
   background: #ffffff;
 
   display: flex;
@@ -35,7 +37,7 @@ body {
 
   padding: 0 5%;
 
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
 
   position: relative;
   z-index: 10;
@@ -44,305 +46,329 @@ body {
 .register-logo {
   display: flex;
   align-items: center;
-
   gap: 10px;
 
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
 
   color: #172554;
 }
 
 .register-logo svg {
-  color: #5b21b6;
+  color: #6338f5;
   font-size: 27px;
 }
 
 .register-logo b {
-  color: #5b21b6;
+  color: #6338f5;
 }
 
 .register-nav-links {
   display: flex;
   align-items: center;
-
   gap: 30px;
 }
 
 .register-nav-links a {
   text-decoration: none;
-
   color: #172554;
 
   font-size: 14px;
-
   font-weight: 600;
 
   transition: 0.3s;
 }
 
 .register-nav-links a:hover {
-  color: #5b21b6;
+  color: #6338f5;
 }
 
-.register-nav-links .active-register {
-  color: #fff;
+.register-nav-links .register-nav-active {
+  background: linear-gradient(
+    135deg,
+    #5538f5,
+    #7132df
+  );
 
-  background:
-    linear-gradient(
-      135deg,
-      #4f46e5,
-      #7c3aed
-    );
+  color: white;
 
   padding: 10px 20px;
 
-  border-radius: 22px;
-
-  box-shadow:
-    0 6px 15px rgba(124, 58, 237, 0.25);
+  border-radius: 20px;
 }
 
-/* =====================================
-   MAIN AREA
-===================================== */
+.register-nav-links .register-nav-active:hover {
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   MAIN
+========================= */
 
 .register-main {
+  min-height: 820px;
+
   display: grid;
 
   grid-template-columns: 47% 53%;
-
-  min-height: 820px;
 }
 
-/* =====================================
+/* =========================
    LEFT
-===================================== */
+========================= */
 
 .register-left {
   position: relative;
 
   overflow: hidden;
 
-  color: #fff;
+  color: white;
 
   background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(255, 255, 255, 0.08),
+      transparent 25%
+    ),
     linear-gradient(
       135deg,
       #3158ed 0%,
-      #4d38e9 45%,
-      #7619d8 100%
+      #4f36ed 45%,
+      #751be5 100%
     );
 
-  padding: 120px 13% 70px;
+  display: flex;
+  align-items: center;
 
-  min-height: 820px;
+  padding: 70px 12%;
 }
 
-.register-left::before {
-  content: "";
-
-  position: absolute;
-
-  width: 180px;
-  height: 180px;
-
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.08);
-
-  right: -60px;
-  top: -50px;
-}
-
-.register-left::after {
-  content: "";
-
-  position: absolute;
-
-  width: 180px;
-  height: 180px;
-
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.08);
-
-  left: -100px;
-  bottom: -60px;
-}
-
-.left-content {
+.register-left-content {
   position: relative;
   z-index: 3;
+
+  max-width: 570px;
 }
 
-.community-badge {
-  display: inline-block;
+.register-community-badge {
+  display: inline-flex;
 
-  padding: 9px 18px;
-
-  border-radius: 25px;
+  align-items: center;
 
   background: rgba(255, 255, 255, 0.13);
 
   border: 1px solid rgba(255, 255, 255, 0.12);
 
-  font-size: 13px;
+  padding: 10px 18px;
 
+  border-radius: 30px;
+
+  font-size: 14px;
   font-weight: 600;
 
   margin-bottom: 25px;
 }
 
 .register-left h1 {
-  font-size: 50px;
+  font-size: 51px;
 
-  line-height: 1.2;
+  line-height: 1.15;
 
-  font-weight: 800;
-
-  margin-bottom: 15px;
-}
-
-.register-left h2 {
-  font-size: 31px;
+  font-weight: 700;
 
   margin-bottom: 18px;
 
-  font-weight: 700;
+  color: #ffffff;
+}
+
+.register-left h2 {
+  font-size: 32px;
+
+  line-height: 1.3;
+
+  margin-bottom: 20px;
+
+  color: white;
 }
 
 .register-left h2 span {
   color: #ffd21c;
 }
 
-.left-description {
-  max-width: 500px;
-
-  font-size: 16px;
+.register-description {
+  font-size: 17px;
 
   line-height: 1.9;
 
-  color: #fff;
+  max-width: 510px;
+
+  color: rgba(255, 255, 255, 0.96);
+
+  margin-bottom: 30px;
 }
 
-/* =====================================
-   WHY BOX
-===================================== */
+/* =========================
+   BENEFITS
+========================= */
 
-.why-box {
-  margin-top: 32px;
-
-  width: 355px;
+.register-benefits {
+  width: 390px;
 
   padding: 25px 30px;
 
   border-radius: 14px;
 
-  background: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.1);
 
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
   backdrop-filter: blur(10px);
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 }
 
-.why-box h3 {
+.register-benefits h3 {
   text-align: center;
 
-  font-size: 18px;
+  font-size: 19px;
 
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
-.why-box ul {
-  list-style: none;
-}
-
-.why-box li {
-  padding: 7px 0;
-
-  font-size: 14px;
-}
-
-/* =====================================
-   DECORATION
-===================================== */
-
-.bottom-decoration {
-  position: absolute;
-
-  bottom: 20px;
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 100%;
-
-  text-align: center;
-
-  font-size: 60px;
-
-  opacity: 0.15;
-
-  letter-spacing: 8px;
-}
-
-/* =====================================
-   RIGHT
-===================================== */
-
-.register-right {
+.register-benefit {
   display: flex;
-
-  justify-content: center;
 
   align-items: center;
 
-  padding: 40px;
+  gap: 12px;
 
-  background:
-    radial-gradient(
-      circle at 20% 20%,
-      #e7e8ff,
-      transparent 30%
-    ),
-    #f8f9ff;
+  margin-bottom: 14px;
 }
 
-/* =====================================
-   CARD
-===================================== */
+.register-benefit:last-child {
+  margin-bottom: 0;
+}
+
+.register-benefit span {
+  font-size: 17px;
+}
+
+.register-benefit p {
+  margin: 0;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* =========================
+   DECORATIONS
+========================= */
+
+.register-circle-one {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.07);
+
+  top: -70px;
+  right: -50px;
+}
+
+.register-circle-two {
+  position: absolute;
+
+  width: 170px;
+  height: 170px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  bottom: -70px;
+  left: -50px;
+}
+
+.register-dot-one,
+.register-dot-two {
+  position: absolute;
+
+  width: 60px;
+  height: 60px;
+
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.35) 2px,
+    transparent 2px
+  );
+
+  background-size: 15px 15px;
+
+  opacity: 0.5;
+}
+
+.register-dot-one {
+  top: 25px;
+  left: 20px;
+}
+
+.register-dot-two {
+  bottom: 20px;
+  right: 20px;
+}
+
+/* =========================
+   RIGHT
+========================= */
+
+.register-right {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(124, 58, 237, 0.08),
+      transparent 25%
+    ),
+    #fafbff;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 45px 70px;
+}
 
 .register-card {
   width: 100%;
 
-  max-width: 445px;
+  max-width: 480px;
 
-  padding: 30px;
-
-  background: rgba(255, 255, 255, 0.96);
+  background: #ffffff;
 
   border-radius: 25px;
 
-  box-shadow:
-    0 15px 45px rgba(40, 30, 100, 0.1);
+  padding: 30px;
 
-  animation: cardShow 0.6s ease;
+  box-shadow:
+    0 20px 55px rgba(31, 41, 55, 0.1);
 }
 
-/* =====================================
-   HEADER
-===================================== */
+/* =========================
+   CARD HEADER
+========================= */
 
-.register-header {
+.register-card-header {
   text-align: center;
 
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
-.register-header h2 {
-  color: #5b21d6;
+.register-card-header h2 {
+  color: #6136eb;
 
   font-size: 25px;
 
@@ -351,100 +377,100 @@ body {
   margin-bottom: 5px;
 }
 
-.register-header p {
-  color: #72758b;
+.register-card-header p {
+  color: #718096;
 
   font-size: 13px;
 }
 
-.header-line {
+.register-title-line {
   width: 48px;
 
   height: 3px;
 
+  background: #6635ee;
+
+  margin: 13px auto 0;
+
   border-radius: 10px;
-
-  background: #6531ee;
-
-  margin: 10px auto 0;
 }
 
-/* =====================================
-   FORM
-===================================== */
+/* =========================
+   INPUT
+========================= */
 
-.form-group {
-  margin-bottom: 11px;
-}
-
-.form-group label {
-  display: none;
-}
-
-/*
-IMPORTANT:
-Input icon आणि input एकाच box मध्ये आहेत.
-Label आत overlap होणार नाही.
-*/
-
-.input-field {
+.register-input {
   position: relative;
 
   width: 100%;
+
+  height: 50px;
+
+  margin-bottom: 11px;
 }
 
-.input-field svg:first-child {
+.register-input > svg {
   position: absolute;
 
-  left: 14px;
+  left: 15px;
 
   top: 50%;
 
   transform: translateY(-50%);
 
-  color: #6131e9;
+  color: #6535ec;
 
-  font-size: 15px;
+  font-size: 17px;
 
   z-index: 2;
 }
 
-.input-field input,
-.input-field select {
+.register-input input,
+.register-input select {
   width: 100%;
 
-  height: 44px;
+  height: 100%;
 
-  border: 1px solid #dfe2ec;
+  border: 1px solid #dfe3ee;
 
   border-radius: 7px;
 
   outline: none;
 
-  background: #fff;
+  background: #ffffff;
 
-  padding: 0 40px;
+  padding: 0 42px;
 
-  font-size: 12px;
+  color: #26345c;
 
-  color: #29304a;
+  font-size: 13px;
 
   transition: 0.3s;
 }
 
-.input-field input::placeholder {
-  color: #9297ac;
+.register-input input::placeholder {
+  color: #8992aa;
 }
 
-.input-field input:focus,
-.input-field select:focus {
-  border-color: #6633ee;
+.register-input select {
+  appearance: auto;
+
+  cursor: pointer;
+}
+
+.register-input input:focus,
+.register-input select:focus {
+  border-color: #6635ee;
 
   box-shadow:
-    0 0 0 3px rgba(102, 51, 238, 0.08);
+    0 0 0 3px rgba(102, 53, 238, 0.08);
 }
 
-.password-eye {
+/* =========================
+   PASSWORD EYE
+========================= */
+
+.register-eye {
   position: absolute;
 
   right: 13px;
@@ -453,131 +479,145 @@ Label आत overlap होणार नाही.
 
   transform: translateY(-50%);
 
-  color: #9297ac;
+  border: none;
+
+  background: transparent;
+
+  color: #8992aa;
 
   cursor: pointer;
 
-  z-index: 3;
+  font-size: 15px;
+
+  padding: 3px;
 }
 
-.password-eye:hover {
-  color: #5b21d6;
+.register-eye:hover {
+  color: #6635ee;
 }
 
-/* =====================================
-   BUTTON
-===================================== */
+/* =========================
+   CREATE BUTTON
+========================= */
 
-.create-account-btn {
+.register-create-btn {
   width: 100%;
 
-  height: 45px;
-
-  margin-top: 8px;
+  height: 49px;
 
   border: none;
 
   border-radius: 7px;
 
+  margin-top: 7px;
+
   background:
     linear-gradient(
       135deg,
-      #5330ed,
-      #6c18d7
+      #4d32ee,
+      #711edb
     );
 
   color: white;
 
-  font-size: 14px;
+  font-size: 15px;
 
-  font-weight: 700;
+  font-weight: 600;
 
   display: flex;
 
-  align-items: center;
-
   justify-content: center;
 
-  gap: 8px;
+  align-items: center;
+
+  gap: 9px;
 
   cursor: pointer;
 
   transition: 0.3s;
 }
 
-.create-account-btn:hover {
+.register-create-btn:hover {
   transform: translateY(-2px);
 
   box-shadow:
-    0 8px 20px rgba(91, 33, 214, 0.3);
+    0 10px 25px rgba(91, 45, 230, 0.3);
 }
 
-.create-account-btn:disabled {
+.register-create-btn:disabled {
   opacity: 0.7;
 
   cursor: not-allowed;
+
+  transform: none;
 }
 
-/* =====================================
-   LOGIN
-===================================== */
+/* =========================
+   LOGIN TEXT
+========================= */
 
-.already-account {
+.register-login-text {
   text-align: center;
 
-  margin-top: 18px;
+  color: #8a92a8;
 
-  color: #9296a8;
+  font-size: 13px;
 
-  font-size: 12px;
+  margin-top: 25px;
 }
 
-.already-account a {
-  color: #4f1fd0;
-
+.register-login-text a {
   text-decoration: none;
+
+  color: #5c2ee9;
 
   font-weight: 700;
 
   margin-left: 4px;
 }
 
-.already-account a:hover {
+.register-login-text a:hover {
   text-decoration: underline;
 }
 
-.copyright {
+/* =========================
+   COPYRIGHT
+========================= */
+
+.register-copyright {
   text-align: center;
 
-  color: #85899c;
+  color: #8b94a9;
 
   font-size: 11px;
 
   margin-top: 18px;
 }
 
-/* =====================================
+/* =========================
    FEATURES
-===================================== */
+========================= */
 
-.features-section {
-  min-height: 125px;
+.register-features {
+  min-height: 115px;
 
-  background: #fff;
+  background: #ffffff;
 
   display: grid;
 
-  grid-template-columns:
-    repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
   align-items: center;
 
-  gap: 40px;
+  gap: 30px;
 
   padding: 25px 8%;
+
+  box-shadow:
+    0 -5px 20px rgba(0, 0, 0, 0.03);
 }
 
-.feature {
+.register-feature {
   display: flex;
 
   align-items: center;
@@ -586,10 +626,16 @@ Label आत overlap होणार नाही.
 }
 
 .feature-icon {
-  min-width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
+
+  min-width: 48px;
 
   border-radius: 50%;
+
+  background: #f1edff;
+
+  color: #5c31ec;
 
   display: flex;
 
@@ -597,81 +643,71 @@ Label आत overlap होणार नाही.
 
   align-items: center;
 
-  color: #5b21d6;
-
-  background: #f0ecff;
-
   font-size: 20px;
 }
 
-.feature h3 {
-  color: #172554;
+.register-feature h4 {
+  color: #1f2b55;
 
   font-size: 14px;
 
   margin-bottom: 5px;
 }
 
-.feature p {
-  color: #7d8298;
+.register-feature p {
+  color: #8992a9;
 
   font-size: 12px;
+
+  margin: 0;
 }
 
-/* =====================================
-   ANIMATION
-===================================== */
-
-@keyframes cardShow {
-  from {
-    opacity: 0;
-
-    transform: translateY(25px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
-  }
-}
-
-/* =====================================
+/* =========================
    RESPONSIVE
-===================================== */
+========================= */
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
+
+  .register-navbar {
+    padding: 0 3%;
+  }
+
+  .register-nav-links {
+    gap: 18px;
+  }
 
   .register-main {
-    grid-template-columns: 1fr;
+    grid-template-columns: 45% 55%;
   }
 
   .register-left {
-    min-height: auto;
-
-    padding: 70px 30px;
+    padding: 50px 7%;
   }
 
   .register-left h1 {
     font-size: 42px;
   }
 
-  .register-right {
-    padding: 50px 20px;
+  .register-left h2 {
+    font-size: 27px;
   }
 
-  .features-section {
-    grid-template-columns: repeat(2, 1fr);
+  .register-right {
+    padding: 40px;
   }
 
 }
 
-@media (max-width: 650px) {
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 850px) {
 
   .register-navbar {
     height: auto;
 
-    padding: 15px 20px;
+    padding: 15px 25px;
 
     flex-direction: column;
 
@@ -679,23 +715,68 @@ Label आत overlap होणार नाही.
   }
 
   .register-nav-links {
-    gap: 12px;
-
     flex-wrap: wrap;
 
     justify-content: center;
+
+    gap: 15px;
+  }
+
+  .register-main {
+    grid-template-columns: 1fr;
+  }
+
+  .register-left {
+    min-height: 650px;
+
+    padding: 60px 30px;
+  }
+
+  .register-left-content {
+    text-align: center;
+  }
+
+  .register-description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .register-benefits {
+    margin: auto;
+  }
+
+  .register-right {
+    padding: 50px 25px;
+  }
+
+  .register-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 550px) {
+
+  .register-logo {
+    font-size: 19px;
+  }
+
+  .register-nav-links {
+    gap: 10px;
   }
 
   .register-nav-links a {
     font-size: 12px;
   }
 
-  .register-logo {
-    font-size: 20px;
-  }
-
   .register-left {
-    padding: 50px 25px;
+    min-height: 600px;
+
+    padding: 45px 20px;
   }
 
   .register-left h1 {
@@ -703,21 +784,37 @@ Label आत overlap होणार नाही.
   }
 
   .register-left h2 {
-    font-size: 25px;
+    font-size: 23px;
   }
 
-  .why-box {
+  .register-description {
+    font-size: 14px;
+  }
+
+  .register-benefits {
     width: 100%;
+
+    padding: 22px;
   }
 
   .register-card {
-    padding: 25px 20px;
+    padding: 25px 18px;
+
+    border-radius: 18px;
   }
 
-  .features-section {
+  .register-card-header h2 {
+    font-size: 22px;
+  }
+
+  .register-features {
     grid-template-columns: 1fr;
 
     padding: 30px;
+  }
+
+  .register-feature {
+    justify-content: flex-start;
   }
 
 }

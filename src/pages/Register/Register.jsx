@@ -4,14 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   FaUser,
   FaEnvelope,
-  FaLock,
-  FaPhoneAlt,
+  FaPhone,
   FaUniversity,
-  FaLaptopCode,
-  FaCalendarAlt,
+  FaGraduationCap,
+  FaLock,
   FaEye,
   FaEyeSlash,
   FaUserPlus,
+  FaCalendarAlt,
   FaShieldAlt,
   FaBolt,
   FaStar,
@@ -45,7 +45,7 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -67,6 +67,11 @@ function Register() {
       return;
     }
 
+    if (formData.mobile.length !== 10) {
+      alert("Please enter a valid 10 digit mobile number.");
+      return;
+    }
+
     if (formData.password.length < 6) {
       alert("Password must be at least 6 characters.");
       return;
@@ -79,25 +84,34 @@ function Register() {
 
     setLoading(true);
 
-    const userData = {
-      fullName: formData.fullName.trim(),
-      email: formData.email.trim().toLowerCase(),
-      mobile: formData.mobile.trim(),
-      college: formData.college.trim(),
-      department: formData.department.trim(),
-      year: formData.year,
-      password: formData.password,
-    };
+    try {
+      // Save user data
+      const userData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        mobile: formData.mobile,
+        college: formData.college,
+        department: formData.department,
+        year: formData.year,
+        password: formData.password,
+      };
 
-    localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
 
-    setTimeout(() => {
+      setTimeout(() => {
+        setLoading(false);
+
+        alert("Account Created Successfully!");
+
+        navigate("/login");
+      }, 1000);
+    } catch (error) {
+      console.log("REGISTER ERROR:", error);
+
       setLoading(false);
 
-      alert("Registration Successful!");
-
-      navigate("/login");
-    }, 1000);
+      alert("Something went wrong.");
+    }
   };
 
   return (
@@ -115,18 +129,24 @@ function Register() {
         </div>
 
         <div className="register-nav-links">
+
           <Link to="/">Home</Link>
+
           <Link to="/events">Events</Link>
+
           <Link to="/about">About</Link>
+
           <Link to="/contact">Contact</Link>
+
           <Link to="/login">Login</Link>
 
           <Link
             to="/register"
-            className="active-register"
+            className="register-nav-active"
           >
             Register
           </Link>
+
         </div>
 
       </nav>
@@ -136,15 +156,20 @@ function Register() {
 
       <div className="register-main">
 
-        {/* ================= LEFT ================= */}
+        {/* ================= LEFT SIDE ================= */}
 
         <section className="register-left">
 
-          <div className="left-content">
+          <div className="register-decoration register-dot-one"></div>
+          <div className="register-decoration register-dot-two"></div>
+          <div className="register-circle-one"></div>
+          <div className="register-circle-two"></div>
 
-            <span className="community-badge">
+          <div className="register-left-content">
+
+            <div className="register-community-badge">
               🚀 Join the Community
-            </span>
+            </div>
 
             <h1>
               Campus Event Hub
@@ -154,69 +179,60 @@ function Register() {
               Create <span>Your Account</span> 👋
             </h2>
 
-            <p className="left-description">
+            <p className="register-description">
               Join thousands of students and be a part
-              of exciting events, workshops, hackathons
-              and competitions.
+              of exciting events, workshops,
+              hackathons and competitions.
             </p>
 
 
-            {/* WHY ACCOUNT */}
+            {/* WHY CREATE ACCOUNT */}
 
-            <div className="why-box">
+            <div className="register-benefits">
 
               <h3>
                 Why Create Account?
               </h3>
 
-              <ul>
+              <div className="register-benefit">
+                <span>🔐</span>
+                <p>Register for Events</p>
+              </div>
 
-                <li>
-                  🎯 Register for Events
-                </li>
+              <div className="register-benefit">
+                <span>🎓</span>
+                <p>Get Digital Certificates</p>
+              </div>
 
-                <li>
-                  🎓 Get Digital Certificates
-                </li>
+              <div className="register-benefit">
+                <span>📊</span>
+                <p>Track Your Registrations</p>
+              </div>
 
-                <li>
-                  📊 Track Your Registrations
-                </li>
+              <div className="register-benefit">
+                <span>🤝</span>
+                <p>Join Communities</p>
+              </div>
 
-                <li>
-                  🤝 Join Communities
-                </li>
-
-                <li>
-                  🔔 Get Event Updates & Reminders
-                </li>
-
-              </ul>
+              <div className="register-benefit">
+                <span>🔔</span>
+                <p>Get Event Updates & Reminders</p>
+              </div>
 
             </div>
 
           </div>
 
-
-          {/* DECORATION */}
-
-          <div className="bottom-decoration">
-            🎓 &nbsp; 👨‍💻 &nbsp; 👩‍💻 &nbsp; 🧑‍💻 &nbsp; 🎓
-          </div>
-
         </section>
 
 
-        {/* ================= RIGHT ================= */}
+        {/* ================= RIGHT SIDE ================= */}
 
         <section className="register-right">
 
-          <form
-            className="register-card"
-            onSubmit={handleSubmit}
-          >
+          <div className="register-card">
 
-            <div className="register-header">
+            <div className="register-card-header">
 
               <h2>
                 Create Your Account
@@ -226,20 +242,17 @@ function Register() {
                 Fill in your details to get started
               </p>
 
-              <div className="header-line"></div>
+              <div className="register-title-line"></div>
 
             </div>
 
 
-            {/* NAME */}
+            <form onSubmit={handleSubmit}>
 
-            <div className="form-group">
 
-              <label>
-                Full Name
-              </label>
+              {/* FULL NAME */}
 
-              <div className="input-field">
+              <div className="register-input">
 
                 <FaUser />
 
@@ -253,18 +266,10 @@ function Register() {
 
               </div>
 
-            </div>
 
+              {/* EMAIL */}
 
-            {/* EMAIL */}
-
-            <div className="form-group">
-
-              <label>
-                Email Address
-              </label>
-
-              <div className="input-field">
+              <div className="register-input">
 
                 <FaEnvelope />
 
@@ -278,20 +283,12 @@ function Register() {
 
               </div>
 
-            </div>
 
+              {/* MOBILE */}
 
-            {/* MOBILE */}
+              <div className="register-input">
 
-            <div className="form-group">
-
-              <label>
-                Mobile Number
-              </label>
-
-              <div className="input-field">
-
-                <FaPhoneAlt />
+                <FaPhone />
 
                 <input
                   type="tel"
@@ -299,22 +296,15 @@ function Register() {
                   placeholder="Enter your mobile number"
                   value={formData.mobile}
                   onChange={handleChange}
+                  maxLength="10"
                 />
 
               </div>
 
-            </div>
 
+              {/* COLLEGE */}
 
-            {/* COLLEGE */}
-
-            <div className="form-group">
-
-              <label>
-                College Name
-              </label>
-
-              <div className="input-field">
+              <div className="register-input">
 
                 <FaUniversity />
 
@@ -328,43 +318,27 @@ function Register() {
 
               </div>
 
-            </div>
 
+              {/* DEPARTMENT */}
 
-            {/* DEPARTMENT */}
+              <div className="register-input">
 
-            <div className="form-group">
-
-              <label>
-                Department
-              </label>
-
-              <div className="input-field">
-
-                <FaLaptopCode />
+                <FaGraduationCap />
 
                 <input
                   type="text"
                   name="department"
-                  placeholder="Enter your Department"
+                  placeholder="Enter your department"
                   value={formData.department}
                   onChange={handleChange}
                 />
 
               </div>
 
-            </div>
 
+              {/* YEAR */}
 
-            {/* YEAR */}
-
-            <div className="form-group">
-
-              <label>
-                Year
-              </label>
-
-              <div className="input-field">
+              <div className="register-input">
 
                 <FaCalendarAlt />
 
@@ -398,18 +372,10 @@ function Register() {
 
               </div>
 
-            </div>
 
+              {/* PASSWORD */}
 
-            {/* PASSWORD */}
-
-            <div className="form-group">
-
-              <label>
-                Password
-              </label>
-
-              <div className="input-field">
+              <div className="register-input">
 
                 <FaLock />
 
@@ -425,8 +391,9 @@ function Register() {
                   onChange={handleChange}
                 />
 
-                <span
-                  className="password-eye"
+                <button
+                  type="button"
+                  className="register-eye"
                   onClick={() =>
                     setShowPassword(!showPassword)
                   }
@@ -436,22 +403,14 @@ function Register() {
                   ) : (
                     <FaEye />
                   )}
-                </span>
+                </button>
 
               </div>
 
-            </div>
 
+              {/* CONFIRM PASSWORD */}
 
-            {/* CONFIRM PASSWORD */}
-
-            <div className="form-group">
-
-              <label>
-                Confirm Password
-              </label>
-
-              <div className="input-field">
+              <div className="register-input">
 
                 <FaLock />
 
@@ -467,8 +426,9 @@ function Register() {
                   onChange={handleChange}
                 />
 
-                <span
-                  className="password-eye"
+                <button
+                  type="button"
+                  className="register-eye"
                   onClick={() =>
                     setShowConfirmPassword(
                       !showConfirmPassword
@@ -480,34 +440,36 @@ function Register() {
                   ) : (
                     <FaEye />
                   )}
-                </span>
+                </button>
 
               </div>
 
-            </div>
+
+              {/* BUTTON */}
+
+              <button
+                type="submit"
+                className="register-create-btn"
+                disabled={loading}
+              >
+
+                {loading ? (
+                  "Creating Account..."
+                ) : (
+                  <>
+                    <FaUserPlus />
+                    Create Account
+                  </>
+                )}
+
+              </button>
+
+            </form>
 
 
-            {/* BUTTON */}
+            {/* LOGIN */}
 
-            <button
-              type="submit"
-              className="create-account-btn"
-              disabled={loading}
-            >
-
-              {loading ? (
-                "Creating Account..."
-              ) : (
-                <>
-                  <FaUserPlus />
-                  Create Account
-                </>
-              )}
-
-            </button>
-
-
-            <p className="already-account">
+            <p className="register-login-text">
 
               Already have an account?
 
@@ -518,11 +480,11 @@ function Register() {
             </p>
 
 
-            <p className="copyright">
+            <p className="register-copyright">
               © 2026 Campus Event Hub
             </p>
 
-          </form>
+          </div>
 
         </section>
 
@@ -531,84 +493,64 @@ function Register() {
 
       {/* ================= FEATURES ================= */}
 
-      <section className="features-section">
+      <div className="register-features">
 
-        <div className="feature">
+        <div className="register-feature">
 
           <div className="feature-icon">
             <FaShieldAlt />
           </div>
 
           <div>
-            <h3>
-              Secure & Reliable
-            </h3>
-
-            <p>
-              Your data is safe with us
-            </p>
+            <h4>Secure & Reliable</h4>
+            <p>Your data is safe with us</p>
           </div>
 
         </div>
 
 
-        <div className="feature">
+        <div className="register-feature">
 
           <div className="feature-icon">
             <FaBolt />
           </div>
 
           <div>
-            <h3>
-              Quick Registration
-            </h3>
-
-            <p>
-              Get started in seconds
-            </p>
+            <h4>Quick Registration</h4>
+            <p>Get started in seconds</p>
           </div>
 
         </div>
 
 
-        <div className="feature">
+        <div className="register-feature">
 
           <div className="feature-icon">
             <FaStar />
           </div>
 
           <div>
-            <h3>
-              Verified Events
-            </h3>
-
-            <p>
-              Quality events you can trust
-            </p>
+            <h4>Verified Events</h4>
+            <p>Quality events you can trust</p>
           </div>
 
         </div>
 
 
-        <div className="feature">
+        <div className="register-feature">
 
           <div className="feature-icon">
             <FaHeadset />
           </div>
 
           <div>
-            <h3>
-              24/7 Support
-            </h3>
-
-            <p>
-              We're here to help you
-            </p>
+            <h4>24/7 Support</h4>
+            <p>We're here to help you</p>
           </div>
 
         </div>
 
-      </section>
+      </div>
 
     </div>
   );
