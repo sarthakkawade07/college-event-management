@@ -1,33 +1,67 @@
-import { useEffect, useState } from "react";
 import "./Participants.css";
+import { useQuery } from "@tanstack/react-query";
 
 function Participants() {
-  const [participants, setParticipants] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // ==========================================
+  // TANSTACK QUERY - GET PARTICIPANTS
+  // ==========================================
 
-  useEffect(() => {
-    fetch(
-      "https://college-event-management-backend-2mzu.onrender.com/api/participants"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Participants Data:", data);
+  const {
+    data: participants = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["participants"],
 
-        setParticipants(data.participants || []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log("Participants Fetch Error:", error);
-        setLoading(false);
-      });
-  }, []);
+    queryFn: async () => {
+      const response = await fetch(
+        "https://college-event-management-backend-2mzu.onrender.com/api/participants"
+      );
 
-  if (loading) {
-    return <h2>Loading Participants...</h2>;
+      if (!response.ok) {
+        throw new Error("Failed to fetch participants");
+      }
+
+      const data = await response.json();
+
+      console.log("Participants Data:", data);
+
+      return data.participants || [];
+    },
+
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // ==========================================
+  // LOADING
+  // ==========================================
+
+  if (isLoading) {
+    return (
+      <div className="loading">
+        Loading Participants...
+      </div>
+    );
   }
 
+  // ==========================================
+  // ERROR
+  // ==========================================
+
+  if (isError) {
+    return (
+      <div className="loading">
+        Failed to load participants.
+      </div>
+    );
+  }
+
+  // ==========================================
+  // UI
+  // ==========================================
+
   return (
-    <div className="participants-container">
+    <div className="participants-page">
 
       <h1>Participants List</h1>
 
