@@ -1,10 +1,10 @@
-
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import "./AdminDashboard.css";
 
 import DashboardChart from "../../components/charts/DashboardChart";
@@ -28,42 +28,52 @@ import {
 
 function AdminDashboard() {
   const {
-  events,
-  participants,
-  refreshData,
-} = useEvent();
+    events,
+    participants,
+    setParticipants,
+  } = useEvent();
+
   const navigate = useNavigate();
 
-  const [darkMode, setDarkMode] = useState(() => {
-  return JSON.parse(localStorage.getItem("darkMode")) || false;
-});
+  // ==========================================
+  // DARK MODE
+  // ==========================================
 
-  const [time, setTime] = useState(
-    new Date().toLocaleTimeString("en-IN")
-  );
+  const [darkMode, setDarkMode] = useState(() => {
+    return (
+      JSON.parse(localStorage.getItem("darkMode")) ||
+      false
+    );
+  });
+
+  // ==========================================
+  // TANSTACK QUERY - CURRENT TIME
+  // ==========================================
+
+  const { data: currentTime } = useQuery({
+    queryKey: ["admin-current-time"],
+
+    queryFn: () => {
+      return new Date().toLocaleTimeString("en-IN");
+    },
+
+    refetchInterval: 1000,
+
+    staleTime: 0,
+  });
+
+  // ==========================================
+  // OTHER STATES
+  // ==========================================
 
   const [showNotifications, setShowNotifications] =
     useState(false);
 
   const [search, setSearch] = useState("");
 
-
- 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(
-        new Date().toLocaleTimeString("en-IN")
-      );
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-  useEffect(() => {
-  localStorage.setItem(
-    "darkMode",
-    JSON.stringify(darkMode)
-  );
-}, [darkMode]);
+  // ==========================================
+  // TODAY'S DATE
+  // ==========================================
 
   const today = new Date().toLocaleDateString(
     "en-IN",
@@ -75,12 +85,20 @@ function AdminDashboard() {
     }
   );
 
+  // ==========================================
+  // SEARCH PARTICIPANTS
+  // ==========================================
+
   const filteredParticipants =
     participants.filter((item) =>
       item.fullName
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(search.toLowerCase())
     );
+
+  // ==========================================
+  // CLEAR NOTIFICATIONS
+  // ==========================================
 
   const clearNotifications = () => {
     if (
@@ -97,85 +115,140 @@ function AdminDashboard() {
       setShowNotifications(false);
     }
   };
+
+  // ==========================================
+  // EXPORT PDF
+  // ==========================================
+
   const exportPDF = () => {
+    const doc = new jsPDF();
 
-  const doc = new jsPDF();
+    doc.setFontSize(18);
 
-  doc.setFontSize(18);
-  doc.text("College Event Management System", 14, 20);
+    doc.text(
+      "College Event Management System",
+      14,
+      20
+    );
 
-  doc.setFontSize(14);
-  doc.text("Participants Report", 14, 30);
+    doc.setFontSize(14);
 
-  autoTable(doc, {
-    startY: 40,
+    doc.text(
+      "Participants Report",
+      14,
+      30
+    );
 
-    head: [["Name", "Email", "Mobile", "Event"]],
+    autoTable(doc, {
+      startY: 40,
 
-    body: participants.map((p) => [
-      p.fullName,
-      p.email,
-      p.mobile,
-      p.eventTitle,
-    ]),
-  });
+      head: [
+        [
+          "Name",
+          "Email",
+          "Mobile",
+          "Event",
+        ],
+      ],
 
-  doc.save("Participants_Report.pdf");
-};
-const exportExcel = () => {
+      body: participants.map((p) => [
+        p.fullName,
+        p.email,
+        p.mobile,
+        p.eventTitle,
+      ]),
+    });
 
-  const data = participants.map((p) => ({
-    Name: p.fullName,
-    Email: p.email,
-    Mobile: p.mobile,
-    Event: p.eventTitle,
-    College: p.college,
-    Department: p.department,
-    Year: p.year,
-  }));
+    doc.save(
+      "Participants_Report.pdf"
+    );
+  };
 
-  const worksheet = XLSX.utils.json_to_sheet(data);
+  // ==========================================
+  // EXPORT EXCEL
+  // ==========================================
 
-  const workbook = XLSX.utils.book_new();
+  const exportExcel = () => {
+    const data = participants.map((p) => ({
+      Name: p.fullName,
+      Email: p.email,
+      Mobile: p.mobile,
+      Event: p.eventTitle,
+      College: p.college,
+      Department: p.department,
+      Year: p.year,
+    }));
 
-  XLSX.utils.book_append_sheet(
-    workbook,
-    worksheet,
-    "Participants"
-  );
+    const worksheet =
+      XLSX.utils.json_to_sheet(data);
 
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "array",
-  });
+    const workbook =
+      XLSX.utils.book_new();
 
-  const file = new Blob([excelBuffer], {
-    type:
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  });
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      "Participants"
+    );
 
-  saveAs(file, "Participants_Report.xlsx");
+    const excelBuffer = XLSX.write(
+      workbook,
+      {
+        bookType: "xlsx",
+        type: "array",
+      }
+    );
 
-};
+    const file = new Blob(
+      [excelBuffer],
+      {
+        type:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }
+    );
+
+    saveAs(
+      file,
+      "Participants_Report.xlsx"
+    );
+  };
+
+  // ==========================================
+  // RECENT EVENTS
+  // ==========================================
 
   const recentEvents =
     events.slice(-5).reverse();
 
+  // ==========================================
+  // RECENT PARTICIPANTS
+  // ==========================================
+
   const recentParticipants =
     participants.slice(-5).reverse();
 
-    const eventStats = {};
+  // ==========================================
+  // TOP EVENTS
+  // ==========================================
 
-participants.forEach((participant) => {
-  const event = participant.eventTitle;
+  const eventStats = {};
 
-  eventStats[event] =
-    (eventStats[event] || 0) + 1;
-});
+  participants.forEach((participant) => {
+    const event =
+      participant.eventTitle;
 
-const topEvents = Object.entries(eventStats)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 5);
+    eventStats[event] =
+      (eventStats[event] || 0) + 1;
+  });
+
+  const topEvents =
+    Object.entries(eventStats)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+  // ==========================================
+  // PAGE
+  // ==========================================
 
   return (
     <div
@@ -185,14 +258,24 @@ const topEvents = Object.entries(eventStats)
           : "admin-dashboard"
       }
     >
-          {/* ================= HEADER ================= */}
+      {/* ================= HEADER ================= */}
 
       <div className="admin-header">
 
         <div className="header-left">
-          <h1>👨‍💼 Admin Dashboard</h1>
-          <p>Welcome back, Admin 👋</p>
-          <span>{today}</span>
+
+          <h1>
+            👨‍💼 Admin Dashboard
+          </h1>
+
+          <p>
+            Welcome back, Admin 👋
+          </p>
+
+          <span>
+            {today}
+          </span>
+
         </div>
 
         <div className="header-center">
@@ -200,7 +283,9 @@ const topEvents = Object.entries(eventStats)
           <div
             className="notification-box"
             onClick={() =>
-              setShowNotifications(!showNotifications)
+              setShowNotifications(
+                !showNotifications
+              )
             }
           >
             <FaBell className="bell-icon" />
@@ -217,11 +302,15 @@ const topEvents = Object.entries(eventStats)
 
               <div className="notification-header">
 
-                <h3>🔔 Notifications</h3>
+                <h3>
+                  🔔 Notifications
+                </h3>
 
                 <button
                   className="clear-btn"
-                  onClick={clearNotifications}
+                  onClick={
+                    clearNotifications
+                  }
                 >
                   <FaTrash /> Clear
                 </button>
@@ -236,26 +325,34 @@ const topEvents = Object.entries(eventStats)
 
               ) : (
 
-                recentParticipants.map((user, index) => (
+                recentParticipants.map(
+                  (user, index) => (
 
-                  <div
-                    className="notification-item"
-                    key={index}
-                    onClick={() =>
-                      navigate("/participants")
-                    }
-                  >
-                    <strong>{user.fullName}</strong>
+                    <div
+                      className="notification-item"
+                      key={index}
+                      onClick={() =>
+                        navigate(
+                          "/participants"
+                        )
+                      }
+                    >
+                      <strong>
+                        {user.fullName}
+                      </strong>
 
-                    <br />
+                      <br />
 
-                    Registered for
+                      Registered for
 
-                    <b> {user.eventTitle}</b>
+                      <b>
+                        {" "}
+                        {user.eventTitle}
+                      </b>
+                    </div>
 
-                  </div>
-
-                ))
+                  )
+                )
 
               )}
 
@@ -266,11 +363,21 @@ const topEvents = Object.entries(eventStats)
 
         <div className="header-right">
 
+          {/* DARK MODE */}
+
           <button
             className="dark-btn"
-            onClick={() =>
-              setDarkMode(!darkMode)
-            }
+            onClick={() => {
+              const newMode =
+                !darkMode;
+
+              setDarkMode(newMode);
+
+              localStorage.setItem(
+                "darkMode",
+                JSON.stringify(newMode)
+              );
+            }}
           >
             {darkMode ? (
               <FaSun />
@@ -279,21 +386,33 @@ const topEvents = Object.entries(eventStats)
             )}
           </button>
 
+          {/* SYSTEM STATUS */}
+
           <div className="status-box">
 
-            <h3>🟢 System Status</h3>
+            <h3>
+              🟢 System Status
+            </h3>
 
-            <p>Running Successfully</p>
+            <p>
+              Running Successfully
+            </p>
 
           </div>
+
+          {/* CLOCK */}
 
           <div className="clock-box">
 
             <FaClock className="clock-icon" />
 
-            <h3>{time}</h3>
+            <h3>
+              {currentTime}
+            </h3>
 
-            <p>Current Time</p>
+            <p>
+              Current Time
+            </p>
 
           </div>
 
@@ -317,7 +436,8 @@ const topEvents = Object.entries(eventStats)
         />
 
       </div>
-            {/* ================= DASHBOARD CARDS ================= */}
+
+      {/* ================= DASHBOARD CARDS ================= */}
 
       <div className="dashboard-cards">
 
@@ -325,9 +445,13 @@ const topEvents = Object.entries(eventStats)
 
           <FaCalendarAlt className="dashboard-icon" />
 
-          <h2>{events.length}</h2>
+          <h2>
+            {events.length}
+          </h2>
 
-          <p>Total Events</p>
+          <p>
+            Total Events
+          </p>
 
         </div>
 
@@ -335,9 +459,13 @@ const topEvents = Object.entries(eventStats)
 
           <FaUsers className="dashboard-icon" />
 
-          <h2>{participants.length}</h2>
+          <h2>
+            {participants.length}
+          </h2>
 
-          <p>Total Participants</p>
+          <p>
+            Total Participants
+          </p>
 
         </div>
 
@@ -345,9 +473,13 @@ const topEvents = Object.entries(eventStats)
 
           <FaClipboardList className="dashboard-icon" />
 
-          <h2>{participants.length}</h2>
+          <h2>
+            {participants.length}
+          </h2>
 
-          <p>Registrations</p>
+          <p>
+            Registrations
+          </p>
 
         </div>
 
@@ -355,138 +487,192 @@ const topEvents = Object.entries(eventStats)
 
           <FaChartLine className="dashboard-icon" />
 
-          <h2>100%</h2>
+          <h2>
+            100%
+          </h2>
 
-          <p>System Health</p>
+          <p>
+            System Health
+          </p>
 
         </div>
 
       </div>
+
+      {/* ================= DASHBOARD CHART ================= */}
+
       <div className="recent-card">
 
-  <h2>📊 Dashboard Analytics</h2>
+        <h2>
+          📊 Dashboard Analytics
+        </h2>
 
-  <DashboardChart
-    events={events}
-    participants={participants}
-  />
+        <DashboardChart
+          events={events}
+          participants={participants}
+        />
 
-</div>
-<div className="recent-card">
+      </div>
 
-  <RegistrationChart
-  participants={participants}
-/>
+      {/* ================= REGISTRATION CHART ================= */}
 
-</div>
+      <div className="recent-card">
 
-      {/* ================= CHART ================= */}
+        <RegistrationChart
+          participants={participants}
+        />
 
-      
+      </div>
+
       {/* ================= ANALYTICS ================= */}
 
-      
-      {/* ================= DASHBOARD ANALYTICS ================= */}
+      <div className="analytics-section">
 
-<div className="analytics-section">
+        <div className="analytics-card">
 
-  <div className="analytics-card">
+          <h3>
+            📊 Event Completion
+          </h3>
 
-    <h3>📊 Event Completion</h3>
+          <div className="progress">
 
-    <div className="progress">
-      <div
-        className="progress-fill"
-        style={{ width: "85%" }}
-      ></div>
-    </div>
+            <div
+              className="progress-fill"
+              style={{
+                width: "85%",
+              }}
+            ></div>
 
-    <span>85%</span>
+          </div>
 
-  </div>
+          <span>
+            85%
+          </span>
 
-  <div className="analytics-card">
+        </div>
 
-    <h3>👥 Registration Growth</h3>
+        <div className="analytics-card">
 
-    <div className="progress">
-      <div
-        className="progress-fill green"
-        style={{ width: "72%" }}
-      ></div>
-    </div>
+          <h3>
+            👥 Registration Growth
+          </h3>
 
-    <span>72%</span>
+          <div className="progress">
 
-  </div>
+            <div
+              className="progress-fill green"
+              style={{
+                width: "72%",
+              }}
+            ></div>
 
-  <div className="analytics-card">
+          </div>
 
-    <h3>🏆 Success Rate</h3>
+          <span>
+            72%
+          </span>
 
-    <div className="progress">
-      <div
-        className="progress-fill orange"
-        style={{ width: "96%" }}
-      ></div>
-    </div>
+        </div>
 
-    <span>96%</span>
+        <div className="analytics-card">
 
-  </div>
+          <h3>
+            🏆 Success Rate
+          </h3>
 
-</div>
+          <div className="progress">
+
+            <div
+              className="progress-fill orange"
+              style={{
+                width: "96%",
+              }}
+            ></div>
+
+          </div>
+
+          <span>
+            96%
+          </span>
+
+        </div>
+
+      </div>
 
       {/* ================= QUICK ACTIONS ================= */}
 
       <div className="quick-actions">
 
-  <h2>⚡ Quick Actions</h2>
+        <h2>
+          ⚡ Quick Actions
+        </h2>
 
-  <div className="dashboard-buttons">
+        <div className="dashboard-buttons">
 
-    <Link to="/add-event">
-      <button>➕ Add Event</button>
-    </Link>
+          <Link to="/add-event">
+            <button>
+              ➕ Add Event
+            </button>
+          </Link>
 
-    <Link to="/manage-events">
-      <button>📝 Manage Events</button>
-    </Link>
+          <Link to="/manage-events">
+            <button>
+              📝 Manage Events
+            </button>
+          </Link>
 
-    <Link to="/participants">
-      <button>👥 Participants</button>
-    </Link>
+          <Link to="/participants">
+            <button>
+              👥 Participants
+            </button>
+          </Link>
 
-    <Link to="/payment-verification">
-      <button>💳 Payment Verification</button>
-    </Link>
+          <Link to="/payment-verification">
+            <button>
+              💳 Payment Verification
+            </button>
+          </Link>
 
-  </div>
+        </div>
 
-</div>
-            {/* ================= BOTTOM SECTION ================= */}
+      </div>
+
+      {/* ================= BOTTOM SECTION ================= */}
 
       <div className="dashboard-bottom">
 
-        {/* Recent Events */}
+        {/* RECENT EVENTS */}
 
         <div className="recent-card">
 
-          <h2>📅 Recent Events</h2>
+          <h2>
+            📅 Recent Events
+          </h2>
 
           {recentEvents.length === 0 ? (
 
-            <p>No Events Available</p>
+            <p>
+              No Events Available
+            </p>
 
           ) : (
 
             recentEvents.map((event) => (
 
-              <div className="list-item" key={event.id}>
+              <div
+                className="list-item"
+                key={
+                  event._id ||
+                  event.id
+                }
+              >
+                <strong>
+                  {event.title}
+                </strong>
 
-                <strong>{event.title}</strong>
-
-                <span>{event.date}</span>
+                <span>
+                  {event.date}
+                </span>
 
               </div>
 
@@ -496,32 +682,45 @@ const topEvents = Object.entries(eventStats)
 
         </div>
 
-        {/* Recent Participants */}
+        {/* RECENT PARTICIPANTS */}
 
         <div className="recent-card">
 
-          <h2>👥 Recent Participants</h2>
+          <h2>
+            👥 Recent Participants
+          </h2>
 
           {filteredParticipants.length === 0 ? (
 
-            <p>No Participants Found</p>
+            <p>
+              No Participants Found
+            </p>
 
           ) : (
 
             filteredParticipants
               .slice(-5)
               .reverse()
-              .map((user, index) => (
+              .map(
+                (user, index) => (
 
-                <div className="list-item" key={index}>
+                  <div
+                    className="list-item"
+                    key={index}
+                  >
 
-                  <strong>{user.fullName}</strong>
+                    <strong>
+                      {user.fullName}
+                    </strong>
 
-                  <span>{user.eventTitle}</span>
+                    <span>
+                      {user.eventTitle}
+                    </span>
 
-                </div>
+                  </div>
 
-              ))
+                )
+              )
 
           )}
 
@@ -533,92 +732,123 @@ const topEvents = Object.entries(eventStats)
 
       <div className="recent-card activity-card">
 
-        <h2>📢 Recent Activity</h2>
+        <h2>
+          📢 Recent Activity
+        </h2>
 
         {participants.length === 0 ? (
 
-          <p>No Activity Yet</p>
+          <p>
+            No Activity Yet
+          </p>
 
         ) : (
 
           participants
             .slice(-5)
             .reverse()
-            .map((user, index) => (
+            .map(
+              (user, index) => (
 
-              <div
-                className="activity-item"
-                key={index}
-              >
+                <div
+                  className="activity-item"
+                  key={index}
+                >
 
-                🟢 <strong>{user.fullName}</strong>
+                  🟢{" "}
+                  <strong>
+                    {user.fullName}
+                  </strong>
 
-                <br />
+                  <br />
 
-                Registered for
+                  Registered for
 
-                <b> {user.eventTitle}</b>
+                  <b>
+                    {" "}
+                    {user.eventTitle}
+                  </b>
 
-              </div>
-              
+                </div>
 
-            ))
+              )
+            )
 
         )}
 
       </div>
+
+      {/* ================= TOP EVENTS ================= */}
+
       <div className="recent-card">
 
-  <h2>🏆 Top 5 Popular Events</h2>
+        <h2>
+          🏆 Top 5 Popular Events
+        </h2>
 
-  {topEvents.length === 0 ? (
+        {topEvents.length === 0 ? (
 
-    <p>No Data Available</p>
+          <p>
+            No Data Available
+          </p>
 
-  ) : (
+        ) : (
 
-    topEvents.map((event, index) => (
+          topEvents.map(
+            (event, index) => (
 
-      <div className="list-item" key={index}>
+              <div
+                className="list-item"
+                key={index}
+              >
 
-        <strong>{event[0]}</strong>
+                <strong>
+                  {event[0]}
+                </strong>
 
-        <span>{event[1]} Registrations</span>
+                <span>
+                  {event[1]} Registrations
+                </span>
+
+              </div>
+
+            )
+          )
+
+        )}
 
       </div>
-
-    ))
-
-  )}
-
-</div>
 
       {/* ================= EXPORT ================= */}
 
       <div className="export-section">
 
-       <button
-  className="pdf-btn"
-  onClick={exportPDF}
->
-  <FaFilePdf />
-  Export PDF
-</button>
         <button
-  className="excel-btn"
-  onClick={exportExcel}
->
-  <FaFileExcel />
-  Export Excel
-</button>
+          className="pdf-btn"
+          onClick={exportPDF}
+        >
+          <FaFilePdf />
+          Export PDF
+        </button>
+
+        <button
+          className="excel-btn"
+          onClick={exportExcel}
+        >
+          <FaFileExcel />
+          Export Excel
+        </button>
 
       </div>
-            {/* ================= FOOTER ================= */}
+
+      {/* ================= FOOTER ================= */}
 
       <div className="dashboard-footer">
 
         <p>
-          © {new Date().getFullYear()} College Event Management System
+          ©{" "}
+          {new Date().getFullYear()}{" "}
+          College Event Management System
         </p>
 
         <p>

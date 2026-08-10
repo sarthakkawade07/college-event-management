@@ -1,20 +1,24 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const EventContext = createContext();
 
 export function EventProvider({ children }) {
-  const [events, setEvents] = useState([]);
-  const [participants, setParticipants] = useState([]);
 
-  useEffect(() => {
-    setEvents(
-      JSON.parse(localStorage.getItem("events")) || []
-    );
+  // ==========================================
+  // GET DATA FROM LOCAL STORAGE
+  // ==========================================
 
-    setParticipants(
-      JSON.parse(localStorage.getItem("participants")) || []
-    );
-  }, []);
+  const [events, setEvents] = useState(() => {
+    return JSON.parse(localStorage.getItem("events")) || [];
+  });
+
+  const [participants, setParticipants] = useState(() => {
+    return JSON.parse(localStorage.getItem("participants")) || [];
+  });
+
+  // ==========================================
+  // REFRESH DATA
+  // ==========================================
 
   const refreshData = () => {
     setEvents(
@@ -25,32 +29,48 @@ export function EventProvider({ children }) {
       JSON.parse(localStorage.getItem("participants")) || []
     );
   };
+
+  // ==========================================
+  // ADD PARTICIPANT
+  // ==========================================
+
   const addParticipant = (participant) => {
-  const updatedParticipants = [...participants, participant];
+    const updatedParticipants = [
+      ...participants,
+      participant,
+    ];
 
-  localStorage.setItem(
-    "participants",
-    JSON.stringify(updatedParticipants)
-  );
+    localStorage.setItem(
+      "participants",
+      JSON.stringify(updatedParticipants)
+    );
 
-  setParticipants(updatedParticipants);
-};
+    setParticipants(updatedParticipants);
+  };
+
+  // ==========================================
+  // PROVIDER
+  // ==========================================
 
   return (
     <EventContext.Provider
-     value={{
-  events,
-  participants,
-  setEvents,
-  setParticipants,
-  refreshData,
-  addParticipant,
-}}
+      value={{
+        events,
+        participants,
+        setEvents,
+        setParticipants,
+        refreshData,
+        addParticipant,
+      }}
     >
       {children}
     </EventContext.Provider>
   );
 }
+
+// ==========================================
+// CUSTOM HOOK
+// ==========================================
 
 export function useEvent() {
   return useContext(EventContext);
