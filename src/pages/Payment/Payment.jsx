@@ -1,7 +1,7 @@
 import "./Payment.css";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { QRCodeSVG } from "qrcode.react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import {
   FaCalendarAlt,
@@ -17,41 +17,92 @@ import {
 function Payment() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const UPI_ID = "9699577041-2@ybl";
   const UPI_NAME = "College Event";
 
-  const [event, setEvent] = useState(null);
   const [transactionId, setTransactionId] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Registration page वर save केलेली माहिती
+  // ==========================================
+  // REGISTRATION DATA
+  // ==========================================
+
   const registrationData =
     JSON.parse(localStorage.getItem("registrationData")) || {};
 
-  useEffect(() => {
-    fetch(
-      `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setEvent(data);
-      })
-      .catch((err) => {
-        console.log("Event Fetch Error:", err);
-      });
-  }, [id]);
+  // ==========================================
+  // TANSTACK QUERY - GET EVENT
+  // ==========================================
+
+  const {
+    data: event,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["event", id],
+
+    queryFn: async () => {
+      const response = await fetch(
+        `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch event");
+      }
+
+      return response.json();
+    },
+
+    enabled: !!id,
+  });
+
+  // ==========================================
+  // UPI URL
+  // ==========================================
 
   const upiUrl =
-  event && Number(event.fee) > 0
-    ? `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(
-        UPI_NAME
-      )}&am=${Number(event.fee).toFixed(2)}&cu=INR`
-    : "";
+    event && Number(event.fee) > 0
+      ? `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(
+          UPI_NAME
+        )}&am=${Number(event.fee).toFixed(2)}&cu=INR`
+      : "";
 
-  // Loading
+  // ==========================================
+  // LOADING
+  // ==========================================
+
+  if (isLoading) {
+    return (
+      <div className="loading">
+        Loading Payment...
+      </div>
+    );
+  }
+
+  // ==========================================
+  // ERROR
+  // ==========================================
+
+  if (isError) {
+    return (
+      <div className="loading">
+        Failed to load event.
+      </div>
+    );
+  }
+
+  // ==========================================
+  // EVENT NOT FOUND
+  // ==========================================
+
   if (!event) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading">
+        Event Not Found.
+      </div>
+    );
   }
 
   // ==========================================
@@ -60,12 +111,16 @@ function Payment() {
 
   const handlePayment = async () => {
     if (!registrationData.fullName) {
-      alert("Student name not found. Please register again.");
+      alert(
+        "Student name not found. Please register again."
+      );
       return;
     }
 
     if (!registrationData.email) {
-      alert("Student email not found. Please register again.");
+      alert(
+        "Student email not found. Please register again."
+      );
       return;
     }
 
@@ -90,13 +145,18 @@ function Payment() {
     ];
 
     if (!allowedTypes.includes(paymentScreenshot.type)) {
-      alert("Only JPG, PNG and WEBP images are allowed.");
+      alert(
+        "Only JPG, PNG and WEBP images are allowed."
+      );
       return;
     }
 
     // Maximum 5 MB
+
     if (paymentScreenshot.size > 5 * 1024 * 1024) {
-      alert("Screenshot size must be less than 5 MB.");
+      alert(
+        "Screenshot size must be less than 5 MB."
+      );
       return;
     }
 
@@ -109,10 +169,22 @@ function Payment() {
     const formData = new FormData();
 
     formData.append("eventId", event._id);
-    formData.append("name", registrationData.fullName);
-    formData.append("email", registrationData.email);
-    formData.append("transactionId", transactionId.trim());
-    formData.append("screenshot", paymentScreenshot);
+    formData.append(
+      "name",
+      registrationData.fullName
+    );
+    formData.append(
+      "email",
+      registrationData.email
+    );
+    formData.append(
+      "transactionId",
+      transactionId.trim()
+    );
+    formData.append(
+      "screenshot",
+      paymentScreenshot
+    );
 
     console.log("Payment FormData Ready");
 
@@ -139,22 +211,27 @@ function Payment() {
         // ==========================================
 
         const existingEvents =
-          JSON.parse(localStorage.getItem("myEvents")) || [];
+          JSON.parse(
+            localStorage.getItem("myEvents")
+          ) || [];
 
         const newEvent = {
           id: event._id,
           title: event.title,
           date: event.date,
           amount: event.fee,
-          transactionId: transactionId.trim(),
+          transactionId:
+            transactionId.trim(),
           paymentStatus: "Pending",
           status: "Registered",
         };
 
-        const alreadyExists = existingEvents.some(
-          (item) =>
-            item.transactionId === transactionId.trim()
-        );
+        const alreadyExists =
+          existingEvents.some(
+            (item) =>
+              item.transactionId ===
+              transactionId.trim()
+          );
 
         if (!alreadyExists) {
           localStorage.setItem(
@@ -175,6 +252,7 @@ function Payment() {
       }
     } catch (error) {
       console.log("Payment Error:", error);
+
       alert(
         "Server Error. Please try again."
       );
@@ -182,6 +260,10 @@ function Payment() {
       setIsSubmitting(false);
     }
   };
+
+  // ==========================================
+  // PAGE
+  // ==========================================
 
   return (
     <div className="payment-page">
@@ -196,54 +278,81 @@ function Payment() {
             PAYMENT VERIFICATION
           </span>
 
-          <h1>Complete Your Payment</h1>
+          <h1>
+            Complete Your Payment
+          </h1>
 
           <p>
-            Scan the QR code, complete your payment and
-            submit the Transaction ID for verification.
+            Scan the QR code, complete your
+            payment and submit the Transaction ID
+            for verification.
           </p>
 
-          {/* Event Card */}
+          {/* EVENT CARD */}
 
           <div className="payment-event-card">
 
             <h2>{event.title}</h2>
 
             <div className="payment-info">
+
               <FaCalendarAlt />
-              <span>{event.date}</span>
+
+              <span>
+                {event.date}
+              </span>
+
             </div>
 
             <div className="payment-info">
+
               <FaMapMarkerAlt />
-              <span>{event.venue}</span>
+
+              <span>
+                {event.venue}
+              </span>
+
             </div>
 
             <div className="payment-info">
+
               <FaMoneyBillWave />
 
               <span>
-                {event.fee === 0
+                {Number(event.fee) === 0
                   ? "Free Entry"
                   : `₹${event.fee}`}
               </span>
+
             </div>
 
-            {/* Payment Steps */}
+            {/* PAYMENT STEPS */}
 
             <div className="payment-steps">
 
-              <h3>How To Pay?</h3>
+              <h3>
+                How To Pay?
+              </h3>
 
-              <p>① Scan QR Code</p>
+              <p>
+                ① Scan QR Code
+              </p>
 
-              <p>② Complete Payment</p>
+              <p>
+                ② Complete Payment
+              </p>
 
-              <p>③ Enter Transaction ID</p>
+              <p>
+                ③ Enter Transaction ID
+              </p>
 
-              <p>④ Upload Payment Screenshot</p>
+              <p>
+                ④ Upload Payment Screenshot
+              </p>
 
-              <p>⑤ Wait For Admin Verification</p>
+              <p>
+                ⑤ Wait For Admin Verification
+              </p>
 
             </div>
 
@@ -255,13 +364,17 @@ function Payment() {
 
         <div className="payment-right">
 
-          {/* Header */}
+          {/* HEADER */}
 
           <div className="payment-header">
 
-            <FaCreditCard className="payment-icon" />
+            <FaCreditCard
+              className="payment-icon"
+            />
 
-            <h2>Payment</h2>
+            <h2>
+              Payment
+            </h2>
 
             <p>
               Verify your payment below.
@@ -269,7 +382,7 @@ function Payment() {
 
           </div>
 
-          {/* Student Details */}
+          {/* STUDENT DETAILS */}
 
           <div className="student-card">
 
@@ -301,54 +414,59 @@ function Payment() {
 
           <div className="qr-card">
 
-            <FaQrcode className="qr-icon" />
+            <FaQrcode
+              className="qr-icon"
+            />
 
-            {Number(event.fee) > 0 ? (
-  <QRCodeSVG
-    value={upiUrl}
-    size={220}
-    level="M"
-    includeMargin={true}
-  />
-) : (
-  <div className="free-payment">
-    FREE ENTRY
-  </div>
-)}
+            <img
+              src="https://i.ibb.co/wrNNpyxc/scanner.png"
+              alt="Payment QR Code"
+              className="qr-image"
+            />
 
             <h3>
+
               Amount :
 
               <span>
-                {event.fee === 0
+
+                {Number(event.fee) === 0
                   ? " Free"
                   : ` ₹${event.fee}`}
+
               </span>
+
             </h3>
 
           </div>
 
-          {/* Amount Card */}
+          {/* AMOUNT CARD */}
 
           <div className="amount-card">
 
-            <FaMoneyBillWave className="amount-icon" />
+            <FaMoneyBillWave
+              className="amount-icon"
+            />
 
             <div>
 
-              <h4>Registration Fee</h4>
+              <h4>
+                Registration Fee
+              </h4>
 
               <h2>
-                {event.fee === 0
+
+                {Number(event.fee) === 0
                   ? "FREE"
                   : `₹${event.fee}`}
+
               </h2>
 
             </div>
 
           </div>
 
-          {/* Transaction ID */}
+          {/* TRANSACTION ID */}
 
           <div className="input-box">
 
@@ -357,13 +475,15 @@ function Payment() {
               placeholder="Enter Transaction ID"
               value={transactionId}
               onChange={(e) =>
-                setTransactionId(e.target.value)
+                setTransactionId(
+                  e.target.value
+                )
               }
             />
 
           </div>
 
-          {/* Screenshot Upload */}
+          {/* SCREENSHOT UPLOAD */}
 
           <div className="upload-box">
 
@@ -386,7 +506,7 @@ function Payment() {
               }}
             />
 
-            {/* Screenshot Preview */}
+            {/* SCREENSHOT PREVIEW */}
 
             {paymentScreenshot && (
 
@@ -410,7 +530,7 @@ function Payment() {
 
           </div>
 
-          {/* Submit Button */}
+          {/* SUBMIT BUTTON */}
 
           <button
             type="button"
