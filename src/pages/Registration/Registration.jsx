@@ -1,6 +1,8 @@
 import "./Registration.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+import { useQuery } from "@tanstack/react-query";
 
 import {
   FaUser,
@@ -19,10 +21,16 @@ function Registration() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  // ==========================================
+  // GET LOGGED IN USER
+  // ==========================================
 
   const loggedInUser =
     JSON.parse(localStorage.getItem("loggedInUser")) || {};
+
+  // ==========================================
+  // FORM DATA
+  // ==========================================
 
   const [formData, setFormData] = useState({
     fullName: loggedInUser.fullName || "",
@@ -33,27 +41,35 @@ function Registration() {
     year: loggedInUser.year || "",
   });
 
-  // ==============================
-  // GET EVENT
-  // ==============================
+  // ==========================================
+  // TANSTACK QUERY - GET EVENT
+  // ==========================================
 
-  useEffect(() => {
-    fetch(
-      `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("EVENT:", data);
-        setSelectedEvent(data);
-      })
-      .catch((err) => {
-        console.log("EVENT ERROR:", err);
-      });
-  }, [id]);
+  const {
+    data: selectedEvent,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["event", id],
 
-  // ==============================
+    queryFn: async () => {
+      const response = await fetch(
+        `https://college-event-management-backend-2mzu.onrender.com/api/events/${id}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch event");
+      }
+
+      return response.json();
+    },
+
+    enabled: !!id,
+  });
+
+  // ==========================================
   // INPUT CHANGE
-  // ==============================
+  // ==========================================
 
   const handleChange = (e) => {
     setFormData({
@@ -62,9 +78,9 @@ function Registration() {
     });
   };
 
-  // ==============================
-  // SUBMIT
-  // ==============================
+  // ==========================================
+  // SUBMIT REGISTRATION
+  // ==========================================
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,6 +90,7 @@ function Registration() {
       return;
     }
 
+    // Save registration data
     localStorage.setItem(
       "registrationData",
       JSON.stringify({
@@ -89,29 +106,58 @@ function Registration() {
       })
     );
 
+    // Go to payment
     navigate(`/payment/${selectedEvent._id}`);
   };
 
-  // ==============================
+  // ==========================================
   // LOADING
-  // ==============================
+  // ==========================================
 
-  if (!selectedEvent) {
+  if (isLoading) {
     return (
-      <div className="registration-loading">
+      <div className="loading">
         Loading Event...
       </div>
     );
   }
+
+  // ==========================================
+  // ERROR
+  // ==========================================
+
+  if (isError) {
+    return (
+      <div className="loading">
+        Failed to load event.
+      </div>
+    );
+  }
+
+  // ==========================================
+  // EVENT NOT FOUND
+  // ==========================================
+
+  if (!selectedEvent) {
+    return (
+      <div className="loading">
+        Event Not Found.
+      </div>
+    );
+  }
+
+  // ==========================================
+  // PAGE
+  // ==========================================
 
   return (
     <div className="registration-page">
 
       <div className="registration-container">
 
-        {/* =========================
-            LEFT SIDE
-        ========================= */}
+        {/* =====================================
+            LEFT PANEL
+        ===================================== */}
 
         <div className="left-panel">
 
@@ -126,8 +172,8 @@ function Registration() {
           </h1>
 
           <p className="left-description">
-            Fill out the registration form and secure
-            your seat for this amazing event.
+            Fill out the registration form and
+            secure your seat for this amazing event.
           </p>
 
           {/* EVENT CARD */}
@@ -139,24 +185,33 @@ function Registration() {
             </h2>
 
             <div className="event-item">
+
               <FaCalendarAlt />
 
               <div>
                 <strong>Date</strong>
-                <span>{selectedEvent.date}</span>
+                <span>
+                  {selectedEvent.date}
+                </span>
               </div>
+
             </div>
 
             <div className="event-item">
+
               <FaMapMarkerAlt />
 
               <div>
                 <strong>Venue</strong>
-                <span>{selectedEvent.venue}</span>
+                <span>
+                  {selectedEvent.venue}
+                </span>
               </div>
+
             </div>
 
             <div className="event-item">
+
               <FaMoneyBillWave />
 
               <div>
@@ -167,7 +222,9 @@ function Registration() {
                     ? "Free"
                     : `₹${selectedEvent.fee}`}
                 </span>
+
               </div>
+
             </div>
 
             <h3 className="about-title">
@@ -179,18 +236,20 @@ function Registration() {
             </p>
 
           </div>
+
         </div>
 
-
-        {/* =========================
-            RIGHT SIDE
-        ========================= */}
+        {/* =====================================
+            RIGHT PANEL
+        ===================================== */}
 
         <div className="right-panel">
 
           <div className="form-header">
 
-            <h2>Create Registration</h2>
+            <h2>
+              Create Registration
+            </h2>
 
             <p>
               Please fill all required information.
@@ -198,16 +257,13 @@ function Registration() {
 
           </div>
 
-
           <form onSubmit={handleSubmit}>
 
             {/* FULL NAME */}
 
             <div className="input-box">
 
-              <div className="icon-container">
-                <FaUser />
-              </div>
+              <FaUser className="input-icon" />
 
               <input
                 type="text"
@@ -220,14 +276,11 @@ function Registration() {
 
             </div>
 
-
             {/* EMAIL */}
 
             <div className="input-box">
 
-              <div className="icon-container">
-                <FaEnvelope />
-              </div>
+              <FaEnvelope className="input-icon" />
 
               <input
                 type="email"
@@ -240,14 +293,11 @@ function Registration() {
 
             </div>
 
-
             {/* MOBILE */}
 
             <div className="input-box">
 
-              <div className="icon-container">
-                <FaPhoneAlt />
-              </div>
+              <FaPhoneAlt className="input-icon" />
 
               <input
                 type="tel"
@@ -260,14 +310,11 @@ function Registration() {
 
             </div>
 
-
             {/* COLLEGE */}
 
             <div className="input-box">
 
-              <div className="icon-container">
-                <FaUniversity />
-              </div>
+              <FaUniversity className="input-icon" />
 
               <input
                 type="text"
@@ -280,14 +327,11 @@ function Registration() {
 
             </div>
 
-
             {/* DEPARTMENT */}
 
             <div className="input-box">
 
-              <div className="icon-container">
-                <FaLaptopCode />
-              </div>
+              <FaLaptopCode className="input-icon" />
 
               <input
                 type="text"
@@ -300,14 +344,11 @@ function Registration() {
 
             </div>
 
-
             {/* YEAR */}
 
             <div className="input-box">
 
-              <div className="icon-container">
-                <FaGraduationCap />
-              </div>
+              <FaGraduationCap className="input-icon" />
 
               <select
                 name="year"
@@ -315,6 +356,7 @@ function Registration() {
                 onChange={handleChange}
                 required
               >
+
                 <option value="">
                   Select Year
                 </option>
@@ -334,10 +376,10 @@ function Registration() {
                 <option value="Final Year">
                   Final Year
                 </option>
+
               </select>
 
             </div>
-
 
             {/* BUTTON */}
 
@@ -345,11 +387,11 @@ function Registration() {
               type="submit"
               className="register-btn"
             >
-              <span>
-                Continue to Payment
-              </span>
+
+              Continue to Payment
 
               <FaArrowRight />
+
             </button>
 
           </form>
