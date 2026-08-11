@@ -7,10 +7,6 @@ function Events() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
-  // ==========================================
-  // TANSTACK QUERY - GET EVENTS
-  // ==========================================
-
   const {
     data: events = [],
     isLoading,
@@ -27,43 +23,27 @@ function Events() {
         throw new Error("Failed to fetch events");
       }
 
-      const data = await response.json();
-
-      console.log("EVENTS:", data);
-
-      return data;
+      return response.json();
     },
 
     staleTime: 5 * 60 * 1000,
   });
 
-  // ==========================================
-  // LOADING
-  // ==========================================
-
   if (isLoading) {
     return (
-      <div className="loading">
+      <div className="events-loading">
         Loading Events...
       </div>
     );
   }
 
-  // ==========================================
-  // ERROR
-  // ==========================================
-
   if (isError) {
     return (
-      <div className="loading">
+      <div className="events-error">
         Failed to load events.
       </div>
     );
   }
-
-  // ==========================================
-  // SEARCH + CATEGORY FILTER
-  // ==========================================
 
   const filteredEvents = events.filter((event) => {
     const matchSearch = event.title
@@ -77,24 +57,20 @@ function Events() {
     return matchSearch && matchCategory;
   });
 
-  // ==========================================
-  // UI
-  // ==========================================
-
   return (
-    <div className="events-page">
+    <div className="all-events-page">
+
+      {/* HEADING */}
 
       <h1>All Events</h1>
 
       <p className="subtitle">
-        Discover exciting college events and
-        register today.
+        Discover exciting college events and register today.
       </p>
 
       {/* SEARCH */}
 
       <div className="search-box">
-
         <input
           type="text"
           placeholder="Search Event..."
@@ -103,58 +79,41 @@ function Events() {
             setSearch(e.target.value)
           }
         />
-
       </div>
 
-      {/* CATEGORY FILTER */}
+      {/* FILTER */}
 
       <div className="filter-buttons">
 
         <button
           onClick={() => setCategory("All")}
-          className={
-            category === "All"
-              ? "active"
-              : ""
-          }
+          className={category === "All" ? "active" : ""}
         >
           All
         </button>
 
         <button
-          onClick={() =>
-            setCategory("Technical")
-          }
+          onClick={() => setCategory("Technical")}
           className={
-            category === "Technical"
-              ? "active"
-              : ""
+            category === "Technical" ? "active" : ""
           }
         >
           Technical
         </button>
 
         <button
-          onClick={() =>
-            setCategory("Coding")
-          }
+          onClick={() => setCategory("Coding")}
           className={
-            category === "Coding"
-              ? "active"
-              : ""
+            category === "Coding" ? "active" : ""
           }
         >
           Coding
         </button>
 
         <button
-          onClick={() =>
-            setCategory("Competition")
-          }
+          onClick={() => setCategory("Competition")}
           className={
-            category === "Competition"
-              ? "active"
-              : ""
+            category === "Competition" ? "active" : ""
           }
         >
           Competition
@@ -185,9 +144,7 @@ function Events() {
 
         ) : (
 
-          <h2>
-            No Event Found
-          </h2>
+          <h2>No Event Found</h2>
 
         )}
 
