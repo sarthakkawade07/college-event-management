@@ -438,3 +438,17 @@ body {
     font-size: 30px;
   }
 }
+/* ===== REMOVE PURPLE COMPLETELY ===== */
+
+.home::before,
+.home::after,
+.events-section::before,
+.events-section::after {
+  display: none !important;
+}
+
+/* Blue only */
+
+.events-section {
+  background: #1d4ed8 !important;
+}
