@@ -17,46 +17,102 @@ import OTPVerification from "./pages/OTPVerification/OTPVerification";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Profile from "./pages/Profile/Profile";
 import MyEvents from "./pages/MyEvents/MyEvents";
+
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AddEvent from "./pages/Admin/AddEvent";
 import Participants from "./pages/Admin/Participants";
 import ManageEvents from "./pages/Admin/ManageEvents";
-import Payment from "./pages/Payment/Payment";
 import PaymentVerification from "./pages/Admin/PaymentVerification";
+
+import Payment from "./pages/Payment/Payment";
 import Certificate from "./pages/Certificate/Certificate";
+
+import { EventProvider } from "./context/EventContext";
+
 function App() {
   return (
-    <>
+    <EventProvider>
       <Navbar />
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetails />} />
+
         <Route path="/registration/:id" element={<Registration />} />
-        <Route path="*" element={<h1>404 Page Not Found</h1>} />
-        <Route path="/forgot-password" element={<ForgotPassword />}/>
-        <Route path="/reset-password"element={<ResetPassword />}/>
-        <Route path="/otp-verification"element={<OTPVerification />}/>
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+        />
+
+        <Route
+          path="/otp-verification"
+          element={<OTPVerification />}
+        />
+
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-events" element={<MyEvents />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/add-event" element={<AddEvent />} />
-        <Route path="/participants" element={<Participants />} />
-        <Route path="/manage-events" element={<ManageEvents />} />
-        <Route path="/payment/:id" element={<Payment />} />
-        <Route path="/payment-verification"element={<PaymentVerification />}/>
-        <Route path="/certificate" element={<Certificate />} />
 
+        {/* ADMIN */}
+        <Route
+          path="/admin-dashboard"
+          element={<AdminDashboard />}
+        />
 
-</Routes>
+        <Route
+          path="/add-event"
+          element={<AddEvent />}
+        />
+
+        <Route
+          path="/participants"
+          element={<Participants />}
+        />
+
+        <Route
+          path="/manage-events"
+          element={<ManageEvents />}
+        />
+
+        <Route
+          path="/payment-verification"
+          element={<PaymentVerification />}
+        />
+
+        {/* PAYMENT */}
+        <Route
+          path="/payment/:id"
+          element={<Payment />}
+        />
+
+        {/* CERTIFICATE */}
+        <Route
+          path="/certificate"
+          element={<Certificate />}
+        />
+
+        {/* 404 - शेवटी ठेव */}
+        <Route
+          path="*"
+          element={<h1>404 Page Not Found</h1>}
+        />
+      </Routes>
+
       <Footer />
-    </>
+    </EventProvider>
   );
 }
 
