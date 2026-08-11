@@ -50,29 +50,28 @@ function Home() {
         </div>
 
       </section>
+<section className="events-section">
 
-      <section className="events-section">
+  <h2>Upcoming Events</h2>
 
-        <h2>Upcoming Events</h2>
+  <div className="events-container">
 
-        <div className="events-container">
+    {eventData.map((event) => (
+      <EventCard
+        key={event.id}
+        id={event.id}
+        title={event.title}
+        date={event.date}
+        location={event.location}
+        fee={event.fee}
+        category={event.category}
+        image={event.image}
+      />
+    ))}
 
-          {eventData.map((event) => (
-            <EventCard
-              key={event.id}
-              id={event.id}
-              title={event.title}
-              date={event.date}
-              location={event.location}
-              fee={event.fee}
-              category={event.category}
-              image={event.image}
-            />
-          ))}
+  </div>
 
-        </div>
-
-      </section>
+</section>
 
     </main>
   );
