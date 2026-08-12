@@ -250,3 +250,86 @@
 }
 
 }
+/* =========================================
+   EVENTS PAGE - BLUE ONLY
+   REMOVE PURPLE COMPLETELY
+========================================= */
+
+.events-page {
+  width: 100% !important;
+  min-height: 100vh !important;
+
+  margin: 0 !important;
+  padding: 50px 5% 80px !important;
+
+  background: linear-gradient(
+    135deg,
+    #eff6ff 0%,
+    #dbeafe 50%,
+    #bfdbfe 100%
+  ) !important;
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* Remove old floating purple backgrounds */
+
+.events-page::before,
+.events-page::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Heading */
+
+.events-page h1 {
+  color: #1e3a8a !important;
+}
+
+/* Subtitle */
+
+.events-page .subtitle {
+  color: #475569 !important;
+}
+
+/* Search */
+
+.events-page .search-box input {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border: 2px solid #bfdbfe !important;
+}
+
+/* Filter buttons */
+
+.events-page .filter-buttons button {
+  background: #ffffff !important;
+  color: #1d4ed8 !important;
+
+  border: 1px solid #bfdbfe !important;
+}
+
+.events-page .filter-buttons button:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* Events grid */
+
+.events-page .events-grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Remove any purple background from event cards */
+
+.events-page .event-card {
+  background: #ffffff !important;
+}
+
+/* Force page background */
+
+body {
+  background: #eff6ff !important;
+}
