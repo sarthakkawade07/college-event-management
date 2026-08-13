@@ -32,86 +32,126 @@ import { EventProvider } from "./context/EventContext";
 function App() {
   return (
     <EventProvider>
-      <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+      <div className="app-layout">
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* NAVBAR */}
+        <Navbar />
 
-        <Route path="/events" element={<Events />} />
-        <Route path="/events/:id" element={<EventDetails />} />
+        {/* MAIN CONTENT */}
+        <main className="app-main">
 
-        <Route path="/registration/:id" element={<Registration />} />
+          <Routes>
 
-        <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
-        />
+            <Route path="/" element={<Home />} />
 
-        <Route
-          path="/reset-password"
-          element={<ResetPassword />}
-        />
+            <Route path="/about" element={<About />} />
 
-        <Route
-          path="/otp-verification"
-          element={<OTPVerification />}
-        />
+            <Route path="/contact" element={<Contact />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/my-events" element={<MyEvents />} />
+            <Route path="/login" element={<Login />} />
 
-        {/* ADMIN */}
-        <Route
-          path="/admin-dashboard"
-          element={<AdminDashboard />}
-        />
+            <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/add-event"
-          element={<AddEvent />}
-        />
+            <Route path="/events" element={<Events />} />
 
-        <Route
-          path="/participants"
-          element={<Participants />}
-        />
+            <Route
+              path="/events/:id"
+              element={<EventDetails />}
+            />
 
-        <Route
-          path="/manage-events"
-          element={<ManageEvents />}
-        />
+            <Route
+              path="/registration/:id"
+              element={<Registration />}
+            />
 
-        <Route
-          path="/payment-verification"
-          element={<PaymentVerification />}
-        />
+            <Route
+              path="/forgot-password"
+              element={<ForgotPassword />}
+            />
 
-        {/* PAYMENT */}
-        <Route
-          path="/payment/:id"
-          element={<Payment />}
-        />
+            <Route
+              path="/reset-password"
+              element={<ResetPassword />}
+            />
 
-        {/* CERTIFICATE */}
-        <Route
-          path="/certificate"
-          element={<Certificate />}
-        />
+            <Route
+              path="/otp-verification"
+              element={<OTPVerification />}
+            />
 
-        {/* 404 - शेवटी ठेव */}
-        <Route
-          path="*"
-          element={<h1>404 Page Not Found</h1>}
-        />
-      </Routes>
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
 
-      <Footer />
+            <Route
+              path="/profile"
+              element={<Profile />}
+            />
+
+            <Route
+              path="/my-events"
+              element={<MyEvents />}
+            />
+
+            {/* ADMIN */}
+
+            <Route
+              path="/admin-dashboard"
+              element={<AdminDashboard />}
+            />
+
+            <Route
+              path="/add-event"
+              element={<AddEvent />}
+            />
+
+            <Route
+              path="/participants"
+              element={<Participants />}
+            />
+
+            <Route
+              path="/manage-events"
+              element={<ManageEvents />}
+            />
+
+            <Route
+              path="/payment-verification"
+              element={<PaymentVerification />}
+            />
+
+            {/* PAYMENT */}
+
+            <Route
+              path="/payment/:id"
+              element={<Payment />}
+            />
+
+            {/* CERTIFICATE */}
+
+            <Route
+              path="/certificate"
+              element={<Certificate />}
+            />
+
+            {/* 404 */}
+
+            <Route
+              path="*"
+              element={<h1>404 Page Not Found</h1>}
+            />
+
+          </Routes>
+
+        </main>
+
+        {/* FOOTER */}
+        <Footer />
+
+      </div>
+
     </EventProvider>
   );
 }

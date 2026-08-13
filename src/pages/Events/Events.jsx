@@ -3,9 +3,20 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import EventCard from "../../components/event/EventCard";
 
+import {
+  FaThLarge,
+  FaCode,
+  FaDesktop,
+  FaTrophy,
+} from "react-icons/fa";
+
 function Events() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+
+  // ==============================
+  // FETCH EVENTS FROM BACKEND
+  // ==============================
 
   const {
     data: events = [],
@@ -23,27 +34,46 @@ function Events() {
         throw new Error("Failed to fetch events");
       }
 
-      return response.json();
+      const data = await response.json();
+
+      return Array.isArray(data)
+        ? data
+        : data.events || [];
     },
 
     staleTime: 5 * 60 * 1000,
   });
 
+  // ==============================
+  // LOADING
+  // ==============================
+
   if (isLoading) {
     return (
       <div className="events-loading">
-        Loading Events...
+        <div className="loading-spinner"></div>
+        <h2>Loading Events...</h2>
+        <p>Please wait while we fetch the latest events.</p>
       </div>
     );
   }
 
+  // ==============================
+  // ERROR
+  // ==============================
+
   if (isError) {
     return (
       <div className="events-error">
-        Failed to load events.
+        <h2>Failed to Load Events</h2>
+        <p>Please try again later.</p>
       </div>
     );
   }
+
+  // ==============================
+  // SEARCH + CATEGORY FILTER
+  // ==============================
 
   const filteredEvents = events.filter((event) => {
     const matchSearch = event.title
@@ -57,12 +87,24 @@ function Events() {
     return matchSearch && matchCategory;
   });
 
+  // ==============================
+  // UI
+  // ==============================
+
   return (
-    <div className="all-events-page">
+    <div className="events-page">
+
+      {/* TOP BADGE */}
+
+      <div className="events-badge">
+        🎉 Explore & Register
+      </div>
 
       {/* HEADING */}
 
-      <h1>All Events</h1>
+      <h1>
+        All <span>Events</span>
+      </h1>
 
       <p className="subtitle">
         Discover exciting college events and register today.
@@ -71,52 +113,80 @@ function Events() {
       {/* SEARCH */}
 
       <div className="search-box">
+
+        <span className="search-icon">
+          🔍
+        </span>
+
         <input
           type="text"
-          placeholder="Search Event..."
+          placeholder="Search events, workshops, hackathons..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
           }
         />
+
       </div>
 
-      {/* FILTER */}
+      {/* FILTER BUTTONS */}
 
       <div className="filter-buttons">
 
         <button
-          onClick={() => setCategory("All")}
-          className={category === "All" ? "active" : ""}
+          className={
+            category === "All"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            setCategory("All")
+          }
         >
-          All
+          <FaThLarge />
+          <span>All Events</span>
         </button>
 
         <button
-          onClick={() => setCategory("Technical")}
           className={
-            category === "Technical" ? "active" : ""
+            category === "Technical"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            setCategory("Technical")
           }
         >
-          Technical
+          <FaCode />
+          <span>Technical</span>
         </button>
 
         <button
-          onClick={() => setCategory("Coding")}
           className={
-            category === "Coding" ? "active" : ""
+            category === "Coding"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            setCategory("Coding")
           }
         >
-          Coding
+          <FaDesktop />
+          <span>Coding</span>
         </button>
 
         <button
-          onClick={() => setCategory("Competition")}
           className={
-            category === "Competition" ? "active" : ""
+            category === "Competition"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            setCategory("Competition")
           }
         >
-          Competition
+          <FaTrophy />
+          <span>Competition</span>
         </button>
 
       </div>
@@ -144,7 +214,21 @@ function Events() {
 
         ) : (
 
-          <h2>No Event Found</h2>
+          <div className="no-events">
+
+            <div className="no-events-icon">
+              📅
+            </div>
+
+            <h2>
+              No Events Found
+            </h2>
+
+            <p>
+              Try another search or category.
+            </p>
+
+          </div>
 
         )}
 

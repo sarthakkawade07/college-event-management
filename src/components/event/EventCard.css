@@ -1,45 +1,439 @@
+/* =========================================================
+   EVENT CARD — PROFESSIONAL
+========================================================= */
+
 .event-card {
-  width: 320px;
-  background: #fff;
-  border-radius: 15px;
+  width: 100%;
+  min-height: 440px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-  margin: 20px;
-  transition: 0.3s;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
+
+
+/* =========================================================
+   TOP COLOR LINE
+========================================================= */
+
+.event-card::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 5px;
+
+  background: #2563eb;
+
+  z-index: 5;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
 
 .event-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-7px);
+
+  box-shadow:
+    0 18px 38px rgba(37, 99, 235, 0.15);
 }
 
-.event-image {
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.event-image-wrapper {
+  padding: 14px 14px 0;
+}
+
+.event-card-image {
   width: 100%;
-  height: 200px;
+  height: 130px;
+
+  display: block;
+
   object-fit: cover;
+
+  border-radius: 12px;
+
+  transition: transform 0.35s ease;
 }
 
-.event-content {
-  padding: 15px;
+.event-card:hover .event-card-image {
+  transform: scale(1.03);
 }
 
-.event-category {
-  background: royalblue;
-  color: white;
-  padding: 4px 10px;
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.event-card-content {
+  padding: 16px 18px 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+.event-card-category {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 11px;
+
   border-radius: 20px;
+
+  background: #eef2ff;
+  color: #2563eb;
+
   font-size: 12px;
+  font-weight: 700;
+
+  margin-bottom: 10px;
 }
 
-.event-content h3 {
-  margin: 10px 0;
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.event-card-title {
+  margin: 0 0 15px;
+
+  color: #172554;
+
+  font-size: 20px;
+  font-weight: 800;
+
+  line-height: 1.35;
 }
 
-.details-btn {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: royalblue;
-  color: white;
+
+/* =========================================================
+   DATE + LOCATION
+========================================================= */
+
+.event-card-info {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  color: #64748b;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  margin: 6px 0;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.event-info-icon {
+  width: 30px;
+  height: 30px;
+
+  min-width: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   border-radius: 8px;
-  cursor: pointer;
+
+  background: #f1f5ff;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   BOTTOM
+========================================================= */
+
+.event-card-bottom {
+  margin-top: auto;
+
+  padding-top: 16px;
+
+  border-top: 1px solid #e5e7eb;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================================
+   FEE
+========================================================= */
+
+.event-card-fee {
+  margin: 0 0 14px;
+
+  color: #172554;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.event-details-link {
+  width: 100%;
+
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 10px 15px;
+
+  box-sizing: border-box;
+
+  border-radius: 9px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #4f46e5
+  );
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.event-details-link span:last-child {
+  font-size: 19px;
+
+  line-height: 1;
+
+  transition: transform 0.25s ease;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+========================================================= */
+
+.event-details-link:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 9px 20px rgba(37, 99, 235, 0.28);
+}
+
+.event-details-link:hover span:last-child {
+  transform: translateX(5px);
+}
+
+
+/* =========================================================
+   BLUE CARD
+========================================================= */
+
+.event-card:nth-child(3n + 1)::before {
+  background: linear-gradient(
+    90deg,
+    #1677ff,
+    #315bea
+  );
+}
+
+.event-card:nth-child(3n + 1) .event-card-category {
+  background: #eaf2ff;
+  color: #1677ff;
+}
+
+.event-card:nth-child(3n + 1) .event-info-icon {
+  background: #eef5ff;
+}
+
+.event-card:nth-child(3n + 1) .event-details-link {
+  background: linear-gradient(
+    135deg,
+    #1677ff,
+    #2448e8
+  );
+}
+
+
+/* =========================================================
+   PURPLE CARD
+========================================================= */
+
+.event-card:nth-child(3n + 2)::before {
+  background: linear-gradient(
+    90deg,
+    #8b5cf6,
+    #6d28d9
+  );
+}
+
+.event-card:nth-child(3n + 2) .event-card-category {
+  background: #f1eaff;
+  color: #7c3aed;
+}
+
+.event-card:nth-child(3n + 2) .event-info-icon {
+  background: #f5efff;
+}
+
+.event-card:nth-child(3n + 2) .event-details-link {
+  background: linear-gradient(
+    135deg,
+    #8b5cf6,
+    #6d28d9
+  );
+}
+
+
+/* =========================================================
+   GREEN CARD
+========================================================= */
+
+.event-card:nth-child(3n + 3)::before {
+  background: linear-gradient(
+    90deg,
+    #10b981,
+    #059669
+  );
+}
+
+.event-card:nth-child(3n + 3) .event-card-category {
+  background: #e8f9f1;
+  color: #059669;
+}
+
+.event-card:nth-child(3n + 3) .event-info-icon {
+  background: #ecfdf5;
+}
+
+.event-card:nth-child(3n + 3) .event-details-link {
+  background: linear-gradient(
+    135deg,
+    #10b981,
+    #059669
+  );
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .event-card {
+    min-height: auto;
+  }
+
+  .event-card-image {
+    height: 200px;
+  }
+
+  .event-card-title {
+    font-size: 19px;
+  }
+
+  .event-card-info {
+    font-size: 13px;
+  }
+
+  .event-card-category {
+    font-size: 11px;
+  }
+
+  .event-card-fee {
+    font-size: 18px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .event-image-wrapper {
+    padding: 12px 12px 0;
+  }
+
+  .event-card-content {
+    padding: 14px;
+  }
+
+  .event-card-image {
+    height: 180px;
+  }
+
+  .event-card-title {
+    font-size: 18px;
+  }
+
+  .event-card-info {
+    font-size: 13px;
+  }
+
+  .event-card-fee {
+    font-size: 18px;
+  }
+
+  .event-details-link {
+    min-height: 43px;
+    font-size: 13px;
+  }
+
 }

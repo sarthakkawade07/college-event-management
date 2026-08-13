@@ -1,3 +1,48 @@
+/* =========================================
+   MAIN APP LAYOUT
+========================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* =========================================
+   APP WRAPPER
+========================================= */
+
+.app-layout {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================
+   MAIN PAGE CONTENT
+========================================= */
+
+.app-main {
+  width: 100%;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

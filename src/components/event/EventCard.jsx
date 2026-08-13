@@ -13,33 +13,73 @@ function EventCard({
   return (
     <div className="event-card">
 
-      <img
-        src={image || "https://via.placeholder.com/300x180?text=No+Image"}
-        alt={title}
-        className="event-image"
-      />
+      {/* IMAGE */}
+      <div className="event-image-wrapper">
+        <img
+          src={
+            image ||
+            "https://via.placeholder.com/600x400?text=No+Image"
+          }
+          alt={title}
+          className="event-card-image"
+        />
+      </div>
 
-      <div className="event-content">
+      {/* CONTENT */}
+      <div className="event-card-content">
 
-        <span className="event-category">
-          {category}
+        {/* CATEGORY */}
+        <span className="event-card-category">
+          {category || "Event"}
         </span>
 
-        <h3>{title}</h3>
+        {/* TITLE */}
+        <h3 className="event-card-title">
+          {title}
+        </h3>
 
-        <p>📅 {date}</p>
+        {/* DATE */}
+        <div className="event-card-info">
+          <span className="event-info-icon">
+            📅
+          </span>
 
-        <p>📍 {location}</p>
+          <span>
+            {date || "Date TBA"}
+          </span>
+        </div>
 
-        <h4>
-          {fee && fee > 0 ? `₹${fee}` : "Free"}
-        </h4>
+        {/* LOCATION */}
+        <div className="event-card-info">
+          <span className="event-info-icon">
+            📍
+          </span>
 
-        <Link to={`/events/${id}`}>
-          <button className="details-btn">
-            View Details
-          </button>
-        </Link>
+          <span>
+            {location || "College Campus"}
+          </span>
+        </div>
+
+        {/* BOTTOM */}
+        <div className="event-card-bottom">
+
+          {/* FEE */}
+          <h4 className="event-card-fee">
+            {fee && Number(fee) > 0
+              ? `₹${fee}`
+              : "Free"}
+          </h4>
+
+          {/* DETAILS */}
+          <Link
+            to={`/events/${id}`}
+            className="event-details-link"
+          >
+            <span>View Details</span>
+            <span>→</span>
+          </Link>
+
+        </div>
 
       </div>
 

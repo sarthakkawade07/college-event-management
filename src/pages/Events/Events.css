@@ -1,335 +1,603 @@
-/* ===========================
-   PREMIUM EVENTS PAGE
-=========================== */
-
-.events-page{
-    width:92%;
-    margin:50px auto 80px;
-}
-
-/* Heading */
-
-.events-page h1{
-    text-align:center;
-    font-size:55px;
-    font-weight:800;
-    color:#1e3a8a;
-    margin-bottom:12px;
-}
-
-.subtitle{
-    text-align:center;
-    font-size:20px;
-    color:#6b7280;
-    margin-bottom:45px;
-}
-
-/* Search */
-
-.search-box{
-    display:flex;
-    justify-content:center;
-    margin-bottom:35px;
-}
-
-.search-box input{
-
-    width:550px;
-    max-width:100%;
-
-    padding:18px 24px;
-
-    border:none;
-
-    border-radius:50px;
-
-    background:white;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-
-    font-size:17px;
-
-    transition:.35s;
-
-    outline:none;
-
-}
-
-.search-box input:focus{
-
-    box-shadow:0 15px 35px rgba(37,99,235,.25);
-
-    transform:translateY(-2px);
-
-}
-
-/* Filter */
-
-.filter-buttons{
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:18px;
-
-    flex-wrap:wrap;
-
-    margin-bottom:50px;
-
-}
-
-.filter-buttons button{
-
-    border:none;
-
-    padding:13px 28px;
-
-    border-radius:40px;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-
-    background:white;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-    transition:.35s;
-
-}
-
-.filter-buttons button:hover{
-
-    background:linear-gradient(135deg,#2563eb,#4f46e5);
-
-    color:white;
-
-    transform:translateY(-4px);
-
-    box-shadow:0 15px 30px rgba(37,99,235,.30);
-
-}
-
-/* Grid */
-
-.events-grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-
-    gap:35px;
-
-}
-
-/* No Event */
-
-.events-grid h2{
-
-    grid-column:1/-1;
-
-    text-align:center;
-
-    color:#6b7280;
-
-    font-size:28px;
-
-    margin-top:40px;
-
-}
-
-/* Floating Background */
-
-.events-page::before{
-
-    content:"";
-
-    position:fixed;
-
-    width:320px;
-
-    height:320px;
-
-    background:#2563eb20;
-
-    border-radius:50%;
-
-    top:-100px;
-
-    right:-100px;
-
-    filter:blur(90px);
-
-    z-index:-1;
-
-}
-
-.events-page::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:280px;
-
-    height:280px;
-
-    background:#9333ea20;
-
-    border-radius:50%;
-
-    bottom:-120px;
-
-    left:-100px;
-
-    filter:blur(90px);
-
-    z-index:-1;
-
-}
-
-/* Responsive */
-
-@media(max-width:992px){
-
-.events-page h1{
-
-    font-size:45px;
-
-}
-
-.search-box input{
-
-    width:100%;
-
-}
-
-}
-
-@media(max-width:768px){
-
-.events-page{
-
-    width:95%;
-
-}
-
-.events-page h1{
-
-    font-size:36px;
-
-}
-
-.subtitle{
-
-    font-size:17px;
-
-}
-
-.filter-buttons{
-
-    gap:12px;
-
-}
-
-.filter-buttons button{
-
-    width:100%;
-
-}
-
-.events-grid{
-
-    grid-template-columns:1fr;
-
-}
-
-}
-/* =========================================
-   EVENTS PAGE - BLUE ONLY
-   REMOVE PURPLE COMPLETELY
-========================================= */
+/* =========================================================
+   EVENTS PAGE — PROFESSIONAL BACKGROUND
+   Event cards are controlled by EventCard.css
+========================================================= */
 
 .events-page {
-  width: 100% !important;
-  min-height: 100vh !important;
-
-  margin: 0 !important;
-  padding: 50px 5% 80px !important;
-
-  background: linear-gradient(
-    135deg,
-    #eff6ff 0%,
-    #dbeafe 50%,
-    #bfdbfe 100%
-  ) !important;
+  min-height: 100vh;
+  padding: 35px 30px 80px;
 
   position: relative;
   overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(37, 99, 235, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(99, 102, 241, 0.10),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #f8fbff 0%,
+      #eef4ff 50%,
+      #f8f9ff 100%
+    );
+
+  box-sizing: border-box;
 }
 
-/* Remove old floating purple backgrounds */
 
-.events-page::before,
+/* =========================================================
+   DECORATIVE BACKGROUND
+========================================================= */
+
+.events-page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  left: -140px;
+  bottom: 30px;
+
+  border-radius: 50%;
+
+  background: rgba(59, 130, 246, 0.08);
+
+  pointer-events: none;
+}
+
+
 .events-page::after {
-  display: none !important;
-  content: none !important;
+  content: "";
+
+  position: absolute;
+
+  width: 350px;
+  height: 350px;
+
+  right: -150px;
+  top: 100px;
+
+  border-radius: 50%;
+
+  background: rgba(99, 102, 241, 0.07);
+
+  pointer-events: none;
 }
 
-/* Heading */
 
-.events-page h1 {
-  color: #1e3a8a !important;
-}
+/* =========================================================
+   TOP BADGE
+========================================================= */
 
-/* Subtitle */
-
-.events-page .subtitle {
-  color: #475569 !important;
-}
-
-/* Search */
-
-.events-page .search-box input {
-  background: #ffffff !important;
-  color: #1e293b !important;
-  border: 2px solid #bfdbfe !important;
-}
-
-/* Filter buttons */
-
-.events-page .filter-buttons button {
-  background: #ffffff !important;
-  color: #1d4ed8 !important;
-
-  border: 1px solid #bfdbfe !important;
-}
-
-.events-page .filter-buttons button:hover {
-  background: #2563eb !important;
-  color: #ffffff !important;
-}
-
-/* Events grid */
-
-.events-page .events-grid {
+.events-badge {
   position: relative;
   z-index: 2;
+
+  width: fit-content;
+
+  margin: 0 auto 12px;
+
+  padding: 7px 14px;
+
+  border-radius: 30px;
+
+  background: rgba(255, 255, 255, 0.75);
+
+  border: 1px solid #dbeafe;
+
+  color: #315bea;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  box-shadow:
+    0 4px 15px rgba(37, 99, 235, 0.08);
 }
 
-/* Remove any purple background from event cards */
 
-.events-page .event-card {
-  background: #ffffff !important;
+/* =========================================================
+   MAIN HEADING
+========================================================= */
+
+.events-page > h1 {
+  position: relative;
+  z-index: 2;
+
+  margin: 0;
+
+  text-align: center;
+
+  color: #172554;
+
+  font-size: 42px;
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  letter-spacing: -1px;
 }
 
-/* Force page background */
 
-body {
-  background: #eff6ff !important;
+.events-page > h1 span {
+  color: #315bea;
+}
+
+
+/* =========================================================
+   SUBTITLE
+========================================================= */
+
+.events-page .subtitle {
+  position: relative;
+  z-index: 2;
+
+  margin: 10px auto 22px;
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   SEARCH BOX
+========================================================= */
+
+.search-box {
+  position: relative;
+  z-index: 3;
+
+  width: 100%;
+  max-width: 540px;
+
+  height: 52px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+
+  background: #ffffff;
+
+  border: 1px solid #dbe3f0;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.08);
+
+  transition: 0.25s ease;
+}
+
+
+.search-box:focus-within {
+  border-color: #315bea;
+
+  box-shadow:
+    0 8px 25px rgba(49, 91, 234, 0.15);
+}
+
+
+.search-icon {
+  margin-left: 17px;
+
+  color: #64748b;
+
+  font-size: 16px;
+}
+
+
+.search-box input {
+  flex: 1;
+
+  height: 100%;
+
+  padding: 0 16px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #172554;
+
+  font-size: 13px;
+}
+
+
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
+
+/* =========================================================
+   FILTER BUTTONS
+========================================================= */
+
+.filter-buttons {
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 25px;
+
+  flex-wrap: wrap;
+}
+
+
+.filter-buttons button {
+  min-height: 38px;
+
+  padding: 8px 15px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border: 1px solid #dbe3f0;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  color: #475569;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.filter-buttons button svg {
+  font-size: 12px;
+}
+
+
+.filter-buttons button:hover {
+  transform: translateY(-2px);
+
+  border-color: #315bea;
+
+  color: #315bea;
+
+  box-shadow:
+    0 5px 15px rgba(49, 91, 234, 0.10);
+}
+
+
+.filter-buttons button.active {
+  background: linear-gradient(
+    135deg,
+    #315bea,
+    #4f46e5
+  );
+
+  border-color: transparent;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 7px 18px rgba(49, 91, 234, 0.22);
+}
+
+
+/* =========================================================
+   EVENTS GRID
+   IMPORTANT:
+   Do NOT style .event-card here.
+   EventCard.css handles the card design.
+========================================================= */
+
+.events-grid {
+  position: relative;
+  z-index: 3;
+
+  width: 100%;
+  max-width: 1160px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 28px;
+
+  align-items: stretch;
+}
+
+/* =========================================================
+   IMPORTANT:
+   REMOVE ALL CARD OVERRIDES FROM EVENTS.CSS
+========================================================= */
+
+/*
+   .event-card
+   .event-card-image
+   .event-card-content
+   .event-card-category
+   .event-card-title
+   .event-card-info
+   .event-card-fee
+   .event-details-link
+
+   यांना इथे style करू नका.
+
+   हे सर्व EventCard.css मध्ये आहेत.
+*/
+
+
+/* =========================================================
+   NO EVENTS
+========================================================= */
+
+.no-events {
+  grid-column: 1 / -1;
+
+  width: 100%;
+
+  min-height: 520px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+
+.no-events-icon {
+  margin-bottom: 12px;
+
+  font-size: 45px;
+}
+
+
+.no-events h2 {
+  margin: 0 0 7px;
+
+  color: #172554;
+
+  font-size: 22px;
+}
+
+
+.no-events p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.events-loading {
+  min-height: 70vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #f4f7ff;
+
+  text-align: center;
+}
+
+
+.events-loading h2 {
+  margin: 15px 0 5px;
+
+  color: #172554;
+}
+
+
+.events-loading p {
+  color: #64748b;
+}
+
+
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+
+  border: 4px solid #dbeafe;
+
+  border-top-color: #315bea;
+
+  border-radius: 50%;
+
+  animation: eventsSpin 0.8s linear infinite;
+}
+
+
+@keyframes eventsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.events-error {
+  min-height: 70vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #f4f7ff;
+
+  text-align: center;
+}
+
+
+.events-error h2 {
+  color: #172554;
+}
+
+
+.events-error p {
+  color: #64748b;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .events-page {
+    padding: 30px 22px 60px;
+  }
+
+
+  .events-page > h1 {
+    font-size: 36px;
+  }
+
+
+  .events-grid {
+    grid-template-columns:
+      repeat(2, minmax(260px, 1fr));
+
+    gap: 22px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .events-page {
+    padding:
+      28px 18px
+      55px;
+  }
+
+
+  .events-page > h1 {
+    font-size: 31px;
+  }
+
+
+  .events-page .subtitle {
+    font-size: 13px;
+
+    max-width: 90%;
+  }
+
+
+  .search-box {
+    max-width: 100%;
+
+    height: 50px;
+  }
+
+
+  .filter-buttons {
+    gap: 8px;
+
+    margin-bottom: 22px;
+  }
+
+
+  .filter-buttons button {
+    padding: 8px 11px;
+
+    font-size: 11px;
+  }
+
+
+  .events-grid {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .events-page {
+    padding:
+      25px 14px
+      45px;
+  }
+
+
+  .events-page > h1 {
+    font-size: 28px;
+  }
+
+
+  .filter-buttons button {
+    flex: 1;
+
+    min-width: 120px;
+  }
+
 }
