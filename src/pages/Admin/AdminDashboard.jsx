@@ -3,7 +3,7 @@ import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "./AdminDashboard.css";
 
@@ -34,6 +34,33 @@ function AdminDashboard() {
   } = useEvent();
 
   const navigate = useNavigate();
+  useEffect(() => {
+  const fetchParticipants = async () => {
+    try {
+      const response = await fetch(
+        "https://college-event-management-backend-2mzu.onrender.com/api/participants"
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setParticipants(data.participants || []);
+      } else {
+        console.log(
+          "Failed to fetch participants:",
+          data.message
+        );
+      }
+    } catch (error) {
+      console.log(
+        "Fetch Participants Error:",
+        error
+      );
+    }
+  };
+
+  fetchParticipants();
+}, [setParticipants]);
 
   // ==========================================
   // DARK MODE

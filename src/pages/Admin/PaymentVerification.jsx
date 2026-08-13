@@ -1,49 +1,56 @@
-import { useEffect, useState } from "react";
 import "./PaymentVerification.css";
+import { useEffect, useState } from "react";
+
+const API =
+  "https://college-event-management-backend-2mzu.onrender.com/api";
 
 function PaymentVerification() {
   const [payments, setPayments] = useState([]);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const API_URL =
-    "https://college-event-management-backend-2mzu.onrender.com/api/payments";
-
-  // ==============================
-  // Fetch Payments From MongoDB
-  // ==============================
-
-  useEffect(() => {
-    fetchPayments();
-  }, []);
+  // ==========================================
+  // GET PAYMENTS FROM DATABASE
+  // ==========================================
 
   const fetchPayments = async () => {
     try {
-      const res = await fetch(API_URL);
+      setLoading(true);
 
-      const data = await res.json();
+      const response = await fetch(
+        `${API}/payments`
+      );
 
-      console.log("Payment Verification Data:", data);
+      const data = await response.json();
 
-      if (res.ok) {
-        setPayments(data.payments || []);
-      } else {
-        alert(data.message || "Unable to fetch payments");
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Failed to fetch payments"
+        );
       }
+
+      setPayments(data.payments || []);
     } catch (error) {
-      console.log("Fetch Payments Error:", error);
-      alert("Server Error");
+      console.error(
+        "Fetch Payments Error:",
+        error
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  // ==============================
-  // Update Payment Status
-  // ==============================
-const updateStatus = async (id, status) => {
+  useEffect(() => {
+    fetchPayments();
+  }, []);
+
+  // ==========================================
+  // UPDATE PAYMENT
+  // ==========================================
+
+  const updateStatus = async (id, status) => {
   try {
-    const res = await fetch(
+    const response = await fetch(
       `https://college-event-management-backend-2mzu.onrender.com/api/payments/${id}`,
       {
         method: "PUT",
@@ -51,294 +58,154 @@ const updateStatus = async (id, status) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status,
+          status: status,
         }),
       }
     );
 
-    const data = await res.json();
+    const data = await response.json();
 
-    console.log("Payment Update Response:", data);
-
-    if (!res.ok) {
-      alert(data.message || "Payment update failed");
-      return;
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Payment update failed"
+      );
     }
 
-    // Update payment list on screen
+    // Update screen
     const updatedPayments = payments.map((item) =>
       item._id === id
         ? {
             ...item,
-            status,
+            status: status,
           }
         : item
     );
 
     setPayments(updatedPayments);
 
-    // Keep localStorage updated
-    localStorage.setItem(
-      "paymentVerification",
-      JSON.stringify(updatedPayments)
+    alert(
+      `Payment ${status} successfully!`
     );
 
-    alert(`Payment ${status} Successfully`);
-
   } catch (error) {
-    console.log("Payment Update Error:", error);
-    alert("Server Error. Please try again.");
+    console.log(
+      "Payment Update Error:",
+      error
+    );
+
+    alert(
+      error.message ||
+        "Something went wrong"
+    );
   }
 };
 
-  // ==============================
-  // Search
-  // ==============================
-
-  const filteredPayments = payments.filter((item) => {
-    const studentName =
-      item.name?.toLowerCase() || "";
-
-    const email =
-      item.email?.toLowerCase() || "";
-
-    const eventTitle =
-      item.eventTitle?.toLowerCase() || "";
-
-    const transactionId =
-      item.transactionId?.toLowerCase() || "";
-
-    const searchText =
-      search.toLowerCase();
-
-    return (
-      studentName.includes(searchText) ||
-      email.includes(searchText) ||
-      eventTitle.includes(searchText) ||
-      transactionId.includes(searchText)
-    );
-  });
-
-  // ==============================
-  // Loading
-  // ==============================
-
   if (loading) {
     return (
-      <div className="payment-verification-page">
+      <div className="payment-verification">
         <h2>Loading Payments...</h2>
       </div>
     );
   }
 
-  // ==============================
-  // UI
-  // ==============================
-
   return (
-    <div className="payment-verification-page">
+    <div className="payment-verification">
 
-      <h1>💳 Payment Verification</h1>
+      <h1>
+        💳 Payment Verification
+      </h1>
 
-      <p className="verification-subtitle">
-        Review and verify student payment submissions
-      </p>
+      {payments.length === 0 ? (
+        <h2>
+          No Payment Requests
+        </h2>
+      ) : (
+        payments.map((item) => (
+          <div
+            className="payment-card"
+            key={item._id}
+          >
 
-      {/* Search */}
+            <img
+              src={item.screenshot}
+              alt="Payment"
+            />
 
-      <input
-        type="text"
-        placeholder="Search Student, Email, Event or Transaction ID..."
-        className="search-box"
-        value={search}
-        onChange={(e) =>
-          setSearch(e.target.value)
-        }
-      />
-
-      {/* Payments */}
-
-      <div className="payment-grid">
-
-        {filteredPayments.length === 0 ? (
-
-          <div className="no-payments">
-
-            <h2>
-              No Payments Found
-            </h2>
-
-            <p>
-              No payment submissions are available.
-            </p>
-
-          </div>
-
-        ) : (
-
-          filteredPayments.map((item) => (
-
-            <div
-              className="payment-card"
-              key={item._id}
-            >
-
-              {/* Header */}
-
-              <div className="payment-card-header">
-
-                <span className="payment-label">
-                  PAYMENT
-                </span>
-
-                <span
-                  className={`status ${
-                    item.status?.toLowerCase() ||
-                    "pending"
-                  }`}
-                >
-                  {item.status || "Pending"}
-                </span>
-
-              </div>
-
-              {/* Student */}
+            <div className="payment-info">
 
               <h2>
-                👤 {item.name}
+                {item.eventTitle}
               </h2>
 
               <p>
-                <strong>📧 Email :</strong>{" "}
+                <strong>
+                  Name :
+                </strong>{" "}
+                {item.name}
+              </p>
+
+              <p>
+                <strong>
+                  Email :
+                </strong>{" "}
                 {item.email}
               </p>
 
-              {/* Event */}
-
               <p>
-                <strong>🎟 Event :</strong>{" "}
-                {item.eventTitle}
+                <strong>
+                  Amount :
+                </strong>{" "}
+                ₹{item.amount}
               </p>
-
-              {/* Amount */}
-
-              <p>
-                <strong>💰 Amount :</strong>{" "}
-                {item.amount === 0
-                  ? "Free"
-                  : `₹${item.amount}`}
-              </p>
-
-              {/* Transaction */}
 
               <p>
                 <strong>
-                  🆔 Transaction ID :
-                </strong>
-
-                <br />
-
-                <span className="transaction-id">
-                  {item.transactionId}
-                </span>
+                  Transaction ID :
+                </strong>{" "}
+                {item.transactionId}
               </p>
 
-              {/* Screenshot */}
-
-              <div className="screenshot-section">
-
+              <p>
                 <strong>
-                  📸 Payment Screenshot
-                </strong>
+                  Status :
+                </strong>{" "}
+                {item.status}
+              </p>
 
-                {item.screenshot ? (
+              <p>
+                <strong>
+                  Date :
+                </strong>{" "}
+                {new Date(
+                  item.createdAt
+                ).toLocaleString()}
+              </p>
 
-                  <p className="screenshot-name">
-                    {item.screenshot}
-                  </p>
+              <div className="buttons">
 
-                ) : (
-
-                  <p>
-                    Screenshot not uploaded
-                  </p>
-
-                )}
+                <button
+  className="approve"
+  onClick={() =>
+    updateStatus(item._id, "Approved")
+  }
+>
+  ✅ Approve
+</button>
+<button
+  className="reject"
+  onClick={() =>
+    updateStatus(item._id, "Rejected")
+  }
+>
+  ❌ Reject
+</button>
 
               </div>
 
-              {/* Date */}
-
-              {item.createdAt && (
-
-                <p>
-                  <strong>
-                    📅 Submitted :
-                  </strong>{" "}
-                  {new Date(
-                    item.createdAt
-                  ).toLocaleString()}
-                </p>
-
-              )}
-
-              {/* Buttons */}
-
-              {item.status === "Pending" && (
-
-                <div className="buttons">
-
-                  <button
-                    className="approve"
-                    onClick={() =>
-                      updateStatus(
-                        item._id,
-                        "Approved"
-                      )
-                    }
-                  >
-                    ✅ Approve
-                  </button>
-
-                  <button
-                    className="reject"
-                    onClick={() =>
-                      updateStatus(
-                        item._id,
-                        "Rejected"
-                      )
-                    }
-                  >
-                    ❌ Reject
-                  </button>
-
-                </div>
-
-              )}
-
-              {item.status === "Approved" && (
-
-                <div className="approved-message">
-                  ✅ Payment Approved
-                </div>
-
-              )}
-
-              {item.status === "Rejected" && (
-
-                <div className="rejected-message">
-                  ❌ Payment Rejected
-                </div>
-
-              )}
-
             </div>
-
-          ))
-
-        )}
-
-      </div>
+          </div>
+        ))
+      )}
 
     </div>
   );

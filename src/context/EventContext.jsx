@@ -1,52 +1,89 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const EventContext = createContext();
 
+const API_URL =
+  "https://college-event-management-backend-2mzu.onrender.com";
+
 export function EventProvider({ children }) {
+  const [events, setEvents] = useState([]);
+  const [participants, setParticipants] = useState([]);
 
   // ==========================================
-  // GET DATA FROM LOCAL STORAGE
+  // GET EVENTS FROM DATABASE
   // ==========================================
 
-  const [events, setEvents] = useState(() => {
-    return JSON.parse(localStorage.getItem("events")) || [];
-  });
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/events`
+      );
 
-  const [participants, setParticipants] = useState(() => {
-    return JSON.parse(localStorage.getItem("participants")) || [];
-  });
+      const data = await response.json();
 
-  // ==========================================
-  // REFRESH DATA
-  // ==========================================
+      if (Array.isArray(data)) {
+        setEvents(data);
+      } else {
+        setEvents(data.events || []);
+      }
 
-  const refreshData = () => {
-    setEvents(
-      JSON.parse(localStorage.getItem("events")) || []
-    );
-
-    setParticipants(
-      JSON.parse(localStorage.getItem("participants")) || []
-    );
+    } catch (error) {
+      console.log(
+        "Fetch Events Error:",
+        error
+      );
+    }
   };
 
   // ==========================================
-  // ADD PARTICIPANT
+  // GET PARTICIPANTS FROM DATABASE
   // ==========================================
 
-  const addParticipant = (participant) => {
-    const updatedParticipants = [
-      ...participants,
-      participant,
-    ];
+  const fetchParticipants = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/participants`
+      );
 
-    localStorage.setItem(
-      "participants",
-      JSON.stringify(updatedParticipants)
-    );
+      const data = await response.json();
 
-    setParticipants(updatedParticipants);
+      if (Array.isArray(data)) {
+        setParticipants(data);
+      } else {
+        setParticipants(
+          data.participants || []
+        );
+      }
+
+    } catch (error) {
+      console.log(
+        "Fetch Participants Error:",
+        error
+      );
+    }
   };
+
+  // ==========================================
+  // REFRESH DATABASE DATA
+  // ==========================================
+
+  const refreshData = async () => {
+    await fetchEvents();
+    await fetchParticipants();
+  };
+
+  // ==========================================
+  // FIRST LOAD
+  // ==========================================
+
+  useEffect(() => {
+    refreshData();
+  }, []);
 
   // ==========================================
   // PROVIDER
@@ -60,7 +97,6 @@ export function EventProvider({ children }) {
         setEvents,
         setParticipants,
         refreshData,
-        addParticipant,
       }}
     >
       {children}
