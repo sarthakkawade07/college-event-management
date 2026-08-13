@@ -77,6 +77,34 @@ export function EventProvider({ children }) {
   };
 
   // ==========================================
+// FETCH PARTICIPANTS FROM MONGODB
+// ==========================================
+
+const fetchParticipants = async () => {
+  try {
+    const response = await fetch(
+      "https://college-event-management-backend-2mzu.onrender.com/api/participants"
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Failed to fetch participants"
+      );
+    }
+
+    setParticipants(data.participants || []);
+
+  } catch (error) {
+    console.error(
+      "Fetch Participants Error:",
+      error
+    );
+  }
+};
+
+  // ==========================================
   // ADD PARTICIPANT
   // ==========================================
 
@@ -128,7 +156,7 @@ export function EventProvider({ children }) {
   // PROVIDER
   // ==========================================
 
-  return (
+   return (
     <EventContext.Provider
       value={{
         events,
