@@ -29,6 +29,14 @@ import Certificate from "./pages/Certificate/Certificate";
 
 import { EventProvider } from "./context/EventContext";
 
+// ==========================================
+// ROUTE PROTECTION
+// ==========================================
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import AdminRoute from "./routes/AdminRoute";
+
+
 function App() {
   return (
     <EventProvider>
@@ -43,26 +51,43 @@ function App() {
 
           <Routes>
 
-            <Route path="/" element={<Home />} />
+            {/* ==================================
+                PUBLIC ROUTES
+            ================================== */}
 
-            <Route path="/about" element={<About />} />
+            <Route
+              path="/"
+              element={<Home />}
+            />
 
-            <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/about"
+              element={<About />}
+            />
 
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/contact"
+              element={<Contact />}
+            />
 
-            <Route path="/register" element={<Register />} />
+            <Route
+              path="/login"
+              element={<Login />}
+            />
 
-            <Route path="/events" element={<Events />} />
+            <Route
+              path="/register"
+              element={<Register />}
+            />
+
+            <Route
+              path="/events"
+              element={<Events />}
+            />
 
             <Route
               path="/events/:id"
               element={<EventDetails />}
-            />
-
-            <Route
-              path="/registration/:id"
-              element={<Registration />}
             />
 
             <Route
@@ -80,67 +105,89 @@ function App() {
               element={<OTPVerification />}
             />
 
-            <Route
-              path="/dashboard"
-              element={<Dashboard />}
-            />
 
-            <Route
-              path="/profile"
-              element={<Profile />}
-            />
+            {/* ==================================
+                USER PROTECTED ROUTES
+            ================================== */}
 
-            <Route
-              path="/my-events"
-              element={<MyEvents />}
-            />
+            <Route element={<ProtectedRoute />}>
 
-            {/* ADMIN */}
+              <Route
+                path="/dashboard"
+                element={<Dashboard />}
+              />
 
-            <Route
-              path="/admin-dashboard"
-              element={<AdminDashboard />}
-            />
+              <Route
+                path="/profile"
+                element={<Profile />}
+              />
 
-            <Route
-              path="/add-event"
-              element={<AddEvent />}
-            />
+              <Route
+                path="/my-events"
+                element={<MyEvents />}
+              />
 
-            <Route
-              path="/participants"
-              element={<Participants />}
-            />
+              <Route
+                path="/registration/:id"
+                element={<Registration />}
+              />
 
-            <Route
-              path="/manage-events"
-              element={<ManageEvents />}
-            />
+              <Route
+                path="/payment/:id"
+                element={<Payment />}
+              />
 
-            <Route
-              path="/payment-verification"
-              element={<PaymentVerification />}
-            />
+              <Route
+                path="/certificate"
+                element={<Certificate />}
+              />
 
-            {/* PAYMENT */}
+            </Route>
 
-            <Route
-              path="/payment/:id"
-              element={<Payment />}
-            />
 
-            {/* CERTIFICATE */}
+            {/* ==================================
+                ADMIN PROTECTED ROUTES
+            ================================== */}
 
-            <Route
-              path="/certificate"
-              element={<Certificate />}
-            />
+            <Route element={<AdminRoute />}>
 
-            {/* 404 */}
+              <Route
+                path="/admin-dashboard"
+                element={<AdminDashboard />}
+              />
+
+              <Route
+                path="/add-event"
+                element={<AddEvent />}
+              />
+
+              <Route
+                path="/participants"
+                element={<Participants />}
+              />
+
+              <Route
+                path="/manage-events"
+                element={<ManageEvents />}
+              />
+
+              <Route
+                path="/payment-verification"
+                element={<PaymentVerification />}
+              />
+
+            </Route>
+
+
+            {/* ==================================
+                404
+            ================================== */}
 
             <Route
               path="*"
-              element={<h1>404 Page Not Found</h1>}
+              element={
+                <h1>404 Page Not Found</h1>
+              }
             />
 
           </Routes>

@@ -21,20 +21,24 @@ function Login() {
 
   const navigate = useNavigate();
 
-  // ==============================
+  // ==========================================
   // FORGOT PASSWORD
-  // ==============================
+  // ==========================================
 
   const handleForgotPassword = () => {
     navigate("/forgot-password");
   };
 
-  // ==============================
+  // ==========================================
   // LOGIN
-  // ==============================
+  // ==========================================
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ==============================
+    // VALIDATION
+    // ==============================
 
     if (!email.trim()) {
       alert("Please enter your email.");
@@ -51,55 +55,130 @@ function Login() {
       return;
     }
 
-    // ==============================
-    // ADMIN LOGIN
-    // ==============================
-
-    if (
-      email.trim().toLowerCase() === "admin@gmail.com" &&
-      password === "admin123"
-    ) {
-      alert("Welcome Admin!");
-      navigate("/admin-dashboard");
-      return;
-    }
-
-    // ==============================
-    // USER LOGIN
-    // ==============================
-
-    const savedUser =
-      JSON.parse(localStorage.getItem("user")) || null;
-
-    if (!savedUser) {
-      alert("No account found! Please Register First.");
-      navigate("/register");
-      return;
-    }
-
-    if (
-      email.trim().toLowerCase() !==
-        savedUser.email.trim().toLowerCase() ||
-      password !== savedUser.password
-    ) {
-      alert("Invalid Email or Password");
-      return;
-    }
-
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // ==========================================
+      // LOGIN API
+      // ==========================================
 
-      localStorage.setItem(
-        "loggedInUser",
-        JSON.stringify(savedUser)
+      const response = await fetch(
+        "https://college-event-management-backend-2mzu.onrender.com/api/auth/login",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            email: email.trim(),
+            password: password,
+          }),
+        }
       );
 
-      alert("Login Successful!");
+      const data = await response.json();
 
-      navigate("/dashboard");
-    }, 800);
+      // ==========================================
+      // LOGIN ERROR
+      // ==========================================
+
+      if (!response.ok) {
+        alert(
+          data.message ||
+            "Invalid email or password"
+        );
+
+        return;
+      }
+
+      // ==========================================
+      // LOGIN SUCCESS
+      // ==========================================
+
+     
+      // ==========================================
+// LOGIN SUCCESS
+// ==========================================
+
+console.log("Login Response:", data);
+
+// Save JWT token
+sessionStorage.setItem("authToken", data.token);
+
+// Save logged-in user information
+sessionStorage.setItem(
+  "loggedInUser",
+  JSON.stringify(data.user)
+);
+
+// Role based redirect
+if (data.user.role === "admin") {
+  alert("Welcome Admin! 👨‍💼");
+  navigate("/admin-dashboard");
+} else {
+  alert("Login Successful! 🎉");
+  navigate("/dashboard");
+}
+
+      /*
+        IMPORTANT:
+
+        User information can be kept temporarily
+        in memory/context.
+
+        We are NOT saving password in LocalStorage.
+      */
+
+      // ==========================================
+      // SAVE AUTH TOKEN
+      // ==========================================
+
+      sessionStorage.setItem(
+        "authToken",
+        data.token
+      );
+
+      // ==========================================
+      // SAVE USER INFORMATION
+      // ==========================================
+
+      sessionStorage.setItem(
+        "loggedInUser",
+        JSON.stringify(data.user)
+      );
+
+      // ==========================================
+      // ROLE CHECK
+      // ==========================================
+
+      if (data.user.role === "admin") {
+        alert("Welcome Admin! 👨‍💼");
+
+        navigate("/admin-dashboard");
+      } else {
+        alert("Login Successful! 🎉");
+
+        navigate("/dashboard");
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Login Error:",
+        error
+      );
+
+      alert(
+        "Server Error. Please try again."
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
   };
 
   return (
@@ -122,11 +201,10 @@ function Login() {
           </h1>
 
           <p className="login-description">
-            Login to discover amazing college events,
-            workshops, hackathons and competitions.
+            Login to discover amazing college
+            events, workshops, hackathons and
+            competitions.
           </p>
-
-          {/* WHY JOIN CARD */}
 
           <div className="login-welcome-box">
 
@@ -165,7 +243,6 @@ function Login() {
 
       </div>
 
-
       {/* =====================================
           RIGHT SIDE
       ===================================== */}
@@ -193,10 +270,7 @@ function Login() {
 
           </div>
 
-
-          {/* =====================================
-              EMAIL
-          ===================================== */}
+          {/* EMAIL */}
 
           <div className="login-input-box">
 
@@ -206,7 +280,9 @@ function Login() {
 
             <div className="login-input-field">
 
-              <FaEnvelope className="login-input-icon" />
+              <FaEnvelope
+                className="login-input-icon"
+              />
 
               <input
                 type="email"
@@ -222,10 +298,7 @@ function Login() {
 
           </div>
 
-
-          {/* =====================================
-              PASSWORD
-          ===================================== */}
+          {/* PASSWORD */}
 
           <div className="login-input-box">
 
@@ -235,7 +308,9 @@ function Login() {
 
             <div className="login-input-field">
 
-              <FaLock className="login-input-icon" />
+              <FaLock
+                className="login-input-icon"
+              />
 
               <input
                 type={
@@ -255,24 +330,25 @@ function Login() {
                 type="button"
                 className="login-eye-button"
                 onClick={() =>
-                  setShowPassword(!showPassword)
+                  setShowPassword(
+                    !showPassword
+                  )
                 }
               >
+
                 {showPassword ? (
                   <FaEyeSlash />
                 ) : (
                   <FaEye />
                 )}
+
               </button>
 
             </div>
 
           </div>
 
-
-          {/* =====================================
-              OPTIONS
-          ===================================== */}
+          {/* OPTIONS */}
 
           <div className="login-options">
 
@@ -282,7 +358,9 @@ function Login() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) =>
-                  setRememberMe(e.target.checked)
+                  setRememberMe(
+                    e.target.checked
+                  )
                 }
               />
 
@@ -295,17 +373,16 @@ function Login() {
             <button
               type="button"
               className="forgot-btn"
-              onClick={handleForgotPassword}
+              onClick={
+                handleForgotPassword
+              }
             >
               Forgot Password?
             </button>
 
           </div>
 
-
-          {/* =====================================
-              LOGIN BUTTON
-          ===================================== */}
+          {/* LOGIN BUTTON */}
 
           <button
             type="submit"
@@ -324,10 +401,7 @@ function Login() {
 
           </button>
 
-
-          {/* =====================================
-              DIVIDER
-          ===================================== */}
+          {/* DIVIDER */}
 
           <div className="login-divider">
 
@@ -339,10 +413,7 @@ function Login() {
 
           </div>
 
-
-          {/* =====================================
-              GOOGLE
-          ===================================== */}
+          {/* GOOGLE */}
 
           <button
             type="button"
@@ -355,10 +426,7 @@ function Login() {
 
           </button>
 
-
-          {/* =====================================
-              REGISTER
-          ===================================== */}
+          {/* REGISTER */}
 
           <p className="register-text">
 
@@ -369,7 +437,6 @@ function Login() {
             </Link>
 
           </p>
-
 
           <p className="copyright">
             © 2026 Campus Event Hub

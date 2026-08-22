@@ -1,4 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const EventContext = createContext();
 
@@ -12,52 +17,55 @@ export function EventProvider({ children }) {
   // ==========================================
 
   const [events, setEvents] = useState(() => {
-    return JSON.parse(localStorage.getItem("events")) || [];
+    return (
+      JSON.parse(localStorage.getItem("events")) || []
+    );
   });
 
   // ==========================================
   // PARTICIPANTS
   // ==========================================
 
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] =
+    useState([]);
 
   // ==========================================
-  // LOAD PARTICIPANTS FROM DATABASE
+  // FETCH PARTICIPANTS FROM MONGODB
   // ==========================================
 
   const fetchParticipants = async () => {
     try {
-
       const response = await fetch(
         `${API_URL}/api/participants`
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch participants");
-      }
-
       const data = await response.json();
 
-      setParticipants(data.participants || []);
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Failed to fetch participants"
+        );
+      }
+
+      setParticipants(
+        data.participants || []
+      );
 
     } catch (error) {
-
       console.error(
         "Fetch Participants Error:",
         error
       );
-
     }
   };
 
   // ==========================================
-  // LOAD DATA
+  // LOAD PARTICIPANTS
   // ==========================================
 
   useEffect(() => {
-
     fetchParticipants();
-
   }, []);
 
   // ==========================================
@@ -73,42 +81,15 @@ export function EventProvider({ children }) {
         localStorage.getItem("events")
       ) || []
     );
-
   };
-
-  // ==========================================
-// FETCH PARTICIPANTS FROM MONGODB
-// ==========================================
-
-const fetchParticipants = async () => {
-  try {
-    const response = await fetch(
-      "https://college-event-management-backend-2mzu.onrender.com/api/participants"
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.message || "Failed to fetch participants"
-      );
-    }
-
-    setParticipants(data.participants || []);
-
-  } catch (error) {
-    console.error(
-      "Fetch Participants Error:",
-      error
-    );
-  }
-};
 
   // ==========================================
   // ADD PARTICIPANT
   // ==========================================
 
-  const addParticipant = async (participant) => {
+  const addParticipant = async (
+    participant
+  ) => {
 
     try {
 
@@ -118,19 +99,23 @@ const fetchParticipants = async () => {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type":
+              "application/json",
           },
 
-          body: JSON.stringify(participant),
+          body: JSON.stringify(
+            participant
+          ),
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
           data.message ||
-          "Failed to add participant"
+            "Failed to add participant"
         );
       }
 
@@ -156,7 +141,7 @@ const fetchParticipants = async () => {
   // PROVIDER
   // ==========================================
 
-   return (
+  return (
     <EventContext.Provider
       value={{
         events,
